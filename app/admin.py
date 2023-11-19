@@ -1,8 +1,5 @@
 from django.contrib import admin
-
-# Register your models here.
-from django.contrib import admin
-from .models import Post, Comment
+from .models import Post, Comment, Profile, Author, Category, Tag
 from django_summernote.admin import SummernoteModelAdmin
 
 
@@ -25,3 +22,19 @@ class CommentAdmin(admin.ModelAdmin):
 
     def approve_comments(self, request, queryset):
         queryset.update(approved=True)
+
+@admin.register(Profile)
+class ProfileAdmin(admin.ModelAdmin):
+    model = Profile
+
+@admin.register(Author)
+class AuthorAdmin(admin.ModelAdmin):
+    list_display = ('last_name', 'first_name')
+
+@admin.register(Category)
+class CategoryAdmin(admin.ModelAdmin):
+    pass
+
+@admin.register(Tag)
+class TagAdmin(admin.ModelAdmin):
+    pass

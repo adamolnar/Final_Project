@@ -3,6 +3,8 @@ from django.views import generic, View
 from django.http import HttpResponseRedirect
 from .models import Post
 from .forms import CommentForm
+from django.shortcuts import render
+from django.contrib.auth.decorators import login_required
 
 
 class PostList(generic.ListView):
@@ -77,3 +79,9 @@ class PostLike(View):
 
         return HttpResponseRedirect(reverse('post_detail', args=[slug]))
 
+
+class Profile(View):
+    # Limit access to logged in users
+    @login_required
+    def profile(request):
+        return render(request, 'profile.html')
