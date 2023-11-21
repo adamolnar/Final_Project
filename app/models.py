@@ -1,31 +1,54 @@
 from django.db import models
-from django.contrib.auth.models import User
+
+from django.contrib.auth.models import User #Blog author or commenter
 from cloudinary.models import CloudinaryField
 from django.urls import reverse # Used to generate URLs by reversing the URL patterns
 
 
 STATUS = ((0, "Draft"), (1, "Published"))
 
+# Model representing a blogger.
+class Author(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="all_authors" )
+    bio = models.TextField(max_length=400, help_text="Enter your bio details here.", null=True)
+   
+    class Meta:
+        ordering = ["user","bio"]
+
+    def get_absolute_url(self):
+        # Returns the url to access a particular blog-author instance.
+        return reverse('all_authors', args=[str(self.id)])
+
+    def __str__(self):
+        # String for representing the Model object.
+        return self.user.username
+
+# Model representing a category.
 class Category(models.Model):
     title = models.CharField(max_length=20)
-    subtitle = models.CharField(max_length=20)
-    slug = models.SlugField(max_length=200, unique=True)
+    slug = models.SlugField(max_length=200, unique=True, null=False)
  
     def __str__(self):
         return self.title
 
 
+# Model representing a tag.
 class Tag(models.Model):
     name = models.CharField(max_length=50, unique=True)
+    slug = models.SlugField(max_length=200, unique=True, null=True)
 
     def __str__(self):
         return self.name
 
-
+# Model representing a blog post.
 class Post(models.Model):
-    title = models.CharField(max_length=200, unique=True)
+    title = models.CharField(max_length=200, unique=True )
     slug = models.SlugField(max_length=200, unique=True)
-    author = models.ForeignKey('Author', on_delete=models.RESTRICT, null=True)
+    # author = models.ForeignKey(Author, on_delete=models.SET_NULL, null=True)
+    # Foreign Key used because Blog can only have one author/User, but bloggsers can have multiple blog posts.
+    author = models.ForeignKey(
+        Author, on_delete=models.CASCADE, related_name="blog_posts"
+    )
     featured_image = CloudinaryField('image', default='placeholder')
     excerpt = models.TextField(blank=True)
     updated_on = models.DateTimeField(auto_now=True)
@@ -35,7 +58,7 @@ class Post(models.Model):
     likes = models.ManyToManyField(
         User, related_name='blogpost_like', blank=True)
     categories = models.ManyToManyField(Category)
-    tags = models.ManyToManyField(Tag, blank=True)
+    tags = models.ManyToManyField(Tag, related_name='tag')
 
     class Meta:
         ordering = ["-created_on"]
@@ -45,13 +68,19 @@ class Post(models.Model):
 
     def number_of_likes(self):
         return self.likes.count()
+    
+    def get_absolute_url(self):
+        # Returns the URL to access a detail record for this post.
+        return reverse('post_detail', args=[str(self.id)])
+    
 
 
+# Model representing a comment against a blog post.
 class Comment(models.Model):
     post = models.ForeignKey(Post, on_delete=models.CASCADE,
                              related_name="comments")
+    author = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name="comment")
     name = models.CharField(max_length=80)
-    email = models.EmailField()
     body = models.TextField()
     created_on = models.DateTimeField(auto_now_add=True)
     approved = models.BooleanField(default=False)
@@ -62,33 +91,4 @@ class Comment(models.Model):
     def __str__(self):
         return f"Comment {self.body} by {self.name}"
 
-# Extending User Model Using a One-To-One Link
-class Profile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-    avatar = CloudinaryField('image', default='placeholder')
-    bio = models.TextField()
 
-    def __str__(self):
-        return self.user.username
-
-    def get_absolute_url(self):
-    # Returns the URL to access a particular instance of the model.
-        return reverse('profile-detail', args=[str(self.id)])
-
-
-class Author(models.Model):
-    # Model representing an author.
-    first_name = models.CharField(max_length=100)
-    last_name = models.CharField(max_length=100)
-    
-
-    class Meta:
-        ordering = ['last_name', 'first_name']
-
-    def get_absolute_url(self):
-        # Returns the URL to access a particular author instance.
-        return reverse('author-detail', args=[str(self.id)])
-
-    def __str__(self):
-        # String for representing the Model object.
-        return f'{self.last_name}, {self.first_name}'

@@ -1,10 +1,11 @@
 from django.shortcuts import render, reverse, get_object_or_404
 from django.views import generic, View
-from django.http import HttpResponseRedirect
-from .models import Post
+from django.http import HttpResponseRedirect, HttpResponse
+from django.template import loader
+from .models import Post, Author
+from django.contrib.auth.models import User #Blog author or commenter
 from .forms import CommentForm
 from django.shortcuts import render
-from django.contrib.auth.decorators import login_required
 
 
 class PostList(generic.ListView):
@@ -12,6 +13,7 @@ class PostList(generic.ListView):
     queryset = Post.objects.filter(status=1).order_by("-created_on")
     template_name = "index.html"
     paginate_by = 5
+
 
 class PostDetail(View):
 
@@ -77,11 +79,22 @@ class PostLike(View):
         else:
             post.likes.add(request.user)
 
-        return HttpResponseRedirect(reverse('post_detail', args=[slug]))
+        return HttpResponseRedirect(reverse('post-detail', args=[slug]))
 
 
-class Profile(View):
-    # Limit access to logged in users
-    @login_required
-    def profile(request):
-        return render(request, 'profile.html')
+class AuthorList(generic.ListView):
+    model = Author
+    queryset = Author.objects.all().order_by('user')
+    template_name = "all_authors.html"
+    
+        
+    # def get_queryse (self):
+    #     user = self.kwargs['user_id']
+    #     target_author=get_object_or_404(Author, user_id = user)
+    #     return Post.objects.filter(author=target_author)
+        
+   
+   
+
+    
+
