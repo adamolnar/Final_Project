@@ -13,11 +13,11 @@ class Author(models.Model):
     bio = models.TextField(max_length=400, help_text="Enter your bio details here.", null=True)
    
     class Meta:
-        ordering = ["user","bio"]
+        ordering = ["user"]
 
     def get_absolute_url(self):
         # Returns the url to access a particular blog-author instance.
-        return reverse('all_authors', args=[str(self.id)])
+        return reverse('author_detail', args=[str(self.id)])
 
     def __str__(self):
         # String for representing the Model object.

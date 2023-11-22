@@ -8,8 +8,8 @@
 
       {% for author in author_list %}
       <li>
-        <a href="{% url 'all_authors'  %}">{{ author}}</a>
-        <p><a href=""> {{ author.user.id }}</a></p>
+        <a href="{% url 'author_detail' author.user_id %}">{{ author}}</a>
+        <p>{{ author.bio }}</p>
       </li>
       {% endfor %}
 
