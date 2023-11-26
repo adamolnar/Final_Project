@@ -35,7 +35,7 @@
                         {% endif %}
                     </a>
                     <div class="card-body">
-                        <div class="small author">Author: {{ post.author }}</div>
+                        <div class="small author">Author: <a href="{{ post.author.get_absolute_url }}">{{ post.author }}</a></div>
                         <h2 class="card-title">{{ post.title }}</h2>
                         <p class="card-text">{{ post.excerpt }}</p>
                         <a class="btn btn-primary" href="{% url 'post_detail' post.slug %}">Read more →</a>

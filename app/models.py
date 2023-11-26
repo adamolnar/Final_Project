@@ -1,9 +1,8 @@
 from django.db import models
-
-from django.contrib.auth.models import User #Blog author or commenter
+from django.contrib.auth.models import User 
 from cloudinary.models import CloudinaryField
 from django.urls import reverse # Used to generate URLs by reversing the URL patterns
-
+from django.template.defaultfilters import slugify
 
 STATUS = ((0, "Draft"), (1, "Published"))
 
@@ -11,6 +10,7 @@ STATUS = ((0, "Draft"), (1, "Published"))
 class Author(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="all_authors" )
     bio = models.TextField(max_length=400, help_text="Enter your bio details here.", null=True)
+    # avatar =  CloudinaryField()
    
     class Meta:
         ordering = ["user"]
@@ -27,6 +27,10 @@ class Author(models.Model):
 class Category(models.Model):
     title = models.CharField(max_length=20)
     slug = models.SlugField(max_length=200, unique=True, null=False)
+
+    class Meta:
+        verbose_name = "Category"
+        verbose_name_plural = "Categories"
  
     def __str__(self):
         return self.title
@@ -63,6 +67,11 @@ class Post(models.Model):
     class Meta:
         ordering = ["-created_on"]
 
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.title)
+        super(Post, self).save(*args, **kwargs)
+
     def __str__(self):
         return self.title
 
@@ -71,7 +80,7 @@ class Post(models.Model):
     
     def get_absolute_url(self):
         # Returns the URL to access a detail record for this post.
-        return reverse('post_detail', args=[str(self.id)])
+        return reverse('post_detail_reverse', args=[str(self.id)])
     
 
 
