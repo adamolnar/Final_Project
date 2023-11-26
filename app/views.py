@@ -1,13 +1,46 @@
 from django.shortcuts import render, reverse, redirect, get_object_or_404
+from django.contrib.auth import login
+from django.contrib.auth import login, authenticate, logout
+from django.contrib.auth.decorators import login_required
 from django.views import generic, View
 from django.http import HttpResponseRedirect, HttpResponse
 from django.template import loader
 from .models import Post, Author
 from django.contrib.auth.models import User #Blog author or commenter
-from .forms import CommentForm, PostForm, ContactForm
+from .forms import CommentForm, PostForm, EditProfileForm
 from django.shortcuts import render
 from django.utils import timezone
 from django.core.mail import send_mail
+
+
+@login_required
+def edit_profile(request):
+    if request.method == "POST":
+        form = EditProfileForm(request.POST, request.FILES)
+        if form.is_valid():
+            about_me = form.cleaned_data["about_me"]
+            username = form.cleaned_data["username"]
+            image = form.cleaned_data["image"]
+
+            user = User.objects.get(id=request.user.id)
+            profile = Author.objects.get(user=user)
+            user.username = username
+            user.save()
+            profile.about_me = about_me
+            if image:
+                profile.image = image
+            profile.save()
+            return redirect("profile", username=user.username)
+    else:
+        form = EditProfileForm()
+    return render(request, "edit_profile.html", {'form': form})
+
+
+@login_required
+def profile(request, username):
+    user = get_object_or_404(User, username=username)
+    profile = get_object_or_404(Author, user=user)
+    return render(request, 'profile.html', {'profile': profile, 'user': user})
 
 
 

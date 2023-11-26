@@ -4,6 +4,10 @@ from .models import Post
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 
+class EditProfileForm(forms.Form):
+    username = forms.CharField()
+    about_me = forms.CharField(widget=forms.Textarea())
+    image = forms.ImageField(required=False)
 
 class CommentForm(forms.ModelForm):
     class Meta:
