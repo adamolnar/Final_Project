@@ -1,10 +1,14 @@
 from django.contrib import admin
-from .models import Post, Comment, Author, Category, Tag
+from .models import Post, Comment, Author, Category, Tag, Profile
 from django_summernote.admin import SummernoteModelAdmin
+
+@admin.register(Profile)
+class ProfileAdmin(admin.ModelAdmin):
+   list_display = ('user', 'about_me', 'image')
 
 @admin.register(Author)
 class AuthorAdmin(admin.ModelAdmin):
-   list_display = ('user', )
+   list_display = ('profile', )
 
 @admin.register(Post)
 class PostAdmin(SummernoteModelAdmin):

@@ -173,6 +173,8 @@ ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_UNIQUE_EMAIL = True
 ACCOUNT_SESSION_REMEMBER = True
 
+# Built-in views for the password reset process.
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 # Custom ErrorList form for signup.html
 ACCOUNT_FORMS = {
   'signup': 'users.forms.CustomSignUpForm',

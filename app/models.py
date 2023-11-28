@@ -1,19 +1,32 @@
 from django.db import models
 from django.contrib.auth.models import User 
 from cloudinary.models import CloudinaryField
+from PIL import Image
 from django.urls import reverse # Used to generate URLs by reversing the URL patterns
 from django.template.defaultfilters import slugify
 
 STATUS = ((0, "Draft"), (1, "Published"))
 
+# Model assigning Profile Page to each user.
+class Profile(models.Model):
+    about_me = models.TextField()
+    # image = CloudinaryField('image', default='placeholder')
+    image = models.ImageField(upload_to='images/', default='placeholder')
+    user = models.OneToOneField(User, on_delete=models.CASCADE )
+
+    def __str__(self):
+        return self.user.username
+
+
 # Model representing a blogger.
 class Author(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="all_authors" )
-    bio = models.TextField(max_length=400, help_text="Enter your bio details here.", null=True)
+    profile = models.ForeignKey(
+        Profile, on_delete=models.CASCADE, related_name="users_profile"
+    )
     # avatar =  CloudinaryField()
    
     class Meta:
-        ordering = ["user"]
+        ordering = ["profile"]
 
     def get_absolute_url(self):
         # Returns the url to access a particular blog-author instance.
@@ -21,7 +34,7 @@ class Author(models.Model):
 
     def __str__(self):
         # String for representing the Model object.
-        return self.user.username
+        return self.profile.user.username
 
 # Model representing a category.
 class Category(models.Model):
@@ -53,7 +66,7 @@ class Post(models.Model):
     author = models.ForeignKey(
         Author, on_delete=models.CASCADE, related_name="blog_posts"
     )
-    featured_image = CloudinaryField('image', default='placeholder')
+    featured_image = models.ImageField(upload_to='images/', default='placeholder')
     excerpt = models.TextField(blank=True)
     updated_on = models.DateTimeField(auto_now=True)
     content = models.TextField()
