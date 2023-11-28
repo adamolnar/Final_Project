@@ -76,6 +76,7 @@ class Post(models.Model):
         User, related_name='blogpost_like', blank=True)
     categories = models.ManyToManyField(Category)
     tags = models.ManyToManyField(Tag, related_name='tag')
+    
 
     class Meta:
         ordering = ["-created_on"]

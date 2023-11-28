@@ -2,9 +2,12 @@ from . import views
 from django.urls import path
 
 urlpatterns = [
+    path('<slug:slug>/delete/', views.PostDeleteView.as_view(), name='post_delete'),
     path("", views.PostList.as_view(), name="home"),
+    
     path('post/new/', views.post_new, name='post_new'),
     path('<slug:slug>/edit/', views.post_edit, name='post_edit'),
+    
     path('profile/<username>/', views.profile, name='profile'),
     path('edit-profile/', views.edit_profile, name='edit_profile'),
    

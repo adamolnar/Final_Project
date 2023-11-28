@@ -14,6 +14,7 @@ from django.core.mail import send_mail
 from cloudinary.models import CloudinaryField
 from PIL import Image
 from django.template.defaultfilters import slugify
+from django.contrib import messages
 
 
 
@@ -34,6 +35,7 @@ def edit_profile(request):
             if image:
                 profile.image = image
             profile.save()
+            messages.success(request, 'Your profile has been updated successfully.')
             return redirect("profile", username=user.username)
     else:
         form = EditProfileForm(request.user.username)
@@ -106,21 +108,25 @@ class AuthorDetail(generic.ListView):
 
 
 # ------------------------------------------------------------------------------------------
+@login_required
 def post_new(request):
     if request.method == "POST":
         form = PostForm(request.POST)
         if form.is_valid():
             post = form.save(commit=False) # Return an object without saving to the DB
             # post = Post.objects.get(post.intsance.pk)
-            new_author = Author.objects.get(profile = request.profile.id)
+            new_author = Author.objects.get(profile = request.user.id)
             post.author = new_author# Add an author field which will contain current user's id
             post.slug = slugify(post.title)
             post.save() # Save the final "real form" to the DB
+            messages.success(request, 'Your post has been created successfully.')
             return redirect('post_detail', slug = post.slug)
     else:
         form = PostForm()
     return render(request, 'post_edit.html', {'form': form})
 
+
+@login_required
 def post_edit(request, slug):
     post = get_object_or_404(Post, slug=slug)
     if request.method == "POST":
@@ -131,10 +137,12 @@ def post_edit(request, slug):
             post.author = Author.objects.get(profile = new_author)
             post.created_on = timezone.now()
             post.save()
+            messages.success(request, 'Your post has been updated successfully.')
             return redirect('post_detail', slug = post.slug)
     else:
         form = PostForm(instance=post)
     return render(request, 'post_edit.html', {'form': form})
+
 
 #-------------------------------------------------------------------------------------------   
     
@@ -217,7 +225,24 @@ class PostLike(View):
 
 
 
+class PostDeleteView(View):
 
+    def get(self, request, slug, *args, **kwargs):
+        post = get_object_or_404(Post, slug=slug)
+        context = {'post': post}
+        if request.method == 'GET':
+            return render(request, 'post_confirm_delete.html',context)
+
+
+    def post(self, request, slug, *args, **kwargs):   
+        post = get_object_or_404(Post, slug=slug)    
+        if request.method == 'POST':
+            post.delete()
+            messages.success(request, 'The post has been deleted successfully.')
+        return HttpResponseRedirect(reverse('home'))
+
+
+        
 
 
     
