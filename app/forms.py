@@ -5,6 +5,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 from cloudinary.models import CloudinaryField
 from PIL import Image
+from django.core.validators import EmailValidator
 
 class EditProfileForm(forms.Form):
     username = forms.CharField()
@@ -46,9 +47,9 @@ class PostForm(forms.ModelForm):
 
 
 class ContactForm(forms.Form):
-    subject = forms.CharField(max_length=100)
+    name = forms.CharField(max_length=100)
     message = forms.CharField(widget=forms.Textarea)
-    sender = forms.EmailField()
-    cc_myself = forms.BooleanField(required=False)
+    email = forms.EmailField(validators=[EmailValidator()])
+    
 
     
