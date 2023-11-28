@@ -121,6 +121,20 @@ def post_new(request):
         form = PostForm()
     return render(request, 'post_edit.html', {'form': form})
 
+def post_edit(request, slug):
+    post = get_object_or_404(Post, slug=slug)
+    if request.method == "POST":
+        form = PostForm(request.POST, instance=post)
+        if form.is_valid():
+            post = form.save(commit=False)
+            new_author = request.user.profile
+            post.author = Author.objects.get(profile = new_author)
+            post.created_on = timezone.now()
+            post.save()
+            return redirect('post_detail', slug = post.slug)
+    else:
+        form = PostForm(instance=post)
+    return render(request, 'post_edit.html', {'form': form})
 
 #-------------------------------------------------------------------------------------------   
     
