@@ -5,9 +5,9 @@ from django.contrib.auth.decorators import login_required
 from django.views import generic, View
 from django.http import HttpResponseRedirect, HttpResponse
 from django.template import loader
-from .models import Post, Author, Profile
+from .models import Post, Author, Profile, Comment, Tag
 from django.contrib.auth.models import User #Blog author or commenter
-from .forms import CommentForm, PostForm, EditProfileForm, ContactForm
+from .forms import CommentForm, PostForm, EditProfileForm, ContactForm, ExploreForm
 from django.shortcuts import render
 from django.utils import timezone
 from django.core.mail import send_mail
@@ -15,7 +15,14 @@ from cloudinary.models import CloudinaryField
 from PIL import Image
 from django.template.defaultfilters import slugify
 from django.contrib import messages
-
+from django.views.generic import (
+    ListView,
+    DetailView,
+    CreateView,
+    UpdateView,
+    DeleteView
+)
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 
 @login_required
@@ -39,58 +46,27 @@ def edit_profile(request):
             return redirect("profile", username=user.username)
     else:
         form = EditProfileForm(request.user.username)
-    return render(request, "edit_profile.html", {'form': form})
+    return render(request, "app/profile_update.html", {'form': form})
 
 
 @login_required
 def profile(request, username):
     user = get_object_or_404(User, username=username)
     profile = get_object_or_404(Profile, user=user)
-    return render(request, 'profile.html', {'profile': profile, 'user': user})
-
-
+    return render(request, 'app/profile.html', {'profile': profile, 'user': user})
 
 
 #  Generic class-based view for a list of authors.
-class AuthorList(generic.ListView):
-    template_name = "all_authors.html"
+class AuthorListView(ListView):
+    template_name = "app/authors_list.html"
     model = Author
     queryset = Author.objects.all()
-   
-
-    # def queryset(self, **kwargs):
-    #     # Call the base implementation first to get a context
-    #     context = super().get_context_data(**kwargs)
-    #     # Add in a QuerySet of all the posts
-    #     context["all_authors"] = Author.objects.all()
-    #     return context
-
-
-    # def get_context_data(self, **kwargs):
-    #     # Call the base implementation first to get the context
-    #     context = super(AuthorList, self).get_context_data(**kwargs)
-    #     # Create any data and add it to the context
-    #     context['all-authors'] = get_object_or_404(Author, post__author = self.kwargs['user_id'])
-    #     return context
-        
-
-
-
-
 
 
 # Generic class-based detail view for a author 
-class AuthorDetail(generic.ListView):
-    template_name ='author_detail.html'
-   
-    # context_object_name = 'author_posts'
-    # context_object_name = 'author_detail'
-
-    # def get_queryset(self):
-    #     self.post = get_object_or_404(Post, pk=self.kwargs['pk'])
-    #     self.author = get_object_or_404(Author, pk=self.kwargs['pk'])
-    #     return Post.objects.filter(self.author==self.post)
-     
+class AuthorDetailView(DetailView):
+    template_name ='app/author_detail.html'
+    
     def get_queryset(self):
         pk = self.kwargs['pk']
         target_author=get_object_or_404(Author, pk = pk)
@@ -101,13 +77,10 @@ class AuthorDetail(generic.ListView):
         # Call the base implementation first to get a context
         context = super(AuthorDetail, self).get_context_data(**kwargs)
         # Get the blogger object from the "pk" URL parameter and add it to the context
-        context['author_detail'] = get_object_or_404(Author, pk = self.kwargs['pk'])
+        context['author-detail'] = get_object_or_404(Author, pk = self.kwargs['pk'])
         return context
     
 
-
-
-# ------------------------------------------------------------------------------------------
 @login_required
 def post_new(request):
     if request.method == "POST":
@@ -118,12 +91,13 @@ def post_new(request):
             new_author = Author.objects.get(profile = request.user.id)
             post.author = new_author# Add an author field which will contain current user's id
             post.slug = slugify(post.title)
+            post.create_tags()
             post.save() # Save the final "real form" to the DB
             messages.success(request, 'Your post has been created successfully.')
-            return redirect('post_detail', slug = post.slug)
+            return redirect('post-detail', slug = post.slug)
     else:
         form = PostForm()
-    return render(request, 'post_edit.html', {'form': form})
+    return render(request, 'app/post_update.html', {'form': form})
 
 
 @login_required
@@ -138,30 +112,30 @@ def post_edit(request, slug):
             post.created_on = timezone.now()
             post.save()
             messages.success(request, 'Your post has been updated successfully.')
-            return redirect('post_detail', slug = post.slug)
+            return redirect('post-detail', slug = post.slug)
     else:
         form = PostForm(instance=post)
-    return render(request, 'post_edit.html', {'form': form})
+    return render(request, 'app/post_update.html', {'form': form})
 
-
-#-------------------------------------------------------------------------------------------   
-    
-
+  
 # Generic class-based view for a list of all posts.
-class PostList(generic.ListView):
+class PostListView(ListView):
     
     model = Post
     queryset = Post.objects.filter(status=1).order_by("-created_on")
-    template_name = "index.html"
+    template_name = "app/index.html"
     context_object_name = 'post_list'
     paginate_by = 5
 
+
 # Generic class-based detail view for a post.
-class PostDetail(View):
+class PostDetailView(DetailView):
     
     def get(self, request, slug, *args, **kwargs):
         queryset = Post.objects.filter(status=1)
         post = get_object_or_404(Post, slug=slug)
+        form = CommentForm()
+        post.create_tags()
         comments = post.comments.filter(approved=True).order_by("-created_on")
         liked = False
         if post.likes.filter(id=self.request.user.id).exists():
@@ -169,7 +143,7 @@ class PostDetail(View):
 
         return render(
             request,
-            "post_detail.html",
+            "app/post_detail.html",
             {
                 "post": post,
                 "comments": comments,
@@ -182,37 +156,61 @@ class PostDetail(View):
     def post(self, request, slug, *args, **kwargs):
         queryset = Post.objects.filter(status=1)
         post = get_object_or_404(queryset,slug=slug)
+        form = CommentForm(request.POST)
         comments = post.comments.filter(approved=True).order_by("-created_on")
         liked = False
+
         if post.likes.filter(id=self.request.user.id).exists():
             liked = True
 
-        comment_form = CommentForm(data=request.POST)
-        if comment_form.is_valid():
-            comment_form.instance.name = request.user.username
-            comment = comment_form.save(commit=False)
-            comment.post = post
-            comment.save()
-            comment_form = CommentForm()
+        
+        if form.is_valid():
+            new_comment = form.save(commit=False)
+            new_comment.instance.name = request.user.username
+            new_comment.post = post
+            new_comment.save()
+            form = CommentForm()           
         else:
-            comment_form = CommentForm()
+            form = CommentForm()
 
         return render(
             request,
-            "post_detail.html",
+            "app/post_detail.html",
             {
                 "post": post,
                 "comments": comments,
                 "approved":True,
                 "commented": True,
-                "comment_form": comment_form,
+                "form": form,
                 "liked": liked
             },
         )
     
     
-# # Generic class-based  view for a like/unlike.
-class PostLike(View):
+
+
+class CommentUpdateView(LoginRequiredMixin, UpdateView):
+    model = Comment
+    fields = ['body']  # What needs to appear in the page for update
+    template_name = 'app/post_detail.html'  # <app>/<model>_<viewtype>.html
+
+    def form_valid(self, form):
+        form.instance.name = self.request.user.user
+        return reverse('post-detail', kwargs=dict(slug=self.kwargs['slug']))
+    
+
+class CommentDeleteView(LoginRequiredMixin, DeleteView):
+    model = Comment
+    template_name = '#'  # <app>/<model>_<viewtype>.html
+
+    def form_invalid(self, form):
+        return HttpResponseRedirect(self.get_success_url())
+
+    def get_success_url(self):
+        return reverse('post-detail', kwargs=dict(slug=self.kwargs['slug']))
+
+# Generic class-based view for a like/unlike.
+class PostLikeView(DetailView):
     
     def post(self, request, slug, *args, **kwargs):
         post = get_object_or_404(Post,  slug=slug)
@@ -221,28 +219,24 @@ class PostLike(View):
         else:
             post.likes.add(request.user)
 
-        return HttpResponseRedirect(reverse('post_detail', args=[slug]))
+        return HttpResponseRedirect(reverse('post-detail', args=[slug]))
 
 
-
+# Generic class-based view to display post detail.
 class PostDeleteView(View):
 
     def get(self, request, slug, *args, **kwargs):
         post = get_object_or_404(Post, slug=slug)
         context = {'post': post}
         if request.method == 'GET':
-            return render(request, 'post_confirm_delete.html',context)
-
+            return render(request, 'app/post_delete.html',context)
 
     def post(self, request, slug, *args, **kwargs):   
         post = get_object_or_404(Post, slug=slug)    
         if request.method == 'POST':
             post.delete()
             messages.success(request, 'The post has been deleted successfully.')
-        return HttpResponseRedirect(reverse('home'))
-
-
-        
+        return HttpResponseRedirect(reverse('index'))
 
 
 def contact(request):
@@ -255,9 +249,51 @@ def contact(request):
             return redirect('success')
     else:
         form = ContactForm()
-    return render(request, 'contact.html', {'form': form})
+    return render(request, 'app/contact.html', {'form': form})
 
 
 def success(request):
-    return render(request, 'success.html')
+    return render(request, 'app/success.html')
 
+# Generic class-based view to look for a tag and filter the posts by the given name.
+class ExploreView(ListView):
+
+  def get(self, request, *args, **kwargs):
+    explore_form = ExploreForm()
+    query = self.request.GET.get('query')
+    tag = Tag.objects.filter(name=query).first()
+
+    if tag:
+        # Filter posts by tag
+        posts = Post.objects.filter(tags__in=[tag])
+
+    else:
+        # Show all posts
+        posts = Post.objects.all()
+        context = {
+        'tag': tag,
+        'posts': posts,
+        'explore_form': explore_form,
+        }
+    return render(request, 'app/index.html', context)
+
+    def post(self, request, *args, **kwargs):
+        explore_form = ExploreForm(request.POST)
+        if explore_form.is_valid():
+            query = explore_form.cleaned_data['query']
+            tag = Tag.objects.filter(name=query).first()
+            posts = None
+            if tag:
+                # filter posts by tag
+                posts = Post.objects.filter(tags__in=[tag])
+            if posts:
+                context = {
+                'tag': tag,
+                'posts': posts
+                }
+            else:
+                context = {
+                'tag': tag
+                }
+            return HttpResponseRedirect(f'/templates/app/index?query={query}')
+    return HttpResponseRedirect('/templates/app/index/')

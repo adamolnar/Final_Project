@@ -50,6 +50,14 @@ class ContactForm(forms.Form):
     name = forms.CharField(max_length=100)
     message = forms.CharField(widget=forms.Textarea)
     email = forms.EmailField(validators=[EmailValidator()])
-    
 
+# create a search form to filter the explore page by other tags, 
+# allowing the user to search for posts with specific tags    
+class ExploreForm(forms.Form):
+  query = forms.CharField(
+  label='',
+  widget=forms.TextInput(attrs={
+    'placeholder': 'Explore tags'
+    })
+  )
     

@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+{% extends 'app/base.html' %}
 {% load static %}
 
 {% block head_title %}{{ user.username }} | Django Blog{% endblock head_title %}
@@ -20,7 +20,7 @@
         </div>
       </div>
     </div>
-    <p><a href="{% url 'edit_profile' %}">Edit your profile</a></p>
+    <p><a href="{% url 'profile-update' %}">Edit your profile</a></p>
   </div>
 </div>
 {% endblock %}

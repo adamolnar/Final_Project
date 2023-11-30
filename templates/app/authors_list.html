@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "app/base.html" %}
 
 {% block content %}
     <h1>All bloggers</h1>
@@ -8,7 +8,7 @@
 
       {% for author in author_list %}
       <li>
-        <a href="{% url 'author_detail' author.pk %}">{{ author}}</a>
+        <a href="{% url 'author-detail' author.pk %}">{{ author}}</a>
         <p>{{ author.bio }}</p>
         {% for post in post_list %}
         <p>{{post.title}}</p>

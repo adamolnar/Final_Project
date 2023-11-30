@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "app/base.html" %}
 
 {% block head_title %}Delete post{% endblock head_title %}
 
@@ -13,7 +13,7 @@
         <div>
           <button type="submit" class="btn btn-danger" value="Yes">Delete</button>
           <button type="submit" class="btn btn-success" value="'No"> 
-            <a style="text-decoration: none; color: white;" href="{% url 'post_detail' post.slug %}">Cancel</a></button>
+            <a style="text-decoration: none; color: white;" href="{% url 'post-detail' post.slug %}">Cancel</a></button>
         </div>
         </button>
       </form>

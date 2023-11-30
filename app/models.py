@@ -5,7 +5,9 @@ from PIL import Image
 from django.urls import reverse # Used to generate URLs by reversing the URL patterns
 from django.template.defaultfilters import slugify
 
+
 STATUS = ((0, "Draft"), (1, "Published"))
+
 
 # Model assigning Profile Page to each user.
 class Profile(models.Model):
@@ -30,7 +32,7 @@ class Author(models.Model):
 
     def get_absolute_url(self):
         # Returns the url to access a particular blog-author instance.
-        return reverse('author_detail', args=[str(self.id)])
+        return reverse('author-detail', args=[str(self.id)])
 
     def __str__(self):
         # String for representing the Model object.
@@ -56,6 +58,30 @@ class Tag(models.Model):
 
     def __str__(self):
         return self.name
+    
+    # Mthod that will find any tags in the text and add create a tag for them.
+    def create_tags(self):
+        for word in self.body.split():
+            if (word[0] == '#'):
+                tag = Tag.objects.get(name=word[1:])
+            if tag:
+                self.tags.add(tag.pk)
+            else:
+                tag = Tag(name=word[1:])
+                tag.save()
+                self.tags.add(tag.pk)
+            self.save()
+
+        for word in self.shared_body.split():
+            if (word[0] == '#'):
+                 tag = Tag.objects.get(name=word[1:])
+            if tag:
+                self.tags.add(tag.pk)
+            else:
+                tag = Tag(name=word[1:])
+                tag.save()
+                self.tags.add(tag.pk)
+            self.save()
 
 # Model representing a blog post.
 class Post(models.Model):
@@ -96,6 +122,8 @@ class Post(models.Model):
         # Returns the URL to access a detail record for this post.
         return reverse('post_detail_reverse', args=[str(self.id)])
     
+    def approved_comments(self):
+        return self.comments.filter(approved=True)
 
 
 # Model representing a comment against a blog post.

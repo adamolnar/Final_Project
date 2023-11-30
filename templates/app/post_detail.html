@@ -1,4 +1,4 @@
-{% extends 'base.html' %} 
+{% extends 'app/base.html' %} 
 
 {% block content %}
 
@@ -31,8 +31,8 @@
         <div class="col card mb-4  mt-3 left  top">
             {% if request.user.profile == post.author.profile %}
             <div class="mt-4 mx-3">
-                <a class="btn btn-primary" href="{% url 'post_edit' post.slug %}">Edit</a>
-                <a class="btn btn-danger" href="{% url 'post_delete' post.slug %}">Delete</a>
+                <a class="btn btn-primary" href="{% url 'post-update' post.slug %}">Edit</a>
+                <a class="btn btn-danger" href="{% url 'post-delete' post.slug %}">Delete</a>
               </div>
             {% endif %}
             <div class="card-body">
@@ -48,7 +48,7 @@
                         <!-- The number of likes goes before the closing strong tag -->
                         <strong class="text-secondary">
                             {% if user.is_authenticated %}
-                            <form class="d-inline" action="{% url 'post_like' post.slug %}" method="POST">
+                            <form class="d-inline" action="{% url 'post-like' post.slug %}" method="POST">
                                 {% csrf_token %}
                                 {% if liked %}
                                 <button style="padding: 0; border: none; background: none;" type="submit" name="blogpost_id" value="{{post.slug}}" class="btn-like"><i class="fas fa-heart" style="color: red;"></i></button>
@@ -99,11 +99,22 @@
                         <span class=" text-muted font-weight-normal">
                             <!-- The comment's created date goes here -->
                             {{ comment.created_on }}
-                        </span> wrote:
+                        </span>
+                        {% if comment.approved %}
+                        <a class="btn btn-default" href="#">
+                            <i class="fa-regular fa-thumbs-up"></i>
+                        </a>
+                        {% endif %}
                     </p>
                     <!-- The body of the comment goes before the | -->
-                    {{ comment.body | linebreaks }}
+                    {{ comment.body | linebreaks }}  
                 </div>
+                {% if comment.name == user.username %}
+                <div>
+                    <a class="btn btn-secondary btn-sm mt-1 mb-1" href="commment-update">Update</a>
+                    <a href="{% url 'comment-delete' post.slug comment.pk %}" style="color: #333;"><i class="fas fa-trash"></i></a>
+                </div>
+                {% endif %}
                 {% empty %}
                 <p>There are no comments yet.</p>
                 <!-- Our for loop ends here -->
@@ -114,18 +125,24 @@
             <div class="card-body">
                 <!-- For later -->
                     {% if user.is_authenticated %}
-                        {% if commented %}
-                        <div id="msg" class="alert alert-success" role="alert"> 
-                            Your comment is awaiting approval.
-                        </div> 
+                        {% if commented %} 
+                            {% if not comment.approved %}
+                            <div id="msg" class="alert alert-success" role="alert"> 
+                                Your comment is awaiting approval.         
+                            </div> 
+                            {% else %}
+                            <div id="msg" class="alert alert-success" role="alert"> 
+                                Your comment was successfully added.
+                            </div>     
+                            {% endif %}
                         {% endif %}
                     <p id="x" style="display: block;">Posting as: {{ user.username }}</p>
                     <form id="x"  method="post" style=" margin-top: 1.3em; display: block;">
-                        {{ comment_form | crispy }}
                         {% csrf_token %}
+                        {{ comment_form | crispy }}
                         <button type="submit" class=" btn btn-success btn-lg">Submit</button>
                     </form>
-                  
+                    <br>
                     {% else %}
                     <h3>Leave a comment:</h3>
                     <div class="alert alert-danger"  role="alert">
