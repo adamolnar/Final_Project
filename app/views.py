@@ -3,11 +3,11 @@ from django.contrib.auth import login
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.decorators import login_required
 from django.views import generic, View
-from django.http import HttpResponseRedirect, HttpResponse
+from django.http import HttpResponseRedirect, HttpResponseNotFound
 from django.template import loader
 from .models import Post, Author, Profile, Comment, Tag
 from django.contrib.auth.models import User #Blog author or commenter
-from .forms import CommentForm, PostForm, EditProfileForm, ContactForm, ExploreForm
+from .forms import CommentForm, PostForm, ContactForm, ExploreForm
 from django.shortcuts import render
 from django.utils import timezone
 from django.core.mail import send_mail
@@ -15,55 +15,42 @@ from cloudinary.models import CloudinaryField
 from PIL import Image
 from django.template.defaultfilters import slugify
 from django.contrib import messages
+from django.urls import reverse_lazy
 from django.views.generic import (
     ListView,
     DetailView,
     CreateView,
     UpdateView,
-    DeleteView
+    DeleteView,
+    FormView
 )
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 
-@login_required
-def edit_profile(request):
-    if request.method == "POST":
-        form = EditProfileForm(request.user.username, request.POST, request.FILES)
-        if form.is_valid():
-            about_me = form.cleaned_data["about_me"]
-            username = form.cleaned_data["username"]
-            image = form.cleaned_data["image"]
-           
-            user = User.objects.get(id=request.user.id)
-            profile = Profile.objects.get(user=user)
-            user.username = username
-            user.save()
-            profile.about_me = about_me
-            if image:
-                profile.image = image
-            profile.save()
-            messages.success(request, 'Your profile has been updated successfully.')
-            return redirect("profile", username=user.username)
-    else:
-        form = EditProfileForm(request.user.username)
-    return render(request, "app/profile_update.html", {'form': form})
+# Class based view to create user profile with signals.py automatically after login.
+class ProfileDetailView(LoginRequiredMixin, DetailView):
+    model = Profile
+    template_name = 'app/profile.html'
+   
+    
+# Class based view to update loged in user profile.
+class ProfileUpdateView(LoginRequiredMixin, UpdateView):
+    model = Profile
+    fields = ["about_me", 'image']
+
+# Class based view to delete loged in user profile.    
+class ProfileDeleteView(LoginRequiredMixin, DeleteView):
+    model = Profile
+    success_url = reverse_lazy("index")
 
 
-@login_required
-def profile(request, username):
-    user = get_object_or_404(User, username=username)
-    profile = get_object_or_404(Profile, user=user)
-    return render(request, 'app/profile.html', {'profile': profile, 'user': user})
-
-
-#  Generic class-based view for a list of authors.
-class AuthorListView(ListView):
+# Class-based view to generate list of all authors.
+class AuthorListView(LoginRequiredMixin, ListView):
     template_name = "app/authors_list.html"
     model = Author
-    queryset = Author.objects.all()
+    
 
-
-# Generic class-based detail view for a author 
+# Class-based view to siplay details about author. 
 class AuthorDetailView(DetailView):
     template_name ='app/author_detail.html'
     
@@ -75,7 +62,7 @@ class AuthorDetailView(DetailView):
     
     def get_context_data(self, **kwargs):
         # Call the base implementation first to get a context
-        context = super(AuthorDetail, self).get_context_data(**kwargs)
+        context = super(AuthorDetailView, self).get_context_data(**kwargs)
         # Get the blogger object from the "pk" URL parameter and add it to the context
         context['author-detail'] = get_object_or_404(Author, pk = self.kwargs['pk'])
         return context

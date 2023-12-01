@@ -20,7 +20,12 @@
         </div>
       </div>
     </div>
-    <p><a href="{% url 'profile-update' %}">Edit your profile</a></p>
+    {% if user.pk == user.pk %}
+    <div>
+        <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{% url 'profile-update' user.pk %}">Update</a>
+        <a class="btn btn-danger btn-sm mt-1 mb-1" href="{% url 'profile-delete' user.pk %}" >Delete</a>
+    </div>
+    {% endif %}
   </div>
 </div>
 {% endblock %}

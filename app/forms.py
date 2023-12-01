@@ -1,34 +1,28 @@
 from .models import Comment
 from django import forms
-from .models import Post
+from .models import Post, Profile
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 from cloudinary.models import CloudinaryField
 from PIL import Image
 from django.core.validators import EmailValidator
 
-class EditProfileForm(forms.Form):
-    username = forms.CharField()
-    about_me = forms.CharField(widget=forms.Textarea())
-    image = forms.ImageField(required=False)
 
-    # The username validation method
-    def __init__(self, original_username, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.original_username = original_username
+# class ProfileForm(forms.ModelForm):
+#     class Meta:
+#         model = Profile
+#         fields = ('about_me', 'image') #Note that we didn't mention user field here.
 
-    def clean_username(self):
-        """
-        This function throws an exception if the username has already been 
-        taken by another user
-        """
+#     def save(self, user=None):
+#         user_profile = super(ProfileForm, self).save(commit=False)
+#         if user:
+#             user_profile.user = user
+#         user_profile.save()
+#         return user_profile
 
-        username = self.cleaned_data['username']
-        if username != self.original_username:
-            if User.objects.filter(username=username).exists():
-                raise forms.ValidationError(
-                    'A user with that username already exists.')
-        return username
+# class ProfileForm(forms.Form):
+#     about_me = forms.CharField(widget=forms.Textarea())
+#     image = forms.ImageField(required=False)
 
 
 class CommentForm(forms.ModelForm):
