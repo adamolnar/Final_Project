@@ -3,11 +3,11 @@ from django.urls import path
 
 urlpatterns = [
     path("", views.PostListView.as_view(), name="index"),
-    path('authors/<int:pk>/', views.AuthorDetailView.as_view(), name='author-detail'),
     path('authors/', views.AuthorListView.as_view(), name='authors-list'),
-    path('post/create/', views.post_new, name='post-create'),
+    path('authors/<int:pk>/', views.AuthorDetailView.as_view(), name='author-detail'),
+    path('post/create/', views.PostCreateView.as_view(), name='post-create'),
     path('post/<slug:slug>/', views.PostDetailView.as_view(), name='post-detail'), 
-    path('post/<slug:slug>/update/', views.post_edit, name='post-update'),  
+    path('post/<slug:slug>/update/', views.PostUpdateView, name='post-update'),  
     path('post/<slug:slug>/delete/', views.PostDeleteView.as_view(), name='post-delete'),
     path('post/<slug:slug>/like/', views.PostLikeView.as_view(), name='post-like'), 
     path('post/<slug:slug>/comment/update/',views.CommentUpdateView.as_view(), name='comment-update'),

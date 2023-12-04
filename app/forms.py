@@ -8,22 +8,6 @@ from PIL import Image
 from django.core.validators import EmailValidator
 
 
-# class ProfileForm(forms.ModelForm):
-#     class Meta:
-#         model = Profile
-#         fields = ('about_me', 'image') #Note that we didn't mention user field here.
-
-#     def save(self, user=None):
-#         user_profile = super(ProfileForm, self).save(commit=False)
-#         if user:
-#             user_profile.user = user
-#         user_profile.save()
-#         return user_profile
-
-# class ProfileForm(forms.Form):
-#     about_me = forms.CharField(widget=forms.Textarea())
-#     image = forms.ImageField(required=False)
-
 
 class CommentForm(forms.ModelForm):
     class Meta:

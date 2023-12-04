@@ -4,7 +4,7 @@ from django_summernote.admin import SummernoteModelAdmin
 
 @admin.register(Profile)
 class ProfileAdmin(admin.ModelAdmin):
-   list_display = ('user', 'about_me', 'image')
+   list_display = ('user', 'about_me', 'image', 'is_active')
 
 @admin.register(Author)
 class AuthorAdmin(admin.ModelAdmin):

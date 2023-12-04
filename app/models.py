@@ -14,7 +14,8 @@ class Profile(models.Model):
     about_me = models.TextField()
     # image = CloudinaryField('image', default='placeholder')
     image = models.ImageField(upload_to='images/', default='placeholder')
-    user = models.OneToOneField(User, on_delete=models.CASCADE, )
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="profile")
+    is_active = models.BooleanField(default=True)
 
     def __str__(self):
         return self.user.username
@@ -35,7 +36,7 @@ class Author(models.Model):
 
     def get_absolute_url(self):
         # Returns the url to access a particular blog-author instance.
-        return reverse('author-detail', args=[str(self.id)])
+        return reverse('author-detail', kwargs={"pk": self.pk})
 
     def __str__(self):
         # String for representing the Model object.
@@ -63,28 +64,28 @@ class Tag(models.Model):
         return self.name
     
     # Mthod that will find any tags in the text and add create a tag for them.
-    def create_tags(self):
-        for word in self.body.split():
-            if (word[0] == '#'):
-                tag = Tag.objects.get(name=word[1:])
-            if tag:
-                self.tags.add(tag.pk)
-            else:
-                tag = Tag(name=word[1:])
-                tag.save()
-                self.tags.add(tag.pk)
-            self.save()
+    # def create_tags(self):
+    #     for word in self.body.split():
+    #         if (word[0] == '#'):
+    #             tag = Tag.objects.get(name=word[1:])
+    #         if tag:
+    #             self.tags.add(tag.pk)
+    #         else:
+    #             tag = Tag(name=word[1:])
+    #             tag.save()
+    #             self.tags.add(tag.pk)
+    #         self.save()
 
-        for word in self.shared_body.split():
-            if (word[0] == '#'):
-                 tag = Tag.objects.get(name=word[1:])
-            if tag:
-                self.tags.add(tag.pk)
-            else:
-                tag = Tag(name=word[1:])
-                tag.save()
-                self.tags.add(tag.pk)
-            self.save()
+    #     for word in self.shared_body.split():
+    #         if (word[0] == '#'):
+    #              tag = Tag.objects.get(name=word[1:])
+    #         if tag:
+    #             self.tags.add(tag.pk)
+    #         else:
+    #             tag = Tag(name=word[1:])
+    #             tag.save()
+    #             self.tags.add(tag.pk)
+    #         self.save()
 
 # Model representing a blog post.
 class Post(models.Model):
@@ -123,7 +124,7 @@ class Post(models.Model):
     
     def get_absolute_url(self):
         # Returns the URL to access a detail record for this post.
-        return reverse('post_detail_reverse', args=[str(self.id)])
+        return reverse('post_detail', args=[str(self.id)])
     
     def approved_comments(self):
         return self.comments.filter(approved=True)
