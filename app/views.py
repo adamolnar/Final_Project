@@ -203,10 +203,14 @@ class PostCreateView(LoginRequiredMixin, CreateView):
 
 # Generic class-based view to update post only by the author of the post.       
 class PostUpdateView(LoginRequiredMixin, UpdateView):
-    pass
-    # model =Post
-    # fields = ['content']
-    # template_name = 'app/post_form.html'
+    model =Post
+    fields = ['content']
+    template_name = 'app/post_form.html'
+
+    def get_success_url(self):
+        slug = self.kwargs['slug']
+        return reverse_lazy('post-detail', kwargs={'slug': slug})
+
     
     # def post_edit(request, slug):
     #     post = get_object_or_404(Post, slug=slug)
@@ -260,51 +264,51 @@ class PostDeleteView(LoginRequiredMixin, DeleteView):
 #     return render(request, 'app/post_update.html', {'form': form})
 
 
-
+# Generic class-based view for author update comment function.
 class CommentUpdateView(LoginRequiredMixin, UpdateView):
     model = Comment
-    fields = ['body']  # What needs to appear in the page for update
-    template_name = 'app/post_detail.html'  # <app>/<model>_<viewtype>.html
+    fields = ['body'] 
+    template_name = 'app/comment_update.html' 
 
     def form_valid(self, form):
-        form.instance.author = self.request.user
-        return reverse('post-detail', kwargs=dict(slug=self.kwargs['slug']))
+        form.save()
+        # messages.success(request, "Comment Updated Successfully!!")
+        return HttpResponseRedirect(reverse('index'))
     
 
+# Generic class-based view for author delete comment function.
 class CommentDeleteView(LoginRequiredMixin, DeleteView):
-    pass
-    # model = Comment
-    # template_name = 'app/comment_delete.html'  # <app>/<model>_<viewtype>.html
+    model = Comment
+    template_name = 'app/comment_delete.html' 
 
-    # def form_invalid(self, form):
-    #     return HttpResponseRedirect(self.get_success_url())
+    def get(self, request, pk, *args, **kwargs):
+        comment = get_object_or_404(Comment, pk=pk)
+        context = {'comment': comment}
+        if request.method == 'GET':
+            return render(request, 'app/comment_delete.html',context)
 
-    # def get_success_url(self):
-    #     return reverse('post-detail', kwargs=dict(slug=self.kwargs['slug']))
-
-
-
-
-
+    def post(self, request, pk, *args, **kwargs):   
+        comment = get_object_or_404(Comment, pk=pk)    
+        if request.method == 'POST':
+            comment.delete()
+            messages.success(request, 'The comment has been deleted successfully.')
+        return HttpResponseRedirect(reverse('index'))
 
 
 def contact(request):
-    pass
 
-#     if request.method == 'POST':
-#         form = ContactForm(request.POST)
-#         if form.is_valid():
-#             # Process the form data
-#             pass
-#             return redirect('success')
-#     else:
-#         form = ContactForm()
-#     return render(request, 'app/contact.html', {'form': form})
+    if request.method == 'POST':
+        form = ContactForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('success')
+    else:
+        form = ContactForm()
+    return render(request, 'app/contact.html', {'form': form})
 
 
 def success(request):
-    pass
-#     return render(request, 'app/success.html')
+    return render(request, 'app/success.html')
 
 # # Generic class-based view to look for a tag and filter the posts by the given name.
 class ExploreView(ListView):

@@ -147,3 +147,11 @@ class Comment(models.Model):
         return f"Comment {self.body} by {self.name}"
 
 
+# Model to store contact form informations.
+class Contact(models.Model):
+    email = models.EmailField()
+    message = models.TextField()
+    name = models.CharField(max_length=50)
+
+    def __str__(self):
+        return self.email
