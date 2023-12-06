@@ -7,7 +7,7 @@ urlpatterns = [
     path('authors/<int:pk>/', views.AuthorDetailView.as_view(), name='author-detail'),
     path('post/create/', views.PostCreateView.as_view(), name='post-create'),
     path('post/<slug:slug>/', views.PostDetailView.as_view(), name='post-detail'), 
-    path('post/<slug:slug>/update/', views.PostUpdateView, name='post-update'),  
+    path('post/<slug:slug>/update/', views.PostUpdateView.as_view(), name='post-update'),  
     path('post/<slug:slug>/delete/', views.PostDeleteView.as_view(), name='post-delete'),
     path('post/<slug:slug>/like/', views.PostLikeView.as_view(), name='post-like'), 
     path('post/<int:pk>/comment/update/',views.CommentUpdateView.as_view(), name='comment-update'),
@@ -17,5 +17,5 @@ urlpatterns = [
     path('profile/<int:pk>/delete/', views.ProfileDeleteView.as_view(), name='profile-delete'),
     path('contact/', views.contact, name='contact'),
     path('success/', views.success, name='success'),  
-    path('explore/', views.ExploreView.as_view(), name='explore'),
+    # path('explore/', views.ExploreView.as_view(), name='explore'),
 ]

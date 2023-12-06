@@ -63,29 +63,6 @@ class Tag(models.Model):
     def __str__(self):
         return self.name
     
-    # Mthod that will find any tags in the text and add create a tag for them.
-    # def create_tags(self):
-    #     for word in self.body.split():
-    #         if (word[0] == '#'):
-    #             tag = Tag.objects.get(name=word[1:])
-    #         if tag:
-    #             self.tags.add(tag.pk)
-    #         else:
-    #             tag = Tag(name=word[1:])
-    #             tag.save()
-    #             self.tags.add(tag.pk)
-    #         self.save()
-
-    #     for word in self.shared_body.split():
-    #         if (word[0] == '#'):
-    #              tag = Tag.objects.get(name=word[1:])
-    #         if tag:
-    #             self.tags.add(tag.pk)
-    #         else:
-    #             tag = Tag(name=word[1:])
-    #             tag.save()
-    #             self.tags.add(tag.pk)
-    #         self.save()
 
 # Model representing a blog post.
 class Post(models.Model):
@@ -107,7 +84,6 @@ class Post(models.Model):
     categories = models.ManyToManyField(Category)
     tags = models.ManyToManyField(Tag, related_name='tag')
     
-
     class Meta:
         ordering = ["-created_on"]
 
@@ -128,6 +104,8 @@ class Post(models.Model):
     
     def approved_comments(self):
         return self.comments.filter(approved=True)
+    
+    
 
 
 # Model representing a comment against a blog post.

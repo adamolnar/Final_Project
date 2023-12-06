@@ -7,7 +7,7 @@ from django.http import HttpResponseRedirect, HttpResponseNotFound
 from django.template import loader
 from .models import Post, Author, Profile, Comment, Tag
 from django.contrib.auth.models import User #Blog author or commenter
-from .forms import CommentForm, PostForm, ContactForm, ExploreForm
+from .forms import CommentForm, PostForm, ContactForm
 from django.shortcuts import render
 from django.utils import timezone
 from django.core.mail import send_mail
@@ -187,46 +187,40 @@ class PostLikeView(LoginRequiredMixin, View):
 
 # Generic class-based view to create new post.
 class PostCreateView(LoginRequiredMixin, CreateView):  
-    model =Post
-    form_class = PostForm
-    
+    model = Post
+    fields = ["title", "content", "featured_image", 'status', 'categories',"tags"]
+
+    def get_success_url(self):
+        messages.success(
+            self.request, 'Your post has been created successfully.')
+        return reverse("index")
 
     def form_valid(self, form):
-        post = form.save(commit=False)
+        obj = form.save(commit=False)
         new_author = self.request.user.profile
-        post.author = Author.objects.get(profile = new_author)
-        post.slug = slugify(form.cleaned_data['title'])
-        post.save()
-        messages.success(self.request, 'Your post has been created successfully.')
-        return redirect('post-detail', slug = post.slug)
+        obj.author = Author.objects.get(profile = new_author)
+        obj.slug = slugify(form.cleaned_data['title'])
+        obj.save()
+        return super().form_valid(form)
 
 
 # Generic class-based view to update post only by the author of the post.       
 class PostUpdateView(LoginRequiredMixin, UpdateView):
-    model =Post
-    fields = ['content']
+    model = Post
+    fields = ["title", "content", "featured_image"]
     template_name = 'app/post_form.html'
 
     def get_success_url(self):
         slug = self.kwargs['slug']
+        messages.success(
+            self.request, 'Your post has been updated successfully.')
         return reverse_lazy('post-detail', kwargs={'slug': slug})
 
-    
-    # def post_edit(request, slug):
-    #     post = get_object_or_404(Post, slug=slug)
-    #     if request.method == "POST":
-    #         form = PostForm(request.POST, instance=post)
-    #         if form.is_valid():
-    #             post = form.save(commit=False)
-    #             new_author = request.user.profile
-    #             post.author = Author.objects.get(profile = new_author)
-    #             post.created_on = timezone.now()
-    #             post.save()
-    #             messages.success(request, 'Your post has been updated successfully.')
-    #             return redirect('post-detail', slug = post.slug)
-    #     else:
-    #         form = PostForm(instance=post)
-    #     return render(request, 'app/post_update.html', {'form': form})
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        update = True
+        context['update'] = update
+        return context
 
 
 # Generic class-based view to delete post.
@@ -245,24 +239,6 @@ class PostDeleteView(LoginRequiredMixin, DeleteView):
             messages.success(request, 'The post has been deleted successfully.')
         return HttpResponseRedirect(reverse('index'))
     
-
-# @login_required
-# def post_edit(request, slug):
-#     post = get_object_or_404(Post, slug=slug)
-#     if request.method == "POST":
-#         form = PostForm(request.POST, instance=post)
-#         if form.is_valid():
-#             post = form.save(commit=False)
-#             new_author = request.user.profile
-#             post.author = Author.objects.get(profile = new_author)
-#             post.created_on = timezone.now()
-#             post.save()
-#             messages.success(request, 'Your post has been updated successfully.')
-#             return redirect('post-detail', slug = post.slug)
-#     else:
-#         form = PostForm(instance=post)
-#     return render(request, 'app/post_update.html', {'form': form})
-
 
 # Generic class-based view for author update comment function.
 class CommentUpdateView(LoginRequiredMixin, UpdateView):
@@ -294,7 +270,7 @@ class CommentDeleteView(LoginRequiredMixin, DeleteView):
             messages.success(request, 'The comment has been deleted successfully.')
         return HttpResponseRedirect(reverse('index'))
 
-
+# View function for a contact form.
 def contact(request):
 
     if request.method == 'POST':
@@ -306,50 +282,6 @@ def contact(request):
         form = ContactForm()
     return render(request, 'app/contact.html', {'form': form})
 
-
+# View function for a successfully sent contact form.
 def success(request):
     return render(request, 'app/success.html')
-
-# # Generic class-based view to look for a tag and filter the posts by the given name.
-class ExploreView(ListView):
-    pass
-
-#   def get(self, request, *args, **kwargs):
-#     explore_form = ExploreForm()
-#     query = self.request.GET.get('query')
-#     tag = Tag.objects.filter(name=query).first()
-
-#     if tag:
-#         # Filter posts by tag
-#         posts = Post.objects.filter(tags__in=[tag])
-
-#     else:
-#         # Show all posts
-#         posts = Post.objects.all()
-#         context = {
-#         'tag': tag,
-#         'posts': posts,
-#         'explore_form': explore_form,
-#         }
-#     return render(request, 'app/index.html', context)
-
-#     def post(self, request, *args, **kwargs):
-#         explore_form = ExploreForm(request.POST)
-#         if explore_form.is_valid():
-#             query = explore_form.cleaned_data['query']
-#             tag = Tag.objects.filter(name=query).first()
-#             posts = None
-#             if tag:
-#                 # filter posts by tag
-#                 posts = Post.objects.filter(tags__in=[tag])
-#             if posts:
-#                 context = {
-#                 'tag': tag,
-#                 'posts': posts
-#                 }
-#             else:
-#                 context = {
-#                 'tag': tag
-#                 }
-#             return HttpResponseRedirect(f'/templates/app/index?query={query}')
-#     return HttpResponseRedirect('/templates/app/index/')

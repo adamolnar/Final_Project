@@ -10,7 +10,7 @@ function formatTags() {
       let words = bodyText.split(' ');
       for (let j = 0; j < words.length; j++) {
         if (words[j][0] === '#') {
-            let replacedText = bodyText.replace(/\s\#(.*?)(\s|$)/g, ` <a href="/templates/app/index?query=${words[j].substring(1)}">${words[j]}</a>`);
+            let replacedText = bodyText.replace(/\s\#(.*?)(\s|$)/g, ` <a href="/app/explore?query=${words[j].substring(1)}">${words[j]}</a>`);
             elements[i].innerHTML = replacedText;
         }
       }
