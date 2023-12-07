@@ -17,6 +17,8 @@ from django.contrib.messages import constants as messages
 if os.path.isfile('env.py'):
     import env
 
+development = os.environ.get('DEVELOPMENT', False)
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 TEMPLATES_DIR = os.path.join(BASE_DIR, 'templates')
@@ -36,6 +38,7 @@ ALLOWED_HOSTS = ['final-project-ada-02b27917ae0c.herokuapp.com','localhost']
 # Application definition
 
 INSTALLED_APPS = [
+    'django.contrib.sites',
     'widget_tweaks',
     'jazzmin',
     'django.contrib.admin',
@@ -43,7 +46,6 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
-    'django.contrib.sites',
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
@@ -105,17 +107,26 @@ WSGI_APPLICATION = 'project.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
-
 # DATABASES = {
 #     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#     }
-# }
-
-DATABASES = {
-     'default': dj_database_url.parse(os.environ.get("DATABASE_URL"))
- }
+#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
+#         'NAME': 'mydb',
+#         'USER': 'myuser',
+#         'PASSWORD': 'mypass',
+#         'HOST': 'localhost',
+#         'PORT': '',
+#     }}
+if development:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        }
+    }
+else:
+    DATABASES = {
+        'default': dj_database_url.parse(os.environ.get("DATABASE_URL"))
+    }
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
