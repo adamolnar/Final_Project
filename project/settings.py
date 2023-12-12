@@ -14,7 +14,7 @@ from pathlib import Path
 import os
 import dj_database_url
 from django.contrib.messages import constants as messages
-if os.path.isfile('env.py'):
+if os.path.exists('env.py'):
     import env
 
 development = os.environ.get('DEVELOPMENT', False)
@@ -107,26 +107,22 @@ WSGI_APPLICATION = 'project.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+    }
+}
+
 # DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-#         'NAME': 'mydb',
-#         'USER': 'myuser',
-#         'PASSWORD': 'mypass',
-#         'HOST': 'localhost',
-#         'PORT': '',
-#     }}
-if development:
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-        }
-    }
-else:
-    DATABASES = {
-        'default': dj_database_url.parse(os.environ.get("DATABASE_URL"))
-    }
+#     'default': dj_database_url.parse(os.environ.get("DATABASE_URL"))
+# }
+
+# DATABASE_URL = os.getenv('DATABASE_URL')
+# DATABASES = {
+#     'default': dj_database_url.config(),
+# }
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
