@@ -2,9 +2,12 @@ from django.contrib import admin
 from .models import Post, Comment, Author, Category, Tag, Profile, Contact
 from django_summernote.admin import SummernoteModelAdmin
 
+
 @admin.register(Profile)
 class ProfileAdmin(admin.ModelAdmin):
-   list_display = ('user', 'about_me', 'image', 'is_active')
+   list_display = ('user', 'about_me', 'image', 'is_admin', 'is_staff', 'is_active')
+   
+   
 
 @admin.register(Author)
 class AuthorAdmin(admin.ModelAdmin):

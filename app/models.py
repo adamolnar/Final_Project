@@ -16,6 +16,8 @@ class Profile(models.Model):
     image = models.ImageField(upload_to='images/', default='placeholder')
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="profile")
     is_active = models.BooleanField(default=True)
+    is_admin = models.BooleanField(default=False)
+    is_staff = models.BooleanField(default=False)
 
     def __str__(self):
         return self.user.username
@@ -23,6 +25,15 @@ class Profile(models.Model):
     def get_absolute_url(self):
         return reverse("profile", kwargs={"pk": self.pk})
 
+    # has_perm and has_module_perms required to view users in Admin
+
+    # def has_perm(self, perm, obj=None):
+    #     "Does the user have a specific permission?"
+    #     return True
+
+    # def has_module_perms(self, app_label):
+    #     "Does the user have permissions to view the app `app_label`?"
+    #     return True
 
 # Model representing a blogger.
 class Author(models.Model):
@@ -132,4 +143,4 @@ class Contact(models.Model):
     name = models.CharField(max_length=50)
 
     def __str__(self):
-        return self.email
+        return self.contact.email

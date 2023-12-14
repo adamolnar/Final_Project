@@ -55,6 +55,7 @@ INSTALLED_APPS = [
     'django_summernote',
     'crispy_forms',
     'django_social_share',
+    'coverage',
     'app',
 ]
 
@@ -119,10 +120,6 @@ DATABASES = {
 #     'default': dj_database_url.parse(os.environ.get("DATABASE_URL"))
 # }
 
-# DATABASE_URL = os.getenv('DATABASE_URL')
-# DATABASES = {
-#     'default': dj_database_url.config(),
-# }
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators

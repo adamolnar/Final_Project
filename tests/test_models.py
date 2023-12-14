@@ -1,20 +1,26 @@
 from django.test import TestCase
 from django.contrib.auth.models import User 
-from app.models import Profile, Post, Author, Profile, Comment, Contact, Category
-
+from app.models import Profile, Author, Category, Tag, Post, Comment, Contact
 
 class ProfileModelTest(TestCase):
     def setUp(self):
         self.user = User.objects.create_user(username='avatar', id=1)
         self.profile = Profile.objects.get(user=self.user) 
+        
             
     def test_create_profile(self):
         """ Tests that profile can be created """
         self.assertTrue(self.profile)
 
+    def test_profile_is_active(self):
+        """ Tests that profile without image can be created """
+        self.profile.is_active = False 
+        self.assertFalse(bool(self.profile.is_active))
+
     def test_profile_str(self):
         """ Tests the __str__ of the Profile model"""
         self.assertEqual(str(self.profile), self.user.username )
+
 
 
 
@@ -44,8 +50,22 @@ class CategoryModelTest(TestCase):
 
 
     def test_category_str(self):
+        """ Tests the __str__ of the Category model"""
+        self.assertEqual(str(self.category.title), self.category.title)
+
+
+class TagModelTest(TestCase):
+    def setUp(self):
+        self.tag = Tag.objects.create(name='post comment', slug= 'post comment')
+         
+    def test_create_category(self):
+        """ Tests that category can be created """
+        self.assertTrue(self.tag)
+
+
+    def test_category_str(self):
         """ Tests the __str__ of the Post model"""
-        self.assertEqual(str(self.category.title), 'News')
+        self.assertEqual(str(self.tag.name), 'post comment')
 
 
 
@@ -79,8 +99,6 @@ class PostModelTest(TestCase):
             title='My blog post',
             author=self.author,
         )
-
-
         self.assertNotEqual(self.post.slug, second_title.slug)
 
     # @property
@@ -99,6 +117,7 @@ class CommentModelTest(TestCase):
             author = self.user,
             name = 'Comment',
             body= 'Its a comment body',
+            approved = True,
         )
             
     def test_create_comment(self):
@@ -109,12 +128,15 @@ class CommentModelTest(TestCase):
         """ Tests the __str__ of the Comment model"""
         self.assertEqual(str(self.comment), f"Comment {self.comment.body} by {self.comment.name}" )
 
+    def test_comment_approved_comments(self):
+        """ Tests the approved = True of the Comment model"""
+        self.assertEqual(bool(self.comment), True )
+
 
 class ContactModelTest(TestCase):
     def setUp(self):
-        self.email='user@gmail.com'
         self.contact = Contact.objects.create(
-            email =self.email,
+            email = 'user@gmail.com',
             message = 'i need to cntact u',
             name = 'randomperson',
         )
@@ -126,5 +148,5 @@ class ContactModelTest(TestCase):
 
     def test_contact_return_str(self):
         """ Tests the __str__ of the Comment model"""
-        self.assertEqual(str(self.email), 'user@gmail.com' )
-        print(self.email)
+        self.assertEqual(str(self.contact.email), 'user@gmail.com' )
+       
