@@ -111,7 +111,7 @@ class Post(models.Model):
     
     def get_absolute_url(self):
         # Returns the URL to access a detail record for this post.
-        return reverse('post_detail', args=[str(self.id)])
+        return reverse('post-detail', args=[str(self.id)])
     
     def approved_comments(self):
         return self.comments.filter(approved=True)
@@ -143,4 +143,4 @@ class Contact(models.Model):
     name = models.CharField(max_length=50)
 
     def __str__(self):
-        return self.contact.email
+        return self.email

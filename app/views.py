@@ -87,6 +87,8 @@ class ProfileDeleteView(LoginRequiredMixin, DeleteView):
 class AuthorListView(ListView):
     template_name = "app/authors_list.html"
     model = Author
+    context_object_name = 'author_list'
+    paginate_by = 10
     
 
 # Generic class-based view to display information about an author and list of created posts . 
