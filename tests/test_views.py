@@ -94,6 +94,42 @@ class AuthorListViewTest(TestCase):
         self.assertEqual(len(response.context['author_list']), 3)
 
 
+class AuthorDetailViewTestCase(TestCase):
+
+    def setUp(self):
+        # Set up any necessary data before running the tests
+        self.user = User.objects.create_user(username='testuser', password='testpassword')
+        self.profile = Profile.objects.get(user=self.user) 
+        self.author = Author.objects.create(profile=self.profile)
+
+
+    def test_author_detail_view_with_valid_author(self):
+        # Test the AuthorDetailView with a valid author
+        response = self.client.get(reverse('author-detail', args=[self.author.pk]))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'app/author_detail.html')  # Check if the correct template is used
+        self.assertEqual(response.context['author_info'], self.author)  # Check if the author_info context variable is set
+
+    def test_author_detail_view_with_invalid_author(self):
+        # Test the AuthorDetailView with an invalid author
+        invalid_author_pk = self.author.pk + 1  # Assuming the next primary key is invalid
+        response = self.client.get(reverse('author-detail', args=[invalid_author_pk]))
+        self.assertEqual(response.status_code, 404)  # Expecting a 404 Not Found response
+
+    def test_author_detail_view_with_no_posts(self):
+        # Test the AuthorDetailView for an author with no posts
+        response = self.client.get(reverse('author-detail', args=[self.author.pk]))
+        self.assertEqual(response.status_code, 200)
+        self.assertQuerysetEqual(response.context['post_list'], [])  # Check if the post_list context variable is an empty queryset
+
+    def test_author_detail_view_with_posts(self):
+        # Test the AuthorDetailView for an author with posts
+        post = Post.objects.create(title='Test Post', content='Test Content', author=self.author, status=1)
+        response = self.client.get(reverse('author-detail', args=[self.author.pk]))
+        self.assertEqual(response.status_code, 200)
+        self.assertQuerysetEqual(response.context['post_list'], [repr(post)])  # Check if the post_list context variable contains the expected post
+
+
 
 class TestIndexView(TestCase):
     def setUp(self):
@@ -179,60 +215,183 @@ class TestAddPostView(TestCase):
 class TestPostDetailView(TestCase):
 
     def setUp(self):
-        self.user = User.objects.create_user(username='avatar', id=1)
-        self.hacker = User.objects.create_user(username='hacker')
+        # Set up any necessary data before running the tests
+        self.user = User.objects.create_user(username='testuser', password='testpassword')
         self.profile = Profile.objects.get(user=self.user) 
         self.author = Author.objects.create(profile=self.profile)
-        self.post= Post.objects.create(title='Karramba', author = self.author, slug='karramba',status='1')
-        self.comment= Comment.objects.create(body='it is a comment', author = self.user, post=self.post)
-        self.client = Client()
-        self.url = reverse('post-detail', args=['karramba'])
+        self.post = Post.objects.create(title='Test Post', content='Test Content', author=self.author, status=1)
 
-    
-    def test_get_post_detail(self):
-        """ Tests that a GET request works and renders the correct template"""
-        
-        response = self.client.get(self.url)
-    
-        self.assertEquals(response.status_code, 200)
+    def test_post_detail_view_with_valid_slug(self):
+        # Test the PostDetailView with a valid slug
+        response = self.client.get(reverse('post-detail', args=[self.post.slug]))
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'Test Post')  # Check if post title is in the response content
+
+    def test_post_detail_view_with_invalid_slug(self):
+        # Test the PostDetailView with an invalid slug
+        response = self.client.get(reverse('post-detail', args=['invalid-slug']))
+        self.assertEqual(response.status_code, 404)  # Expecting a 404 Not Found response
+
+    def test_get_request(self):
+        # Test the GET request to the PostDetailView
+        url = reverse('post-detail', kwargs={'slug': self.post.slug})
+        response = self.client.get(url)
+
+        self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'app/post_detail.html')
+        self.assertIn('post', response.context)
+        self.assertIn('comments', response.context)
 
+    def test_post_request(self):
+        # Test the POST request to the PostDetailView
+        url = reverse('post-detail', kwargs={'slug': self.post.slug})
+        form_data = {'name': 'Test User', 'body': 'Test Comment Body'}
 
+        # Login before making the post request
+        self.client.login(username='testuser', password='testpassword')
+        response = self.client.post(url, data=form_data)
+        
+        # Check if the response status code is 200 OK
+        self.assertEqual(response.status_code, 200)
 
-class TestDeletePost(TestCase):
+        # Check if a new comment is created after posting
+        self.assertEqual(Comment.objects.count(), 1)
+        new_comment = Comment.objects.first()
+
+        # Set the author field based on the user in the test setup
+        new_comment.author = self.user
+        new_comment.save()
+
+        # Ensure that the new comment is associated with the correct post
+        self.assertEqual(new_comment.post, self.post)
+        self.assertEqual(new_comment.body, 'Test Comment Body')
+        
+class TestPostLikeView(TestCase):
 
     def setUp(self):
-        self.user = User.objects.create_user(username='avatar', id=1)
-        self.hacker = User.objects.create_user(username='hacker')
-        self.profile = Profile.objects.get(user=self.user) 
+        self.user = User.objects.create_user(username='testuser', password='testpassword')
+        self.profile = Profile.objects.get(user=self.user)
         self.author = Author.objects.create(profile=self.profile)
-        self.post= Post.objects.create(title='Karramba', author = self.author, slug='karramba',status='1')
-        self.post.save()
-        self.client = Client()
-        self.url = reverse('post_detail', args=[str(self.id)])
+        self.post = Post.objects.create(title='Test Post', content='Test Content', author=self.author, status=1)
 
-    # def test_login_requirement(self):
-    #     """ Tests a non-logged in user gets a 404 """
+    def test_post_like(self):
+        url = reverse('post-like', kwargs={'slug': self.post.slug})
+        self.client.login(username='testuser', password='testpassword')
 
-    #     response = self.client.get(self.url)
+        response = self.client.post(url)
+        self.assertEqual(response.status_code, 302)  # Expecting a redirect after liking a post
+        self.post.refresh_from_db()
+        self.assertTrue(self.user in self.post.likes.all())
 
-    #     self.assertEqual(response.status_code, 404)
+    def test_post_unlike(self):
+        url = reverse('post-like', kwargs={'slug': self.post.slug})
+        self.client.login(username='testuser', password='testpassword')
+        self.post.likes.add(self.user)  # Simulate the user has already liked the post
 
-    # def test_author_gets_200(self):
-    #     """ Tests that the logged in author gets a 200 response """
-
-    #     self.client.force_login(self.user)
-    #     response = self.client.get(self.url)
-
-    #     self.assertEqual(response.status_code, 200)
-
-    # def test_nonauthor_gets_404(self):
-    #     """ Tests that a logged in user who is not the author gets a 404 """
-
-    #     self.client.force_login(self.hacker)
-    #     response = self.client.get(self.url)
-
-    #     self.assertEqual(response.status_code, 404)
+        response = self.client.post(url)
+        self.assertEqual(response.status_code, 302)  # Expecting a redirect after unliking a post
+        self.post.refresh_from_db()
+        self.assertFalse(self.user in self.post.likes.all())
 
 
-        
+class TestPostCreateView(TestCase):
+
+    def setUp(self):
+        self.user = User.objects.create_user(username='testuser', password='testpassword')
+        self.profile = Profile.objects.get(user=self.user)
+        self.author = Author.objects.create(profile=self.profile)
+        self.category = Category.objects.create(title='Test Category', slug='test-category')
+        self.tag = Tag.objects.create(name='Test Tag', slug='test-tag')
+
+    def test_post_create_view(self):
+        self.client.login(username='testuser', password='testpassword')
+        url = reverse('post-create')
+
+        data = {
+            'title': 'Test Post',
+            'content': 'Test Content',
+            'status': 1,
+            'categories': [self.category.id],
+            'tags': [self.tag.id],
+        }
+
+        response = self.client.post(url, data)
+
+        # Check if the response status code is 302 (redirect)
+        self.assertEqual(response.status_code, 302)
+
+        # Check if the post was created successfully
+        new_post = Post.objects.filter(title='Test Post').first()
+        self.assertIsNotNone(new_post)
+
+        # Check if the created post has the correct author
+        self.assertEqual(new_post.author, self.author)
+
+        # Check if the created post has the correct category and tag
+        self.assertEqual(new_post.categories.first(), self.category)
+        self.assertEqual(new_post.tags.first(), self.tag)
+
+class TestPostUpdateView(TestCase):
+
+    def setUp(self):
+        # Create a user, profile, and author
+        self.user = User.objects.create_user(username='testuser', password='testpassword')
+        self.profile = Profile.objects.get(user=self.user)
+        self.author = Author.objects.create(profile=self.profile)
+
+        # Create a post
+        self.post = Post.objects.create(title='Test Post', content='Test Content', author=self.author, status=1)
+
+    def test_post_update_view(self):
+        url = reverse('post-update', kwargs={'slug': self.post.slug})
+        self.client.login(username='testuser', password='testpassword')
+
+        data = {
+            'title': 'Updated Post Title',
+            'content': 'Updated Content',
+            'featured_image': 'path/to/updated/image.jpg',
+        }
+
+        response = self.client.post(url, data)
+        self.assertEqual(response.status_code, 302)  # Expecting a redirect after updating a post
+
+        updated_post = Post.objects.get(id=self.post.id)
+        self.assertEqual(updated_post.title, 'Updated Post Title')
+        self.assertEqual(updated_post.content, 'Updated Content')
+       
+class TestPostDeleteView(TestCase):
+
+    def setUp(self):
+        # Create a user, profile, and author
+        self.user = User.objects.create_user(username='testuser', password='testpassword')
+        self.profile = Profile.objects.get(user=self.user)
+        self.author = Author.objects.create(profile=self.profile)
+
+        # Create a post
+        self.post = Post.objects.create(title='Test Post', content='Test Content', author=self.author, status=1)
+
+    def test_post_delete_view(self):
+        url = reverse('post-delete', kwargs={'slug': self.post.slug})
+        self.client.login(username='testuser', password='testpassword')
+
+        response = self.client.post(url)
+        self.assertEqual(response.status_code, 302)  # Expecting a redirect after deleting a post
+
+        # Ensure that the post has been deleted
+        with self.assertRaises(Post.DoesNotExist):
+            deleted_post = Post.objects.get(id=self.post.id)
+
+class TestCommentUpdateView(TestCase):
+    def setUp(self):
+        self.user = User.objects.create_user(username='testuser', password='testpassword')
+        self.profile = Profile.objects.get(user=self.user)
+        self.author = Author.objects.create(profile=self.profile)
+        self.post = Post.objects.create(title='Test Post', content='Test Content', author_id=self.user.id, status=1)
+        self.comment = Comment.objects.create(
+            post=self.post,
+            author=self.user,
+            name='Test User',
+            body='Test Comment Body'
+        )
+        self.url = reverse('comment-update', args=[self.comment.pk])
+

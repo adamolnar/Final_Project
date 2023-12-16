@@ -203,7 +203,15 @@ class PostCreateView(LoginRequiredMixin, CreateView):
         obj.author = Author.objects.get(profile = new_author)
         obj.slug = slugify(form.cleaned_data['title'])
         obj.save()
-        return super().form_valid(form)
+        
+        # Process categories and tags
+        categories = form.cleaned_data.get('categories', [])
+        tags = form.cleaned_data.get('tags', [])
+
+        obj.categories.set(categories)
+        obj.tags.set(tags)
+
+        return HttpResponseRedirect(self.get_success_url())
 
 
 # Generic class-based view to update post only by the author of the post.       
