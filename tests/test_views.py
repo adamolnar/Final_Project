@@ -2,85 +2,119 @@ from django.test import TestCase, Client
 from django.contrib.auth.models import User 
 from app.models import Profile, Author, Category, Tag, Post, Comment, Contact
 from app.forms import ContactForm
-from django.urls import reverse
+from django.urls import reverse, resolve
 from django.contrib.messages import get_messages
+from app.views import ProfileDetailView
+from django.core.files.uploadedfile import SimpleUploadedFile
 
 
 class ProfileViewTest(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        # Common data setup for the entire test class
+        cls.user = User.objects.create_user(username='hemingway', id=1, email='user@gmail.com', password='1234')
+        cls.profile = Profile.objects.get(user=cls.user)
+        cls.url = reverse('profile', args=[str(cls.user.pk)])
+        cls.client = Client()
+        
     def setUp(self):
-        self.user = User.objects.create_user(username='hemingway', id=1, email='user@gmail.com',password='1234'
-        )
-        self.profile = Profile.objects.get(user=self.user) 
+        # Additional setup for each individual test method
         self.client = Client()
-        self.url = reverse('profile', args=['1'])
-        self.response = self.client.get(self.url)
 
     def test_user_must_be_logged_in(self):        
-        """ Tests that a non-logged in user is redirected to login page""" 
+        # Tests that a non-logged in user is redirected to login page
         response = self.client.get(self.url)  
-        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.status_code, 302) 
 
     def test_returns_200(self):
-        """ Tests correctly logged in user response"""
+        # Tests correctly logged in user response
         self.client.login(username='hemingway', password="1234")
-        response = self.client.get(reverse("profile", kwargs=({"pk": self.user.pk})))
+        response = self.client.get(self.url)
         self.assertEqual(response.status_code, 200)
  
     def test_get_add(self):        
-        """ Tests that a GET request works and renders the correct template"""         
+        # Tests that a GET request works and renders the correct template       
         self.client.force_login(self.user)        
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'app/profile.html')
 
     def test_view_returns_profile_of_current_user(self):
-        """Check the profile of the current user"""
+        # Check the profile of the current user
         self.client.login(username='hemingway', password="1234")
-        response = self.client.get(reverse("profile",kwargs=({"pk": self.user.pk})))
+        response = self.client.get(self.url)
         self.assertEqual(response.context["user"], self.user)
         self.assertEqual(response.context["profile"], self.user.profile)
+
+    def test_correct_view_function(self):
+        # Check that the URL is associated with the correct view function
+        view_func = resolve(self.url).func
+        expected_view_func = ProfileDetailView.as_view()
+        
+        # Compare the view functions by their paths or names
+        self.assertEqual(view_func.__name__, expected_view_func.__name__)
 
 
 
 class ProfileUpdateViewTest(TestCase):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        # Common setup code that is the same for all test methods
+
     def setUp(self):
-        self.user = User.objects.create_user(username='hemingway',  email='user@gmail.com',password='1234', id='1')
-        self.profile = Profile.objects.get(user=self.user) 
+        self.user = User.objects.create_user(username='hemingway', email='user@gmail.com', password='1234', id=1)
+        self.profile = Profile.objects.get(user=self.user)
 
     def test_edit_profile_returns_200(self):
-        """Check the profile update belongs to current user"""
-        self.client.login(username='hemingway', password='1234')
-        response = self.client.get(reverse('profile-update', args=['1']))
+        # Check the profile update belongs to current user
+        self.login_user()
+        response = self.client.get(reverse('profile-update', args=[str(self.user.pk)]))
         self.assertEqual(response.status_code, 200)
 
+    def test_edit_profile_form_displayed(self):
+        # Check that the profile update form is displayed on the page
+        self.login_user()
+        response = self.client.get(reverse('profile-update', args=['1']))
+        self.assertContains(response, '<form', count=1)
+        self.assertContains(response, 'id="id_username"', count=1)
+
+    def login_user(self):
+        self.client.login(username='hemingway', password='1234')
 
 
 class AuthorListViewTest(TestCase):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.user = User.objects.create_user(username='hemingway',id=1, email='user@gmail.com', password='1234')
+        cls.profile = Profile.objects.get(user=cls.user) 
+        cls.author = Author.objects.create(profile=cls.profile)
+
     def setUp(self):
-        self.client = Client()
         self.user = User.objects.create_user(username='hemingway', id=1, email='user@gmail.com',password='1234')
         self.profile = Profile.objects.get(user=self.user) 
-        """Create 13 authors for pagination tests"""
+        # Create 13 authors for pagination tests
         number_of_authors = 13
 
         for profile in range(number_of_authors):
             Author.objects.create(
                 profile=self.profile,
-            ) 
+            )
 
     def test_view_uses_correct_template(self):
-        """Test that authors list is using correct template"""
-        response = self.client.get('/authors/')
+        # Test that authors list is using correct template
+        response = self.client.get(reverse('authors-list'))
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'app/authors_list.html')
 
     def test_view_url_accessible_by_name(self):
-        """Test if authors list can be accesses by authors name"""
+        # Test if authors list can be accesses by authors name
         response = self.client.get(reverse('authors-list'))
         self.assertEqual(response.status_code, 200)
 
     def test_pagination_is_ten(self):
-        """Get first page and confirm it has (exactly) remaining 10 items"""
+        # Get first page and confirm it has (exactly) remaining 10 items
         response = self.client.get(reverse('authors-list'))
         self.assertEqual(response.status_code, 200)
         self.assertTrue('is_paginated' in response.context)
@@ -88,82 +122,90 @@ class AuthorListViewTest(TestCase):
         self.assertEqual(len(response.context['author_list']), 10)
 
     def test_lists_all_authors(self):
-        """Get second page and confirm it has (exactly) remaining 3 items"""
+        # Get second page and confirm it has (exactly) remaining 4 items
         response = self.client.get(reverse('authors-list')+'?page=2')
         self.assertEqual(response.status_code, 200)
         self.assertTrue('is_paginated' in response.context)
         self.assertTrue(response.context['is_paginated'] == True)
-        self.assertEqual(len(response.context['author_list']), 3)
+        self.assertEqual(len(response.context['author_list']), 4)
 
 
 class AuthorDetailViewTestCase(TestCase):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
 
     def setUp(self):
-        # Set up any necessary data before running the tests
-        self.user = User.objects.create_user(username='testuser', password='testpassword')
+        self.user = User.objects.create_user(username='hemingway', id=1, email='user@gmail.com',password='1234')
         self.profile = Profile.objects.get(user=self.user) 
         self.author = Author.objects.create(profile=self.profile)
-
 
     def test_author_detail_view_with_valid_author(self):
         # Test the AuthorDetailView with a valid author
         response = self.client.get(reverse('author-detail', args=[self.author.pk]))
         self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, 'app/author_detail.html')  # Check if the correct template is used
-        self.assertEqual(response.context['author_info'], self.author)  # Check if the author_info context variable is set
+        self.assertTemplateUsed(response, 'app/author_detail.html')  
+        self.assertEqual(response.context['author_info'], self.author) 
 
     def test_author_detail_view_with_invalid_author(self):
         # Test the AuthorDetailView with an invalid author
-        invalid_author_pk = self.author.pk + 1  # Assuming the next primary key is invalid
+        invalid_author_pk = self.author.pk + 1 
         response = self.client.get(reverse('author-detail', args=[invalid_author_pk]))
-        self.assertEqual(response.status_code, 404)  # Expecting a 404 Not Found response
+        self.assertEqual(response.status_code, 404) 
 
     def test_author_detail_view_with_no_posts(self):
         # Test the AuthorDetailView for an author with no posts
         response = self.client.get(reverse('author-detail', args=[self.author.pk]))
         self.assertEqual(response.status_code, 200)
-        self.assertQuerysetEqual(response.context['post_list'], [])  # Check if the post_list context variable is an empty queryset
+        self.assertQuerysetEqual(response.context['post_list'], [])  
 
     def test_author_detail_view_with_posts(self):
         # Test the AuthorDetailView for an author with posts
         post = Post.objects.create(title='Test Post', content='Test Content', author=self.author, status=1)
         response = self.client.get(reverse('author-detail', args=[self.author.pk]))
         self.assertEqual(response.status_code, 200)
-        self.assertQuerysetEqual(response.context['post_list'], [repr(post)])  # Check if the post_list context variable contains the expected post
+        self.assertQuerysetEqual(response.context['post_list'], [repr(post)])  
 
 
+class TestPostListView(TestCase):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
 
-class TestIndexView(TestCase):
     def setUp(self):
-        self.user = User.objects.create_user(username='avatar', id=1)
+        self.client = Client()
+        self.user = User.objects.create_user(username='hemingway', id=1, email='user@gmail.com',password='1234')
         self.profile = Profile.objects.get(user=self.user) 
-        self.author = Author.objects.create(profile=self.profile)
-        self.post= Post.objects.create(title='Karramba', author = self.author, slug='karramba',status='1',)
-        self.post1= Post.objects.create(title='News', author = self.author, slug='news')
-        self.post2= Post.objects.create(title='Coding', author = self.author, slug='coding', status='1',)
-        self.response = Client().get(reverse('index'))
-
+        self.author = Author.objects.create(profile=self.profile) 
+        self.post= Post.objects.create(title='Karramba', author = self.author, slug='karramba',status='1')
+        self.post1= Post.objects.create(title='News', author = self.author, slug='news',status='1')
+   
     def test_get_index(self):
-        """ Tests that a get request to index works and renders the correct template"""
-
-        self.assertEquals(self.response.status_code, 200)
-        self.assertTemplateUsed(self.response, 'app/index.html')
+        # Tests that a get request to index works and renders the correct template
+        response = self.client.get(reverse('index'))
+        self.assertEquals(response.status_code, 200)
+        self.assertTemplateUsed(response, 'app/index.html')
 
     def test_context_contains_posts(self):
-        """ Tests that there the context contains 'post_list' """
-
-        self.assertIn('post_list', self.response.context)
+        #Tests that there the context contains 'post_list' 
+        response = self.client.get(reverse('index'))
+        self.assertIn('post_list',response.context_data)
 
     def test_excludes_draft_posts(self):
-        """ Tests that the list of posts on the homepage excludes drafts"""
-
-        number_of_published_posts = len(self.response.context['post_list'])
-
-        self.assertEqual(number_of_published_posts,2)
-
+        # Tests that the list of posts on the homepage excludes drafts
+        response = self.client.get(reverse('index'))
+        self.assertEqual(len(response.context_data['post_list']), 2)
 
 
 class TestAddPostView(TestCase):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+
+        # Create a sample image file for testing
+        cls.image_content = b"dummy content"
+        cls.sample_image = SimpleUploadedFile("test_image.jpg", 
+            cls.image_content, content_type="image/jpeg")
 
     def setUp(self):
         self.user = User.objects.create_user(username='avatar', id=1)
@@ -177,35 +219,27 @@ class TestAddPostView(TestCase):
         self.url = reverse('post-create')
 
     def test_login_requirement(self):
-        """ Tests that a non-logged-in user is redirected """
-
+        # Tests that a non-logged-in user is redirected
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, 302)
        
-
     def test_get_post_create(self):
-        """ Tests that a GET request works and renders the correct template"""
-
+        # Tests that a GET request works and renders the correct template
         self.client.force_login(self.user)
         response = self.client.get(self.url)
-
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'app/post_form.html')
 
     def test_user_must_be_logged_in(self):
-        """ Tests that a non-logged in user is redirected """
-
+        # Tests that a non-logged in user is redirected
         response = self.client.get(self.url)
-
         self.assertEqual(response.status_code, 302)
 
     def test_form_fields(self):
-        """ Tests that fields are displayed in the user form"""
-
+        # Tests that fields are displayed in the user form
         self.client.force_login(self.user)
         response = self.client.get(self.url)
         form = response.context_data['form']
-
         self.assertEqual(len(form.fields), 6)
         self.assertIn('title', form.fields)
         self.assertIn('content', form.fields)
@@ -214,7 +248,11 @@ class TestAddPostView(TestCase):
         self.assertIn('categories', form.fields)
         self.assertIn('tags', form.fields)
 
+
 class TestPostDetailView(TestCase):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
 
     def setUp(self):
         # Set up any necessary data before running the tests
@@ -267,8 +305,30 @@ class TestPostDetailView(TestCase):
         # Ensure that the new comment is associated with the correct post
         self.assertEqual(new_comment.post, self.post)
         self.assertEqual(new_comment.body, 'Test Comment Body')
-        
+
+    def test_user_likes_post(self):
+        # Check if the user now likes the post
+        self.client.login(username='testuser', password='testpassword')
+        self.url = reverse('post-detail', kwargs={'slug': self.post.slug})
+        response = self.client.get(self.url)
+        self.assertFalse(response.context['liked'])
+        self.client.post(reverse('post-like', kwargs={'slug': self.post.slug}))
+        response = self.client.get(self.url)
+        self.assertTrue(response.context['liked'])
+
+    def test_post_detail_view_not_liked(self):
+        # Check that the request user ID is in the response
+        self.client.login(username='testuser', password='testpassword')
+        self.url = reverse('post-detail', kwargs={'slug': self.post.slug})
+        response = self.client.get(self.url)
+        self.assertFalse(response.context['liked'])
+        self.assertEqual(response.context['request'].user.id, self.user.id)
+
+
 class TestPostLikeView(TestCase):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
 
     def setUp(self):
         self.user = User.objects.create_user(username='testuser', password='testpassword')
@@ -281,22 +341,24 @@ class TestPostLikeView(TestCase):
         self.client.login(username='testuser', password='testpassword')
 
         response = self.client.post(url)
-        self.assertEqual(response.status_code, 302)  # Expecting a redirect after liking a post
+        self.assertEqual(response.status_code, 302) 
         self.post.refresh_from_db()
         self.assertTrue(self.user in self.post.likes.all())
 
     def test_post_unlike(self):
         url = reverse('post-like', kwargs={'slug': self.post.slug})
         self.client.login(username='testuser', password='testpassword')
-        self.post.likes.add(self.user)  # Simulate the user has already liked the post
-
+        self.post.likes.add(self.user)
         response = self.client.post(url)
-        self.assertEqual(response.status_code, 302)  # Expecting a redirect after unliking a post
+        self.assertEqual(response.status_code, 302)
         self.post.refresh_from_db()
         self.assertFalse(self.user in self.post.likes.all())
 
 
 class TestPostCreateView(TestCase):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
 
     def setUp(self):
         self.user = User.objects.create_user(username='testuser', password='testpassword')
@@ -333,65 +395,130 @@ class TestPostCreateView(TestCase):
         self.assertEqual(new_post.categories.first(), self.category)
         self.assertEqual(new_post.tags.first(), self.tag)
 
-class TestPostUpdateView(TestCase):
 
+class TestPostUpdateView(TestCase):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+    
     def setUp(self):
-        # Create a user, profile, and author
         self.user = User.objects.create_user(username='testuser', password='testpassword')
         self.profile = Profile.objects.get(user=self.user)
         self.author = Author.objects.create(profile=self.profile)
-
-        # Create a post
         self.post = Post.objects.create(title='Test Post', content='Test Content', author=self.author, status=1)
+        self.url = reverse('post-update', kwargs={'slug': self.post.slug})
+        self.updated_title = 'Updated Title'
+        self.updated_content = 'Updated Content'
+        self.client.login(username='testuser', password='testpassword')
+
+    def test_get_update_post_view(self):
+        # Test accessing the update view for a post
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'app/post_form.html')
+        self.assertContains(response, 'Test Post')
+        self.assertContains(response, 'Test Content')
 
     def test_post_update_view(self):
+        # Test posting an update to the post
         url = reverse('post-update', kwargs={'slug': self.post.slug})
+        updated_title = 'Updated Test Post'
+        updated_content = 'Updated Test Content'
+        response = self.client.post(url, {'title': updated_title, 'content': updated_content})
+        self.assertEqual(response.status_code, 302)
+
+    def test_post_update_redirect(self):
+        # Test redirection after posting an update to the post
+        url = reverse('post-update', kwargs={'slug': self.post.slug})
+        updated_title = 'Updated Test Post'
+        updated_content = 'Updated Test Content'
+        response = self.client.post(url, {'title': updated_title, 'content': updated_content})
+        
+        expected_redirect_url = reverse('post-detail', kwargs={'slug': self.post.slug})
+        self.assertRedirects(response, expected_redirect_url)
+
+    def test_post_updated_in_database(self):
+        # Test that the post is updated in the database
+        url = reverse('post-update', kwargs={'slug': self.post.slug})
+        updated_title = 'Updated Test Post'
+        updated_content = 'Updated Test Content'
+        response = self.client.post(url, {'title': updated_title, 'content': updated_content})
+
+        updated_post = Post.objects.get(pk=self.post.pk)
+        self.assertEqual(updated_post.title, updated_title)
+        self.assertEqual(updated_post.content, updated_content)
+
+    def test_get_object_permission(self):
+        # Test that accessing the update view for another user's post raises PermissionError
+        self.other_user = User.objects.create_user(username='otheruser', password='otherpassword')
+        self.other_profile = Profile.objects.get(user=self.other_user)
+        self.other_author = Author.objects.create(profile=self.other_profile)
+        self.other_post = Post.objects.create(title='Other Post', content='Other Content', author=self.other_author, status=1)
+        
+        # Set up the URL for the update view
+        self.url = reverse('post-update', kwargs={'slug': self.other_post.slug})
+        
+        # Log in the test user
         self.client.login(username='testuser', password='testpassword')
 
-        data = {
-            'title': 'Updated Post Title',
-            'content': 'Updated Content',
-            'featured_image': 'path/to/updated/image.jpg',
-        }
+        # Test that accessing the update view for another user's post raises PermissionError
+        with self.assertRaises(PermissionError):
+            response = self.client.get(self.url)
 
-        response = self.client.post(url, data)
-        self.assertEqual(response.status_code, 302)  # Expecting a redirect after updating a post
 
-        updated_post = Post.objects.get(id=self.post.id)
-        self.assertEqual(updated_post.title, 'Updated Post Title')
-        self.assertEqual(updated_post.content, 'Updated Content')
-       
 class TestPostDeleteView(TestCase):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
 
     def setUp(self):
         # Create a user, profile, and author
         self.user = User.objects.create_user(username='testuser', password='testpassword')
         self.profile = Profile.objects.get(user=self.user)
         self.author = Author.objects.create(profile=self.profile)
-
-        # Create a post
         self.post = Post.objects.create(title='Test Post', content='Test Content', author=self.author, status=1)
-
-    def test_post_delete_view(self):
-        url = reverse('post-delete', kwargs={'slug': self.post.slug})
+        self.url = reverse('post-delete', kwargs={'slug': self.post.slug})
         self.client.login(username='testuser', password='testpassword')
 
-        response = self.client.post(url)
-        self.assertEqual(response.status_code, 302)  # Expecting a redirect after deleting a post
-
-        # Ensure that the post has been deleted
+    def test_get_post_delete_view(self):
+        # Test accessing the delete view for a post
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'app/post_delete.html')
+        self.assertContains(response, 'Test Post')
+    
+    def test_post_delete_view(self):
+        # Test posting a deletion request for the post
+        response = self.client.post(self.url)
+        self.assertEqual(response.status_code, 302)
         with self.assertRaises(Post.DoesNotExist):
             deleted_post = Post.objects.get(id=self.post.id)
 
+    def test_post_delete_redirect(self):
+        # Test redirection after posting a deletion request for the post
+        self.url = reverse('post-delete', kwargs={'slug': self.post.slug})
+        self.client.login(username='testuser', password='testpassword')
+        response = self.client.post(self.url)
+        expected_redirect_url = reverse('index')
+        self.assertRedirects(response, expected_redirect_url)
+
+    def test_post_deleted_from_database(self):
+        # Test that the post is deleted from the database
+        response = self.client.post(self.url)
+        with self.assertRaises(Post.DoesNotExist):
+            Post.objects.get(pk=self.post.pk)
+
+
 class CommentUpdateViewTest(TestCase):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
 
     def setUp(self):
         # Create a user, profile, and author
         self.user = User.objects.create_user(username='testuser', password='testpassword')
         self.profile = Profile.objects.get(user=self.user)
         self.author = Author.objects.create(profile=self.profile)
-
-        # Create a post
         self.post = Post.objects.create(title='Test Post', content='Test Content', author=self.author, status=1)
 
         # Create a test comment
@@ -400,41 +527,43 @@ class CommentUpdateViewTest(TestCase):
             author=self.user,
             name='Test Author',
             body='Test Comment Body',
-
         )
 
-
-    def test_comment_update_view(self):
-        # Log in the test user
+    def test_comment_update_view_template_used(self):
+        # Check that the correct template is used
         self.client.login(username='testuser', password='testpassword')
+        response = self.client.get(reverse('comment-update', kwargs={'pk': self.comment.pk}))
+        self.assertTemplateUsed(response, 'app/comment_update.html')
 
-        # Get the template for the CommentUpdateView
-        self.assertTemplateUsed('app/comment_update.html')
-        
-        # Simulate a GET request to the CommentUpdateView
-        url = reverse('comment-update', kwargs={'pk': self.comment.pk})
-        response = self.client.get(url)
-
+    def test_comment_update_view_get_request(self):
         # Check that the response status code is 200 (OK)
+        self.client.login(username='testuser', password='testpassword')
+        response = self.client.get(reverse('comment-update', kwargs={'pk': self.comment.pk}))
         self.assertEqual(response.status_code, 200)
 
-        # Simulate a POST request to update the comment
-        updated_body = 'Updated Comment Body'
-        response = self.client.post(url, {'body': updated_body})
-
-        # Check that the response status code is 302 (redirect)
-        self.assertEqual(response.status_code, 302)
-
+    def test_comment_update_view_post_request(self):
         # Check that the comment was updated in the database
+        self.client.login(username='testuser', password='testpassword')
+        updated_body = 'Updated Comment Body'
+        post_data = {'body': updated_body}
+        response = self.client.post(reverse('comment-update', kwargs={'pk': self.comment.pk}), post_data)
+        self.assertEqual(response.status_code, 302)
         updated_comment = Comment.objects.get(pk=self.comment.pk)
         self.assertEqual(updated_comment.body, updated_body)
 
+    def test_comment_update_view_redirect_after_update(self):
         # Check that the user is redirected to the expected URL after updating the comment
+        self.client.login(username='testuser', password='testpassword')
+        updated_body = 'Updated Comment Body'
+        post_data = {'body': updated_body}
+        response = self.client.post(reverse('comment-update', kwargs={'pk': self.comment.pk}), post_data)
         expected_redirect_url = reverse('index') 
-        self.assertRedirects(response, expected_redirect_url)
-
-
+        
+    
 class CommentDeleteViewTest(TestCase):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
 
     def setUp(self):
         # Create a user, profile, and author
@@ -451,41 +580,41 @@ class CommentDeleteViewTest(TestCase):
             author=self.user,
             name='Test Author',
             body='Test Comment Body',
-
         )
-
-        # Log in the test user
         self.client.login(username='testuser', password='testpassword')
 
-    def test_comment_delete_view(self):
-        # Get the URL for the CommentDeleteView
-        url = reverse('comment-delete', kwargs={'pk': self.comment.pk})
-
-        # Simulate a GET request to the CommentDeleteView
-        response = self.client.get(url)
-
+    def test_comment_delete_view_get_request(self):
         # Check that the response status code is 200 (OK)
+        url = reverse('comment-delete', kwargs={'pk': self.comment.pk})
+        response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
 
-        # Check that the comment is present in the response context
+    def test_comment_delete_view_context_contains_comment(self):
+        # Simulate a GET request to the CommentDeleteView
+        response = self.client.get(reverse('comment-delete', kwargs={'pk': self.comment.pk}))
         self.assertEqual(response.context['comment'], self.comment)
 
-        # Simulate a POST request to delete the comment
-        response = self.client.post(url)
-
+    def test_comment_delete_view_post_request(self):
         # Check that the response status code is 302 (redirect)
+        response = self.client.post(reverse('comment-delete', kwargs={'pk': self.comment.pk}))
         self.assertEqual(response.status_code, 302)
 
+    def test_comment_deleted_from_database(self):
         # Check that the comment is deleted from the database
+        self.client.post(reverse('comment-delete', kwargs={'pk': self.comment.pk}))
         with self.assertRaises(Comment.DoesNotExist):
             Comment.objects.get(pk=self.comment.pk)
 
+    def test_success_message_present(self):
         # Check that a success message is present in the messages framework
+        response = self.client.post(reverse('comment-delete', kwargs={'pk': self.comment.pk}))
         messages = list(get_messages(response.wsgi_request))
         self.assertEqual(len(messages), 1)
         self.assertEqual(str(messages[0]), 'The comment has been deleted successfully.')
 
+    def test_user_redirected_after_deleting_comment(self):
         # Check that the user is redirected to the expected URL after deleting the comment
+        response = self.client.post(reverse('comment-delete', kwargs={'pk': self.comment.pk}))
         expected_redirect_url = reverse('index')  # Replace 'index' with the actual URL name
         self.assertRedirects(response, expected_redirect_url)
 
@@ -511,13 +640,13 @@ class ContactViewTest(TestCase):
             'email': 'test@example.com',
             'message': 'Test message content',
         }
-        response = client.post(reverse('contact'), data)  # Replace 'contact' with the actual URL name
+        response = client.post(reverse('contact'), data)  
 
         # Check that the response status code is 302 (redirect)
         self.assertEqual(response.status_code, 302)
 
         # Check that the user is redirected to the 'success' page
-        self.assertRedirects(response, reverse('success'))  # Replace 'success' with the actual URL name
+        self.assertRedirects(response, reverse('success'))  
 
         # Check that the form data is saved in the database
         self.assertEqual(Contact.objects.count(), 1)

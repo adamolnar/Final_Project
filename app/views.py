@@ -24,7 +24,7 @@ from django.views.generic import (
     DeleteView,
     FormView
 )
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 
 
 # Generic class-based view to create user profile with signals.py automatically after login.
@@ -38,25 +38,43 @@ class ProfileUpdateView(LoginRequiredMixin, UpdateView):
     model = Profile
     fields = ["about_me", 'image']
 
-# Generic class-based view for user to deactivate their profile.    
-class ProfileDeleteView(LoginRequiredMixin, DeleteView):
+# Generic class-based view for user to deactivate their profile.   
+class ProfileDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = Profile
+    template_name = 'app/profile_confirm_delete.html'
+    success_url = reverse_lazy('index')  # Replace 'index' with the actual URL name
 
-    def delete_user(request, self):
-        if request.method == 'DELETE':
-            try:
-                user_pk = request.user.pk
-                User.objects.filter(pk=user_pk).update(is_active=False)
-                logout(request)
-                messages.success(request, 'Your profile has been deleted.')
-                return HttpResponseRedirect(get_success_url())
-            except Exception as e: 
-                HttpResponseNotFound("<h1>Something went wrong!</h1>")
-        else:
-            return HttpResponseNotFound("<h1>Profile not found</h1>")
+    def test_func(self):
+        # Check if the user is the owner of the profile or has superuser/admin privileges
+        return self.request.user.is_superuser or self.request.user == self.get_object().user
 
-    def get_success_url(self):
-        return reverse('index')
+    def delete(self, request, *args, **kwargs):
+        # Add a success message
+        messages.success(self.request, 'Your profile has been deleted successfully.')
+        
+        # Logout the user
+        logout(request)
+        return super().delete(request, *args, **kwargs)
+    
+
+# class ProfileDeleteView(LoginRequiredMixin, DeleteView):
+#     model = Profile
+
+#     def delete_user(request, self):
+#         if request.method == 'DELETE':
+#             try:
+#                 user_pk = request.user.pk
+#                 User.objects.filter(pk=user_pk).update(is_active=False)
+#                 logout(request)
+#                 messages.success(request, 'Your profile has been deleted.')
+#                 return HttpResponseRedirect(get_success_url())
+#             except Exception as e: 
+#                 HttpResponseNotFound("<h1>Something went wrong!</h1>")
+#         else:
+#             return HttpResponseNotFound("<h1>Profile not found</h1>")
+
+#     def get_success_url(self):
+#         return reverse('index')
 
 
 
@@ -205,26 +223,31 @@ class PostUpdateView(LoginRequiredMixin, UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        update = True
-        context['update'] = update
+        context['update'] = True
         return context
+
+    def get_object(self, queryset=None):
+        obj = super().get_object(queryset)
+        # Ensure that the user is the author of the post
+        if obj.author.id != self.request.user.pk:
+            raise PermissionError("You are not authorized to update this post.")
+        return obj
 
 
 # Generic class-based view to delete post.
 class PostDeleteView(LoginRequiredMixin, DeleteView):
+    model = Post
+    template_name = 'app/post_delete.html'
+    success_url = reverse_lazy('index')
 
     def get(self, request, slug, *args, **kwargs):
-        post = get_object_or_404(Post, slug=slug)
-        context = {'post': post}
-        if request.method == 'GET':
-            return render(request, 'app/post_delete.html',context)
+        self.object = self.get_object()
+        return super().get(request, *args, **kwargs)
 
-    def post(self, request, slug, *args, **kwargs):   
-        post = get_object_or_404(Post, slug=slug)    
-        if request.method == 'POST':
-            post.delete()
-            messages.success(request, 'The post has been deleted successfully.')
-        return HttpResponseRedirect(reverse('index'))
+    def post(self, request, slug, *args, **kwargs):
+        self.object = self.get_object()
+        messages.success(request, 'The post has been deleted successfully.')
+        return super().post(request, *args, **kwargs)
     
 
 # Generic class-based view for author update comment function.
