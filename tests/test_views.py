@@ -1,7 +1,9 @@
 from django.test import TestCase, Client
 from django.contrib.auth.models import User 
 from app.models import Profile, Author, Category, Tag, Post, Comment, Contact
+from app.forms import ContactForm
 from django.urls import reverse
+from django.contrib.messages import get_messages
 
 
 class ProfileViewTest(TestCase):
@@ -381,17 +383,164 @@ class TestPostDeleteView(TestCase):
         with self.assertRaises(Post.DoesNotExist):
             deleted_post = Post.objects.get(id=self.post.id)
 
-class TestCommentUpdateView(TestCase):
+class CommentUpdateViewTest(TestCase):
+
     def setUp(self):
+        # Create a user, profile, and author
         self.user = User.objects.create_user(username='testuser', password='testpassword')
         self.profile = Profile.objects.get(user=self.user)
         self.author = Author.objects.create(profile=self.profile)
-        self.post = Post.objects.create(title='Test Post', content='Test Content', author_id=self.user.id, status=1)
+
+        # Create a post
+        self.post = Post.objects.create(title='Test Post', content='Test Content', author=self.author, status=1)
+
+        # Create a test comment
         self.comment = Comment.objects.create(
             post=self.post,
             author=self.user,
-            name='Test User',
-            body='Test Comment Body'
+            name='Test Author',
+            body='Test Comment Body',
+
         )
-        self.url = reverse('comment-update', args=[self.comment.pk])
+
+
+    def test_comment_update_view(self):
+        # Log in the test user
+        self.client.login(username='testuser', password='testpassword')
+
+        # Get the template for the CommentUpdateView
+        self.assertTemplateUsed('app/comment_update.html')
+        
+        # Simulate a GET request to the CommentUpdateView
+        url = reverse('comment-update', kwargs={'pk': self.comment.pk})
+        response = self.client.get(url)
+
+        # Check that the response status code is 200 (OK)
+        self.assertEqual(response.status_code, 200)
+
+        # Simulate a POST request to update the comment
+        updated_body = 'Updated Comment Body'
+        response = self.client.post(url, {'body': updated_body})
+
+        # Check that the response status code is 302 (redirect)
+        self.assertEqual(response.status_code, 302)
+
+        # Check that the comment was updated in the database
+        updated_comment = Comment.objects.get(pk=self.comment.pk)
+        self.assertEqual(updated_comment.body, updated_body)
+
+        # Check that the user is redirected to the expected URL after updating the comment
+        expected_redirect_url = reverse('index') 
+        self.assertRedirects(response, expected_redirect_url)
+
+
+class CommentDeleteViewTest(TestCase):
+
+    def setUp(self):
+        # Create a user, profile, and author
+        self.user = User.objects.create_user(username='testuser', password='testpassword')
+        self.profile = Profile.objects.get(user=self.user)
+        self.author = Author.objects.create(profile=self.profile)
+
+        # Create a post
+        self.post = Post.objects.create(title='Test Post', content='Test Content', author=self.author, status=1)
+
+        # Create a test comment
+        self.comment = Comment.objects.create(
+            post=self.post,
+            author=self.user,
+            name='Test Author',
+            body='Test Comment Body',
+
+        )
+
+        # Log in the test user
+        self.client.login(username='testuser', password='testpassword')
+
+    def test_comment_delete_view(self):
+        # Get the URL for the CommentDeleteView
+        url = reverse('comment-delete', kwargs={'pk': self.comment.pk})
+
+        # Simulate a GET request to the CommentDeleteView
+        response = self.client.get(url)
+
+        # Check that the response status code is 200 (OK)
+        self.assertEqual(response.status_code, 200)
+
+        # Check that the comment is present in the response context
+        self.assertEqual(response.context['comment'], self.comment)
+
+        # Simulate a POST request to delete the comment
+        response = self.client.post(url)
+
+        # Check that the response status code is 302 (redirect)
+        self.assertEqual(response.status_code, 302)
+
+        # Check that the comment is deleted from the database
+        with self.assertRaises(Comment.DoesNotExist):
+            Comment.objects.get(pk=self.comment.pk)
+
+        # Check that a success message is present in the messages framework
+        messages = list(get_messages(response.wsgi_request))
+        self.assertEqual(len(messages), 1)
+        self.assertEqual(str(messages[0]), 'The comment has been deleted successfully.')
+
+        # Check that the user is redirected to the expected URL after deleting the comment
+        expected_redirect_url = reverse('index')  # Replace 'index' with the actual URL name
+        self.assertRedirects(response, expected_redirect_url)
+
+
+class ContactViewTest(TestCase):
+    def test_contact_view_get(self):
+        client = Client()
+        response = client.get(reverse('contact'))  # Replace 'contact' with the actual URL name
+
+        # Check that the response status code is 200 (OK)
+        self.assertEqual(response.status_code, 200)
+
+        # Check that the correct template is used
+        self.assertTemplateUsed(response, 'app/contact.html')
+
+        # Check that the form is present in the context
+        self.assertIsInstance(response.context['form'], ContactForm)
+
+    def test_contact_view_post_valid(self):
+        client = Client()
+        data = {
+            'name': 'Test User',
+            'email': 'test@example.com',
+            'message': 'Test message content',
+        }
+        response = client.post(reverse('contact'), data)  # Replace 'contact' with the actual URL name
+
+        # Check that the response status code is 302 (redirect)
+        self.assertEqual(response.status_code, 302)
+
+        # Check that the user is redirected to the 'success' page
+        self.assertRedirects(response, reverse('success'))  # Replace 'success' with the actual URL name
+
+        # Check that the form data is saved in the database
+        self.assertEqual(Contact.objects.count(), 1)
+        saved_contact = Contact.objects.first()
+        self.assertEqual(saved_contact.name, 'Test User')
+        self.assertEqual(saved_contact.email, 'test@example.com')
+        self.assertEqual(saved_contact.message, 'Test message content')
+
+    def test_contact_view_post_invalid(self):
+        client = Client()
+        # Omitting required data to intentionally trigger form validation errors
+        data = {}
+        response = client.post(reverse('contact'), data)
+
+        # Check that the response status code is 200 (OK)
+        self.assertEqual(response.status_code, 200)
+
+        # Check that the correct template is used
+        self.assertTemplateUsed(response, 'app/contact.html')
+
+        # Check that the form is present in the context
+        self.assertIsInstance(response.context['form'], ContactForm)
+
+        # Check that the form has errors
+        self.assertTrue(response.context['form'].errors)
 

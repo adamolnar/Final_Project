@@ -41,29 +41,6 @@ class ProfileUpdateView(LoginRequiredMixin, UpdateView):
 # Generic class-based view for user to deactivate their profile.    
 class ProfileDeleteView(LoginRequiredMixin, DeleteView):
     model = Profile
-    # template_name = 'app/profile_confirm_delete.html'
-
-    # def get_queryset(self):
-    #     owner = self.request.user
-    #     return self.model.objects.filter(user=owner)
-
-    # def get(self, request, pk):
-    #     profile =  Profile.objects.get(user = request.user)
-    #     return render(request, self.template_name, {'profile': profile})
-
-    # def post(self, request, pk):
-    #     owner = self.request.user
-    #     profile = request.user.profile
-    #     print(owner, profile)
-    #     if owner == profile:
-    #         profile.is_active = False
-    #         owner.is_active = False
-    #         profile.save()
-    #         owner.save()
-    #         logout(request)
-    #     else:
-    #         return HttpResponseNotFound("<h1>Profile not found</h1>")
-    #     return redirect('index')
 
     def delete_user(request, self):
         if request.method == 'DELETE':
@@ -72,7 +49,7 @@ class ProfileDeleteView(LoginRequiredMixin, DeleteView):
                 User.objects.filter(pk=user_pk).update(is_active=False)
                 logout(request)
                 messages.success(request, 'Your profile has been deleted.')
-                return HttpResponseRedirect(self.get_success_url())
+                return HttpResponseRedirect(get_success_url())
             except Exception as e: 
                 HttpResponseNotFound("<h1>Something went wrong!</h1>")
         else:
@@ -258,7 +235,7 @@ class CommentUpdateView(LoginRequiredMixin, UpdateView):
 
     def form_valid(self, form):
         form.save()
-        # messages.success(request, "Comment Updated Successfully!!")
+        messages.success(self.request, "Comment Updated Successfully!!")
         return HttpResponseRedirect(reverse('index'))
     
 
