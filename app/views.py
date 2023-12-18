@@ -1,44 +1,36 @@
 from django.shortcuts import render, reverse, redirect, get_object_or_404
-from django.contrib.auth import login
+from django.contrib import messages
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.decorators import login_required
-from django.views import generic, View
-from django.http import HttpResponseRedirect, HttpResponseNotFound
-from django.template import loader
-from .models import Post, Author, Profile, Comment, Tag
-from django.contrib.auth.models import User #Blog author or commenter
-from .forms import CommentForm, PostForm, ContactForm
-from django.shortcuts import render
-from django.utils import timezone
-from django.core.mail import send_mail
-from cloudinary.models import CloudinaryField
-from PIL import Image
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.template.defaultfilters import slugify
-from django.contrib import messages
 from django.urls import reverse_lazy
+from django.http import HttpResponseRedirect
+from .models import Post, Author, Profile, Comment
+from .forms import CommentForm, ContactForm
 from django.views.generic import (
+    View,
     ListView,
     DetailView,
     CreateView,
     UpdateView,
     DeleteView,
-    FormView
 )
-from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 
 
-# Generic class-based view to create user profile with signals.py automatically after login.
+# Generic class-based view to display user profile details.
 class ProfileDetailView(LoginRequiredMixin, DetailView):
     model = Profile
     template_name = 'app/profile.html'
    
     
-# Generic class-based view to update loged in user profile.
+# Generic class-based view to update logged-in user profile.
 class ProfileUpdateView(LoginRequiredMixin, UpdateView):
     model = Profile
     fields = ["about_me", 'image']
 
-# Generic class-based view for user to deactivate their profile.   
+
+# Generic class-based view to delete user profile. 
 class ProfileDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = Profile
     template_name = 'app/profile_confirm_delete.html'
@@ -49,36 +41,16 @@ class ProfileDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
         return self.request.user.is_superuser or self.request.user == self.get_object().user
 
     def delete(self, request, *args, **kwargs):
+        # Delete user when related profile is deleted
         # Add a success message
-        messages.success(self.request, 'Your profile has been deleted successfully.')
+        messages.success(request, 'Your profile has been deleted successfully.')
         
         # Logout the user
         logout(request)
         return super().delete(request, *args, **kwargs)
-    
+        
 
-# class ProfileDeleteView(LoginRequiredMixin, DeleteView):
-#     model = Profile
-
-#     def delete_user(request, self):
-#         if request.method == 'DELETE':
-#             try:
-#                 user_pk = request.user.pk
-#                 User.objects.filter(pk=user_pk).update(is_active=False)
-#                 logout(request)
-#                 messages.success(request, 'Your profile has been deleted.')
-#                 return HttpResponseRedirect(get_success_url())
-#             except Exception as e: 
-#                 HttpResponseNotFound("<h1>Something went wrong!</h1>")
-#         else:
-#             return HttpResponseNotFound("<h1>Profile not found</h1>")
-
-#     def get_success_url(self):
-#         return reverse('index')
-
-
-
-# Generic class-based view to generate list of all authors.
+# Generic class-based view to generate a list of all authors.
 class AuthorListView(ListView):
     template_name = "app/authors_list.html"
     model = Author
@@ -103,8 +75,7 @@ class AuthorDetailView(ListView):
     
   
 # Generic class-based view for a list of all posts.
-class PostListView(ListView):
-    
+class PostListView(ListView): 
     model = Post
     queryset = Post.objects.filter(status=1).order_by("-created_on")
     template_name = "app/index.html"
@@ -113,8 +84,7 @@ class PostListView(ListView):
 
 
 # Generic class-based detail view for a post.
-class PostDetailView(DetailView):
-    
+class PostDetailView(DetailView):   
     def get(self, request, slug, *args, **kwargs):
         queryset = Post.objects.filter(status=1)
         post = get_object_or_404(Post, slug=slug)
@@ -169,10 +139,10 @@ class PostDetailView(DetailView):
                 "liked": liked
             },
         )
-    
+
+
 # Generic class-based view for a like/unlike.
-class PostLikeView(LoginRequiredMixin, View):
-    
+class PostLikeView(LoginRequiredMixin, View): 
     def post(self, request, slug, *args, **kwargs):
         post = get_object_or_404(Post,  slug=slug)
         if post.likes.filter(id=request.user.id).exists():
@@ -181,6 +151,7 @@ class PostLikeView(LoginRequiredMixin, View):
             post.likes.add(request.user)
 
         return HttpResponseRedirect(reverse('post-detail', args=[slug]))
+
 
 # Generic class-based view to create new post.
 class PostCreateView(LoginRequiredMixin, CreateView):  
@@ -279,6 +250,7 @@ class CommentDeleteView(LoginRequiredMixin, DeleteView):
             comment.delete()
             messages.success(request, 'The comment has been deleted successfully.')
         return HttpResponseRedirect(reverse('index'))
+    
 
 # View function for a contact form.
 def contact(request):
@@ -292,6 +264,34 @@ def contact(request):
         form = ContactForm()
     return render(request, 'app/contact.html', {'form': form})
 
+
 # View function for a successfully sent contact form.
 def success(request):
     return render(request, 'app/success.html')
+
+
+# Function to log out the user and redirect to the registration page.
+def logout_and_redirect(request):
+    logout(request)
+    return redirect('register') 
+
+
+# Login view function.
+@login_required
+def login_view(request):
+    if request.user.is_authenticated:
+        return redirect('index') 
+    else:
+        if request.method == 'POST':
+            username = request.POST.get('username')
+            password = request.POST.get('password')
+
+            user = authenticate(request, username=username, password=password)
+
+            if user is not None:
+                login(request, user)
+                return redirect('index')
+            else:
+                pass
+
+        return render(request, 'login.html')

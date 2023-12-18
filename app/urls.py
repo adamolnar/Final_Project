@@ -1,4 +1,5 @@
 from . import views
+from .views import logout_and_redirect
 from django.urls import path
 
 urlpatterns = [
@@ -16,6 +17,7 @@ urlpatterns = [
     path('profile/<int:pk>/update/', views.ProfileUpdateView.as_view(), name='profile-update'),
     path('profile/<int:pk>/delete/', views.ProfileDeleteView.as_view(), name='profile-delete'),
     path('contact/', views.contact, name='contact'),
-    path('success/', views.success, name='success'),  
+    path('success/', views.success, name='success'), 
+    path('logout/', logout_and_redirect, name='logout_and_redirect'), 
     # path('explore/', views.ExploreView.as_view(), name='explore'),
 ]

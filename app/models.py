@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth import get_user_model
 from django.contrib.auth.models import User 
 from cloudinary.models import CloudinaryField
 from PIL import Image
@@ -12,28 +13,27 @@ STATUS = ((0, "Draft"), (1, "Published"))
 # Model assigning Profile Page to each user.
 class Profile(models.Model):
     about_me = models.TextField()
-    # image = CloudinaryField('image', default='placeholder')
     image = models.ImageField(upload_to='images/', default='placeholder')
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="profile")
-    is_active = models.BooleanField(default=True)
-    is_admin = models.BooleanField(default=False)
-    is_staff = models.BooleanField(default=False)
 
     def __str__(self):
         return self.user.username
     
     def get_absolute_url(self):
         return reverse("profile", kwargs={"pk": self.pk})
+    
+    @property
+    def is_active(self):
+        return self.user.is_active
 
-    # has_perm and has_module_perms required to view users in Admin
+    @property
+    def is_staff(self):
+        return self.user.groups.filter(name='Staff').exists()
 
-    # def has_perm(self, perm, obj=None):
-    #     "Does the user have a specific permission?"
-    #     return True
+    @property
+    def is_admin(self):
+        return self.user.groups.filter(name='Admin').exists()
 
-    # def has_module_perms(self, app_label):
-    #     "Does the user have permissions to view the app `app_label`?"
-    #     return True
 
 # Model representing a blogger.
 class Author(models.Model):
@@ -79,8 +79,6 @@ class Tag(models.Model):
 class Post(models.Model):
     title = models.CharField(max_length=200, unique=True )
     slug = models.SlugField(max_length=200, unique=True)
-    # author = models.ForeignKey(Author, on_delete=models.SET_NULL, null=True)
-    # Foreign Key used because Blog can only have one author/User, but bloggsers can have multiple blog posts.
     author = models.ForeignKey(
         Author, on_delete=models.CASCADE, related_name="blog_posts"
     )
