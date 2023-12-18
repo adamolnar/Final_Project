@@ -1,4 +1,5 @@
 from django.shortcuts import render, reverse, redirect, get_object_or_404
+from django.http import Http404
 from django.contrib import messages
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.decorators import login_required
@@ -295,3 +296,11 @@ def login_view(request):
                 pass
 
         return render(request, 'login.html')
+
+
+# Function that will be called when a 404 error occurs
+def custom_404(request, exception):
+    """
+    Custom 404 error view.
+    """
+    return render(request, 'app/404.html', {'exception': exception}, status=404)

@@ -2,6 +2,8 @@ from . import views
 from .views import logout_and_redirect
 from django.urls import path
 
+
+
 urlpatterns = [
     path("", views.PostListView.as_view(), name="index"),
     path('authors/', views.AuthorListView.as_view(), name='authors-list'),
