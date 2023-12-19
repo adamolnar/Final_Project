@@ -33,6 +33,15 @@ class Profile(models.Model):
     @property
     def is_admin(self):
         return self.user.groups.filter(name='Admin').exists()
+    
+    def post_count(self):
+        return Post.objects.filter(author=self.user.profile.user_id).count()
+
+    def comment_count(self):
+        return Comment.objects.filter(author=self.user).count()
+    
+    def shared_count(self):
+        return self.users_profile.aggregate(shared_count=models.Count('blog_posts__likes'))['shared_count'] or 0
 
 
 # Model representing a blogger.
@@ -40,6 +49,8 @@ class Author(models.Model):
     profile = models.ForeignKey(
         Profile, on_delete=models.CASCADE, related_name="users_profile"
     )
+    first_name = models.CharField(max_length=100, default="")
+    last_name = models.CharField(max_length=100, default="")
     # avatar =  CloudinaryField()
    
     class Meta:
@@ -52,6 +63,7 @@ class Author(models.Model):
     def __str__(self):
         # String for representing the Model object.
         return self.profile.user.username
+
 
 # Model representing a category.
 class Category(models.Model):
