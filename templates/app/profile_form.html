@@ -12,12 +12,12 @@
         
         <div class="mb-3">
           {{ form.username.label_tag }}
-          <input type="text" class="form-control {% if form.username.errors %}is-invalid{% endif %}" id="id_username"
-            name="username" value='{{ form.username.value|default:user.username }}'>
+          <input  id="id_username" type="text" id="readonlyInput" readonly class="form-control"
+             name="username" value='{{ form.username.value|default:user.username }}'>
           {% if form.username.errors %}
-          <div class="invalid-feedback">{{ form.username.errors }}</div>
+             <div class="invalid-feedback">{{ form.username.errors }}</div>
           {% endif %}
-        </div>
+       </div>
 
         <div class="mb-3">
           {{ form.about_me.label_tag }}
@@ -36,6 +36,12 @@
           <div class="invalid-feedback">{{ form.image.errors }}</div>
           {% endif %}
         </div>
+
+        {% if form.non_field_errors %}
+        <div class="alert alert-danger" role="alert">
+            {{ form.non_field_errors.as_text }}
+        </div>
+        {% endif %}
 
         <button type="submit" class="btn btn-primary">Submit</button>
       </form>

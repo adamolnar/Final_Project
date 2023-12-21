@@ -1,5 +1,16 @@
 from django import forms
-from .models import Post, Comment, Contact
+from .models import Post, Comment, Contact, Profile
+
+
+class ProfileUpdateForm(forms.ModelForm):
+    class Meta:
+        model = Profile
+        fields = ["about_me", 'image']
+
+class AuthorMessageForm(forms.Form):
+    sender_name = forms.CharField(max_length=255)
+    sender_email = forms.EmailField()
+    message = forms.CharField(widget=forms.Textarea)
 
 
 class CommentForm(forms.ModelForm):

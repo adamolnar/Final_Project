@@ -81,24 +81,23 @@
             </div> 
 
             <!-- Secondary posts (2 in a row) -->
-            <div class="col-lg-8">
-                {% for post in post_list %}
-                    {% if not forloop.first and forloop.counter <= 2 %}
-                        <div class="row mb-4">
-                            <div class="col-md-6">
-                                {% include 'app/blog_post_card.html' %}
-                            </div>
-                            <div class="col-md-6">
-                                {% if forloop.counter < post_list|length %}
+            <div class="row g-2">
+                
+                    {% for post in post_list %}
+                        {% if not forloop.first and forloop.counter <= 2 %}
+                        <div class="col-lg-4 mb-4">
+                            <div class="card">
+                                <div class="card-body">
                                     {% include 'app/blog_post_card.html' %}
-                                {% endif %}
+                                </div>
                             </div>
                         </div>
-                    {% endif %}
-                {% endfor %}
+                        {% endif %}
+                    {% endfor %}
+               
             </div>
 
-
+ 
             
             
         </div>

@@ -1,0 +1,11 @@
+{% extends 'app/base.html' %}
+{% block content %}
+    <div class="container">
+        <h1>Write a message to author: {{ author.username }}</h1>
+        <form method="post" action="{% url 'message-author' author.id %}">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="btn btn-primary">Send Message</button>
+        </form>
+    </div>
+{% endblock %}

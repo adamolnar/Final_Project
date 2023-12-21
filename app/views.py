@@ -1,5 +1,5 @@
 from django.shortcuts import render, reverse, redirect, get_object_or_404
-from django.http import Http404
+from django.contrib.auth.models import User
 from django.contrib import messages
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.decorators import login_required
@@ -7,8 +7,8 @@ from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.template.defaultfilters import slugify
 from django.urls import reverse_lazy
 from django.http import HttpResponseRedirect
-from .models import Post, Author, Profile, Comment
-from .forms import CommentForm, ContactForm
+from .models import Post, Author, Profile, Comment, AuthorMessage
+from .forms import CommentForm, ContactForm, ProfileUpdateForm, AuthorMessageForm
 from django.views.generic import (
     View,
     ListView,
@@ -16,6 +16,7 @@ from django.views.generic import (
     CreateView,
     UpdateView,
     DeleteView,
+    FormView
 )
 
 
@@ -28,7 +29,27 @@ class ProfileDetailView(LoginRequiredMixin, DetailView):
 # Generic class-based view to update logged-in user profile.
 class ProfileUpdateView(LoginRequiredMixin, UpdateView):
     model = Profile
-    fields = ["about_me", 'image']
+    form_class = ProfileUpdateForm
+    template_name = 'app/profile_form.html'
+   
+
+    def form_valid(self, form):
+        messages.success(self.request, 'Your profile has been updated successfully.')
+        return super().form_valid(form)
+    
+    def profile_update_view(request, pk):
+        profile = Profile.objects.get(pk=pk)
+        if request.method == 'POST':
+            form = ProfileUpdateForm(request.POST, request.FILES, instance=profile)
+            if form.is_valid():
+                form.save()
+                # Redirect to success page or any other desired page
+                
+                return redirect('profile')
+        else:
+            form = ProfileUpdateForm(instance=profile)
+
+        return render(request, 'app/profile_form.html', {'form': form})
 
 
 # Generic class-based view to delete user profile. 
@@ -60,20 +81,44 @@ class AuthorListView(ListView):
     
 
 # Generic class-based view to display information about an author and list of created posts . 
-class AuthorDetailView(ListView):
+class AuthorDetailView(DetailView):
     template_name ='app/author_detail.html'
+    model = Author
     
     def get_queryset(self):
-        pk = self.kwargs['pk']
-        target_author=get_object_or_404(Author, pk = pk)
-        target_author.save()
-        return Post.objects.filter(author=target_author)
+        author_id = self.kwargs['pk']
+        return Post.objects.filter(author_id=author_id)
     
     def get_context_data(self, **kwargs):
         context = super(AuthorDetailView, self).get_context_data(**kwargs)
-        context['author_info'] = get_object_or_404(Author, pk = self.kwargs['pk'])
+        author_info = self.get_object()
+        context['author_info'] = author_info
         return context
-    
+
+# Generic class-based to store all messages sent by users to authors.
+class MessageAuthorView(FormView):
+    template_name = 'app/message_author.html'
+    form_class = AuthorMessageForm
+
+    def get_author(self):
+        author_id = self.kwargs.get('author_id')
+        return get_object_or_404(User, id=author_id)
+
+    def form_valid(self, form):
+        author = self.get_author()
+        message = AuthorMessage(
+            author=author,
+            sender_name=form.cleaned_data['sender_name'],
+            sender_email=form.cleaned_data['sender_email'],
+            message=form.cleaned_data['message'],
+        )
+        message.save()
+        messages.success(self.request, 'Your message has been sent successfully!')
+        return redirect('author-detail', pk=author.id)  # Redirect to the author's detail page or modify as needed
+
+    def form_invalid(self, form):
+        author = self.get_author()
+        return self.render_to_response({'form': form, 'author': author})   
   
 # Generic class-based view for a list of all posts.
 class PostListView(ListView): 
