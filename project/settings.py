@@ -20,6 +20,7 @@ if os.path.exists('env.py'):
 development = os.environ.get('DEVELOPMENT', False)
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 TEMPLATES_DIR = os.path.join(BASE_DIR, 'templates')
 
@@ -32,31 +33,42 @@ SECRET_KEY = os.environ.get('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['final-project-ada-02b27917ae0c.herokuapp.com','localhost']
+ALLOWED_HOSTS = ['final-project-ada-02b27917ae0c.herokuapp.com', '8000-adamolnar-finalproject-scsmnofs6ih.ws-eu107.gitpod.io' , 'localhost']
 
 
 # Application definition
 
 INSTALLED_APPS = [
-    'django.contrib.sites',
-    'widget_tweaks',
     'jazzmin',
+
+
+    # Django built-in apps
+    'django.contrib.sites',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
+
+
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
     'cloudinary_storage',
     'django.contrib.staticfiles',
+
+    'widget_tweaks',
+    
     'cloudinary',
     'django_summernote',
     'crispy_forms',
     'django_social_share',
     'coverage',
-    'app',
+
+    # Custom apps
+    'blog',
+    'profile',
+    'author',
 ]
 
 SITE_ID = 1
@@ -90,8 +102,12 @@ ROOT_URLCONF = 'project.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [TEMPLATES_DIR],
         'APP_DIRS': True,
+        'DIRS': [
+            os.path.join(BASE_DIR, 'author', 'templates'),
+            os.path.join(BASE_DIR, 'blog', 'templates'),
+            os.path.join(BASE_DIR, 'profile', 'templates'),
+        ],
         'OPTIONS': {
             'context_processors': [
                 'django.template.context_processors.debug',
@@ -119,6 +135,9 @@ WSGI_APPLICATION = 'project.wsgi.application'
 DATABASES = {
    'default': dj_database_url.parse(os.environ.get("DATABASE_URL"))
 }
+
+# DATABASE_URL = os.environ.get('DATABASE_URL', 'sqlite:///db.sqlite3')
+# DATABASES = {'default': dj_database_url.parse(DATABASE_URL)}
 
 
 # Password validation
@@ -159,7 +178,12 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATICFILES_STORAGE = 'cloudinary_storage.storage.StaticHashedCloudinaryStorage'
-STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'author', 'static'),
+    os.path.join(BASE_DIR, 'blog', 'static'),
+    os.path.join(BASE_DIR, 'profile', 'static'),
+
+]
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
@@ -182,6 +206,6 @@ ACCOUNT_SESSION_REMEMBER = True
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 # Custom ErrorList form for signup.html
 ACCOUNT_FORMS = {
-  'signup': 'users.forms.CustomSignUpForm',
-  'login': 'users.forms.CustomLoginForm',
+  'signup': 'profile.forms.CustomSignUpForm',
+  'login': 'profile.forms.CustomLoginForm',
 }

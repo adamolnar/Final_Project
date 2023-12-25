@@ -1,0 +1,205 @@
+from django.shortcuts import render, reverse, redirect, get_object_or_404
+from django.contrib import messages
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.template.defaultfilters import slugify
+from django.urls import reverse_lazy
+from django.http import HttpResponseRedirect
+from .models import Post, Comment
+from author.models import Author
+from .forms import CommentForm
+from django.views.generic import (
+    View,
+    ListView,
+    DetailView,
+    CreateView,
+    UpdateView,
+    DeleteView,
+)
+
+
+
+  
+# Generic class-based view for a list of all posts.
+class PostListView(ListView): 
+    model = Post
+    queryset = Post.objects.filter(status=1).order_by("-created_on")
+    template_name = "blog/index.html"
+    context_object_name = 'post_list'
+    paginate_by = 5
+
+
+# Generic class-based detail view for a post.
+class PostDetailView(DetailView):   
+    def get(self, request, slug, *args, **kwargs):
+        queryset = Post.objects.filter(status=1)
+        post = get_object_or_404(Post, slug=slug)
+        form = CommentForm()
+        # post.create_tags()
+        comments = post.comments.filter(approved=True).order_by("-created_on")
+        liked = False
+        if post.likes.filter(id=self.request.user.id).exists():
+            liked = True
+
+        return render(
+            request,
+            "blog/post_detail.html",
+            {
+                "post": post,
+                "comments": comments,
+                "commented": False,
+                "liked": liked,
+                "comment_form": CommentForm(),
+            },
+        )
+
+    def post(self, request, slug, *args, **kwargs):
+        queryset = Post.objects.filter(status=1)
+        post = get_object_or_404(queryset,slug=slug)
+        form = CommentForm(request.POST)
+        comments = post.comments.filter(approved=True).order_by("-created_on")
+        liked = False
+
+        if post.likes.filter(id=self.request.user.id).exists():
+            liked = True
+
+        
+        if form.is_valid():
+            new_comment = form.save(commit=False)
+            new_comment.author = request.user
+            new_comment.post = post
+            new_comment.save()
+            form = CommentForm()           
+        else:
+            form = CommentForm()
+
+        return render(
+            request,
+            "blog/post_detail.html",
+            {
+                "post": post,
+                "comments": comments,
+                "approved":True,
+                "commented": True,
+                "form": form,
+                "liked": liked
+            },
+        )
+
+
+# Generic class-based view for a like/unlike.
+class PostLikeView(LoginRequiredMixin, View): 
+    def post(self, request, slug, *args, **kwargs):
+        post = get_object_or_404(Post,  slug=slug)
+        if post.likes.filter(id=request.user.id).exists():
+            post.likes.remove(request.user)
+        else:
+            post.likes.add(request.user)
+
+        return HttpResponseRedirect(reverse('post-detail', args=[slug]))
+
+
+# Generic class-based view to create new post.
+class PostCreateView(LoginRequiredMixin, CreateView):  
+    model = Post
+    fields = ["title", "content", "featured_image", 'status', 'categories',"tags"]
+
+    def get_success_url(self):
+        messages.success(
+            self.request, 'Your post has been created successfully.')
+        return reverse("index")
+
+    def form_valid(self, form):
+        obj = form.save(commit=False)
+        new_author = self.request.user.profile
+        obj.author = Author.objects.get(profile = new_author)
+        obj.slug = slugify(form.cleaned_data['title'])
+        obj.save()
+        
+        # Process categories and tags
+        categories = form.cleaned_data.get('categories', [])
+        tags = form.cleaned_data.get('tags', [])
+
+        obj.categories.set(categories)
+        obj.tags.set(tags)
+
+        return HttpResponseRedirect(self.get_success_url())
+
+
+# Generic class-based view to update post only by the author of the post.       
+class PostUpdateView(LoginRequiredMixin, UpdateView):
+    model = Post
+    fields = ["title", "content", "featured_image"]
+    template_name = 'blog/post_form.html'
+
+    def get_success_url(self):
+        slug = self.kwargs['slug']
+        messages.success(
+            self.request, 'Your post has been updated successfully.')
+        return reverse_lazy('post-detail', kwargs={'slug': slug})
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['update'] = True
+        return context
+
+    def get_object(self, queryset=None):
+        obj = super().get_object(queryset)
+        # Ensure that the user is the author of the post
+        if obj.author.id != self.request.user.pk:
+            raise PermissionError("You are not authorized to update this post.")
+        return obj
+
+
+# Generic class-based view to delete post.
+class PostDeleteView(LoginRequiredMixin, DeleteView):
+    model = Post
+    template_name = 'blog/post_delete.html'
+    success_url = reverse_lazy('index')
+
+    def get(self, request, slug, *args, **kwargs):
+        self.object = self.get_object()
+        return super().get(request, *args, **kwargs)
+
+    def post(self, request, slug, *args, **kwargs):
+        self.object = self.get_object()
+        messages.success(request, 'The post has been deleted successfully.')
+        return super().post(request, *args, **kwargs)
+    
+
+# Generic class-based view for author update comment function.
+class CommentUpdateView(LoginRequiredMixin, UpdateView):
+    model = Comment
+    fields = ['body'] 
+    template_name = 'blog/comment_update.html' 
+
+    def form_valid(self, form):
+        form.save()
+        messages.success(self.request, "Comment Updated Successfully!!")
+        return HttpResponseRedirect(reverse('index'))
+    
+
+# Generic class-based view for author delete comment function.
+class CommentDeleteView(LoginRequiredMixin, DeleteView):
+    model = Comment
+    template_name = 'blog/comment_delete.html' 
+
+    def get(self, request, pk, *args, **kwargs):
+        comment = get_object_or_404(Comment, pk=pk)
+        context = {'comment': comment}
+        if request.method == 'GET':
+            return render(request, 'blog/comment_delete.html',context)
+
+    def post(self, request, pk, *args, **kwargs):   
+        comment = get_object_or_404(Comment, pk=pk)    
+        if request.method == 'POST':
+            comment.delete()
+            messages.success(request, 'The comment has been deleted successfully.')
+        return HttpResponseRedirect(reverse('index'))
+    
+
+# Function that will be called when a 404 error occurs
+def custom_404(request, exception):
+    """
+    Custom 404 error view.
+    """
+    return render(request, 'blog/404.html', {'exception': exception}, status=404)

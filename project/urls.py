@@ -15,15 +15,19 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from app.views import custom_404
+from profile.views import custom_404
 from django.conf import settings
 from django.conf.urls.static import static
 
 handler404 = custom_404
 
 urlpatterns = [
-    path("",include('app.urls'), name='app_urls'),
+    # path("",include('app.urls'), name='app_urls'),
     path('admin/', admin.site.urls),
+    path('', include('blog.urls')),
+    
+    path('', include('author.urls')),
+    path('', include('profile.urls')),
     path('summernote/', include('django_summernote.urls')),
     path('accounts/', include('allauth.urls')),  
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

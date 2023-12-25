@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block head_title %}{{ user }}{% endblock head_title %}
+
+{% block content %}
+
+<form method="post">{% csrf_token %}
+    <p>Are you sure you want to delete "<strong>{{ profile }}</strong>" profile?</p>
+    {{ form }}
+    <input type="submit" value="Confirm">
+</form>
+
+{% endblock %}
