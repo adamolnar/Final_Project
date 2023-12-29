@@ -1,10 +1,12 @@
 from django.test import TestCase, Client
 from django.contrib.auth.models import User 
-from app.models import Profile, Author, Category, Tag, Post, Comment, Contact
-from app.forms import ContactForm
+from author.models import Author
+from profile.models import Profile,  Contact
+from blog.models import Category, Tag, Post, Comment
+from profile.forms import ContactForm
 from django.urls import reverse, resolve
 from django.contrib.messages import get_messages
-from app.views import ProfileDetailView
+from profile.views import ProfileDetailView
 from django.core.files.uploadedfile import SimpleUploadedFile
 
 

@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <div class="container">
+    <h2>Request Author Access</h2>
+    <p>
+      If you would like to become an author and contribute posts, please submit a request below.
+    </p>
+
+    <!-- Display form errors if any -->
+    {% if form.errors %}
+      <div class="alert alert-danger">
+        {% for error in form.errors %}
+          <strong>{{ error }}</strong><br>
+        {% endfor %}
+      </div>
+    {% endif %}
+
+    <!-- Your author access request form goes here -->
+    <form method="post" action="{% url 'request-author-access' %}">
+      {% csrf_token %}
+      {{ form.as_p }}
+
+      <button type="submit" class="btn btn-primary">Submit Request</button>
+    </form>
+  </div>
+{% endblock %}

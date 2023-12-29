@@ -1,9 +1,10 @@
-from django.shortcuts import redirect, get_object_or_404
+from django.shortcuts import redirect, get_object_or_404, render
 from django.contrib.auth.models import User
 from django.contrib import messages
+from django.contrib.auth.mixins import LoginRequiredMixin
 from .models import Author, AuthorMessage
 from blog.models import Post
-from .forms import AuthorMessageForm
+from .forms import AuthorMessageForm, AuthorAccessRequestForm
 from django.views.generic import (
     ListView,
     DetailView,
@@ -33,7 +34,7 @@ class AuthorDetailView(DetailView):
         context['author_info'] = author_info
         return context
 
-# Generic class-based to store all messages sent by users to authors.
+# Generic class-based view to store all messages sent by users to authors.
 class MessageAuthorView(FormView):
     template_name = 'author/message_author.html'
     form_class = AuthorMessageForm
@@ -57,5 +58,30 @@ class MessageAuthorView(FormView):
     def form_invalid(self, form):
         author = self.get_author()
         return self.render_to_response({'form': form, 'author': author})   
-  
-  
+    
+
+# Generic class-based view to handle author access requests
+class RequestAuthorAccessView(LoginRequiredMixin, FormView):
+    template_name = 'author/request_author_access.html'
+    form_class = AuthorAccessRequestForm
+    
+    def get(self, request, *args, **kwargs):
+        form = self.form_class()
+        return render(request, self.template_name, {'form': form})
+
+    def post(self, request, *args, **kwargs):
+        form = self.form_class(request.POST)
+        if form.is_valid():
+            # Update the form.instance.profile with the user's profile
+            form.instance.profile = request.profile
+            # Process the form data and handle the request
+            request_reason = form.cleaned_data['request_reason']
+            # Process the request_reason as needed (e.g., save to database)
+
+            # Authorize the request
+            form.instance.authorize_request()
+
+            messages.success(request, 'Your request has been submitted. We will review it soon.')
+            return redirect('index')  # Redirect to the desired page after successful submission
+
+        return render(request, self.template_name, {'form': form})

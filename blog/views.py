@@ -1,6 +1,6 @@
-from django.shortcuts import render, reverse, redirect, get_object_or_404
+from django.shortcuts import render, redirect, reverse, get_object_or_404
 from django.contrib import messages
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.template.defaultfilters import slugify
 from django.urls import reverse_lazy
 from django.http import HttpResponseRedirect
@@ -17,8 +17,6 @@ from django.views.generic import (
 )
 
 
-
-  
 # Generic class-based view for a list of all posts.
 class PostListView(ListView): 
     model = Post
@@ -31,15 +29,16 @@ class PostListView(ListView):
 # Generic class-based detail view for a post.
 class PostDetailView(DetailView):   
     def get(self, request, slug, *args, **kwargs):
+        # Retrieve the post and associated data
         queryset = Post.objects.filter(status=1)
         post = get_object_or_404(Post, slug=slug)
         form = CommentForm()
-        # post.create_tags()
         comments = post.comments.filter(approved=True).order_by("-created_on")
         liked = False
         if post.likes.filter(id=self.request.user.id).exists():
             liked = True
 
+        # Render the post detail page with relevant data
         return render(
             request,
             "blog/post_detail.html",
@@ -53,6 +52,7 @@ class PostDetailView(DetailView):
         )
 
     def post(self, request, slug, *args, **kwargs):
+        # Handle comment submission
         queryset = Post.objects.filter(status=1)
         post = get_object_or_404(queryset,slug=slug)
         form = CommentForm(request.POST)
@@ -72,6 +72,7 @@ class PostDetailView(DetailView):
         else:
             form = CommentForm()
 
+        # Render the post detail page with updated data
         return render(
             request,
             "blog/post_detail.html",
@@ -89,6 +90,7 @@ class PostDetailView(DetailView):
 # Generic class-based view for a like/unlike.
 class PostLikeView(LoginRequiredMixin, View): 
     def post(self, request, slug, *args, **kwargs):
+        # Handle post liking/unliking
         post = get_object_or_404(Post,  slug=slug)
         if post.likes.filter(id=request.user.id).exists():
             post.likes.remove(request.user)
@@ -97,16 +99,29 @@ class PostLikeView(LoginRequiredMixin, View):
 
         return HttpResponseRedirect(reverse('post-detail', args=[slug]))
 
+def is_author(user):
+    return user.groups.filter(name='author').exists()
 
 # Generic class-based view to create new post.
-class PostCreateView(LoginRequiredMixin, CreateView):  
+class PostCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):  
     model = Post
     fields = ["title", "content", "featured_image", 'status', 'categories',"tags"]
+    template_name = 'blog/post_form.html'
 
     def get_success_url(self):
+        # Save the new post and associated data
         messages.success(
             self.request, 'Your post has been created successfully.')
         return reverse("index")
+    
+    def test_func(self):
+        # Check if the user is associated with an Author model
+        return Author.objects.filter(profile=self.request.user.profile).exists()
+    
+    def handle_no_permission(self):
+        # Handle the case where the user doesn't pass the test
+        messages.warning(self.request, 'You are not authorized to create a post.')
+        return redirect('request-author-access')  # Redirect to the request author access page
 
     def form_valid(self, form):
         obj = form.save(commit=False)
@@ -173,6 +188,7 @@ class CommentUpdateView(LoginRequiredMixin, UpdateView):
     template_name = 'blog/comment_update.html' 
 
     def form_valid(self, form):
+        # Save the updated comment
         form.save()
         messages.success(self.request, "Comment Updated Successfully!!")
         return HttpResponseRedirect(reverse('index'))
@@ -184,12 +200,14 @@ class CommentDeleteView(LoginRequiredMixin, DeleteView):
     template_name = 'blog/comment_delete.html' 
 
     def get(self, request, pk, *args, **kwargs):
+        # Retrieve and render the comment for deletion
         comment = get_object_or_404(Comment, pk=pk)
         context = {'comment': comment}
         if request.method == 'GET':
             return render(request, 'blog/comment_delete.html',context)
 
-    def post(self, request, pk, *args, **kwargs):   
+    def post(self, request, pk, *args, **kwargs):
+        # Handle comment deletion
         comment = get_object_or_404(Comment, pk=pk)    
         if request.method == 'POST':
             comment.delete()

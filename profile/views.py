@@ -4,8 +4,8 @@ from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.urls import reverse_lazy
-from .models import  Profile
-from .forms import  ContactForm, ProfileUpdateForm
+from .models import Profile
+from .forms import ContactForm, ProfileUpdateForm
 from django.views.generic import (
     DetailView,
     UpdateView,

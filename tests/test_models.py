@@ -1,6 +1,8 @@
 from django.test import TestCase
 from django.contrib.auth.models import User 
-from app.models import Profile, Author, Category, Tag, Post, Comment, Contact
+from author.models import Author
+from profile.models import Profile,  Contact
+from blog.models import Category, Tag, Post, Comment
 from django.urls import reverse
 
 
