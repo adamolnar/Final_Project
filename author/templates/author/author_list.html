@@ -11,16 +11,18 @@
         <a href="{% url 'author-detail' author.pk %}">{{ author }}</a>
         <p>{{ author.bio }}</p>
         {% for post in author.blog_posts.all %}
+          {% if post.status == 1 %}  
             <div>
                 {% if post.featured_image %}
                     <img src="{% if 'placeholder' in post.featured_image.url %}https://res.cloudinary.com/dmg7oqpgs/image/upload/v1698830526/Project_4/masthead_wxqbsd.jpg
-                      {% else %}{{ post.featured_image.url }}{% endif %}" style="width: 25px; height: 25px; text-decoration: none; color: black;"  alt="{{ post.title }}"> =>  
-                        <a href="{% url 'post-detail' post.slug %}">{{ post.title }}</a>
+                      {% else %}{{ post.featured_image.url }}{% endif %}" style="width: 25px; height: 25px;"  alt="{{ post.title }}"> 
+                        <a href="{% url 'post-detail' post.slug %}" style="text-decoration: none; color: black;">{{ post.title }}</a>
                 {% else %}
                     <!-- You can use a default icon or leave it empty based on your design -->
                     <span style="width: 50px; height: 50px; display: inline-block; background-color: lightgray;"></span>
                 {% endif %}
             </div>
+          {% endif %}
         {% endfor %}
       </li>
       {% endfor %}

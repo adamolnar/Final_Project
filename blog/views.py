@@ -7,6 +7,8 @@ from django.http import HttpResponseRedirect
 from .models import Post, Comment
 from author.models import Author
 from .forms import CommentForm
+from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
 from django.views.generic import (
     View,
     ListView,
@@ -108,11 +110,33 @@ class PostCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
     fields = ["title", "content", "featured_image", 'status', 'categories',"tags"]
     template_name = 'blog/post_form.html'
 
-    def get_success_url(self):
+    def form_valid(self, form):
         # Save the new post and associated data
-        messages.success(
-            self.request, 'Your post has been created successfully.')
-        return reverse("index")
+        messages.success(self.request, 'Your post has been created successfully.')
+        
+        # Set the author and slug before saving
+        form.instance.author = Author.objects.get(profile=self.request.user.profile)
+        form.instance.slug = slugify(form.cleaned_data['title'])
+
+        # Save the form and get the object
+        self.object = form.save()
+
+        return HttpResponseRedirect(self.get_success_url())
+
+    def get_success_url(self):
+        # Check if the object has been created and has a status attribute
+        if self.object and hasattr(self.object, 'status'):
+            # Check the status of the created post
+            if self.object.status == 1:  # Assuming 1 represents a published post
+                return reverse_lazy('post-detail', kwargs={'slug': self.object.slug})
+            elif self.object.status == 0:  # Assuming 0 represents a draft post
+                return reverse_lazy('draft-post-author-list')
+
+        # Default to index if the status is neither 0 nor 1
+        return reverse_lazy('index')
+
+    
+
     
     def test_func(self):
         # Check if the user is associated with an Author model
@@ -123,21 +147,21 @@ class PostCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
         messages.warning(self.request, 'You are not authorized to create a post.')
         return redirect('request-author-access')  # Redirect to the request author access page
 
-    def form_valid(self, form):
-        obj = form.save(commit=False)
-        new_author = self.request.user.profile
-        obj.author = Author.objects.get(profile = new_author)
-        obj.slug = slugify(form.cleaned_data['title'])
-        obj.save()
+    # def form_valid(self, form):
+    #     obj = form.save(commit=False)
+    #     new_author = self.request.user.profile
+    #     obj.author = Author.objects.get(profile = new_author)
+    #     obj.slug = slugify(form.cleaned_data['title'])
+    #     obj.save()
         
-        # Process categories and tags
-        categories = form.cleaned_data.get('categories', [])
-        tags = form.cleaned_data.get('tags', [])
+    #     # Process categories and tags
+    #     categories = form.cleaned_data.get('categories', [])
+    #     tags = form.cleaned_data.get('tags', [])
 
-        obj.categories.set(categories)
-        obj.tags.set(tags)
+    #     obj.categories.set(categories)
+    #     obj.tags.set(tags)
 
-        return HttpResponseRedirect(self.get_success_url())
+    #     return HttpResponseRedirect(self.get_success_url())
 
 
 # Generic class-based view to update post only by the author of the post.       
@@ -179,6 +203,17 @@ class PostDeleteView(LoginRequiredMixin, DeleteView):
         self.object = self.get_object()
         messages.success(request, 'The post has been deleted successfully.')
         return super().post(request, *args, **kwargs)
+    
+@method_decorator(login_required, name='dispatch')
+class DraftPostAuthorListView(ListView):
+    model = Post
+    template_name = "blog/draft_post_author.html"  # Create a template for displaying draft posts by a particular author
+    context_object_name = 'draft_post_list'
+    paginate_by = 5
+
+    def get_queryset(self):
+        # Filter draft posts for the currently logged-in author
+        return Post.objects.filter(author=self.request.user.profile.id, status=0).order_by("-created_on")
     
 
 # Generic class-based view for author update comment function.
