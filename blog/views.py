@@ -206,6 +206,28 @@ class PostUpdateView(LoginRequiredMixin, UpdateView):
         if obj.author.id != self.request.user.pk:
             raise PermissionError("You are not authorized to update this post.")
         return obj
+    
+
+class PublishPostView(View):
+    def post(self, request, slug, *args, **kwargs):
+        # Retrieve the post object
+        post = get_object_or_404(Post, slug=slug)
+
+        # Check if the user has permission to publish (e.g., is the post's author)
+        if request.user.profile != post.author.profile:
+            # You may want to handle unauthorized access differently, e.g., show an error message
+            messages.error(request, 'You do not have permission to publish this post.')
+            return redirect('post-detail', slug=slug)
+
+        # Update the post's status to 1 (published)
+        post.status = 1
+        post.save()
+
+        # Add a success message
+        messages.success(request, 'The post has been published successfully.')
+
+        # Redirect to the post detail page
+        return redirect('index')
 
 
 # Generic class-based view to delete post.
