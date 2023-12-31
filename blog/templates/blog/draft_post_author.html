@@ -1,16 +1,20 @@
 {% extends 'base.html' %}
 
 {% block content %}
-  <h1>Draft Posts by {{ user.username }}</h1>
+  <h1 class="text-center" style="margin: 2% auto;">Draft Posts by <strong>{{ user.username }}</strong></h1>
 
-  {% for post in draft_post_list %}
-    <div>
-      <h2><a href="{% url 'post-detail' slug=post.slug %}">{{ post.title }}</a></h2>
-      <p>{{ post.content|truncatewords:30 }}</p>
-      <!-- Add other post details as needed -->
-    </div>
-  {% endfor %}
-
+  <div class="row">
+    {% for post in draft_post_list %}
+      <div class="col-lg-6 mb-4">
+        <div class="card">
+          <div class="card-body">
+            {% include 'blog/blog_post_card.html' %}
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+  
   {% if is_paginated %}
     <div class="pagination">
       <span class="step-links">

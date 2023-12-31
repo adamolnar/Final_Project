@@ -341,6 +341,7 @@ th {
 
 label {
   display: inline-block;
+  float: inline-start;
 }
 
 button {
@@ -402,6 +403,7 @@ button:not(:disabled),
 
 textarea {
   resize: vertical;
+  width: 80%;
 }
 
 fieldset {
@@ -10932,4 +10934,8 @@ textarea.form-control-lg {
   50% {
       transform: translateY(-10px);
   }
+}
+
+form input {
+  width: 80%; /* Adjust the width as needed */
 }

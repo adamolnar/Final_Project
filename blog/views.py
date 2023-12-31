@@ -25,7 +25,7 @@ class PostListView(ListView):
     queryset = Post.objects.filter(status=1).order_by("-created_on")
     template_name = "blog/index.html"
     context_object_name = 'post_list'
-    paginate_by = 5
+    paginate_by = 10
 
 
 # Generic class-based detail view for a post.
@@ -167,7 +167,7 @@ class PostCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
 # Generic class-based view to update post only by the author of the post.       
 class PostUpdateView(LoginRequiredMixin, UpdateView):
     model = Post
-    fields = ["title", "content", "featured_image"]
+    fields = ["title", "content", "featured_image", "status"]
     template_name = 'blog/post_form.html'
 
     def get_success_url(self):

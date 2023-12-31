@@ -73,7 +73,11 @@ def contact(request):
         form = ContactForm(request.POST)
         if form.is_valid():
             form.save()
+            messages.success(request, 'Your message was sent successfully!')
             return redirect('success')
+        else:
+            messages.error(request, 'Please correct the errors below.')
+            
     else:
         form = ContactForm()
     return render(request, 'profile/contact.html', {'form': form})

@@ -31,12 +31,18 @@ class ContactForm(forms.ModelForm):
     class Meta:
         model = Contact
         fields = '__all__'
+        
 
-    # Widget customization for the 'message' field
-        widgets = {
-            'message': forms.Textarea(attrs={'rows': 5, 'placeholder': 'Enter your message here...'}),
-            # Add more widget customization if needed
-        }
+    # Widget customization for the field
+        # widgets = {
+        #     'message': forms.Textarea(attrs={'rows': 5, 'placeholder': 'Enter your message here...'}),
+        # }
+
+    def __init__(self, *args, **kwargs):
+        super(ContactForm, self).__init__(*args, **kwargs)
+        self.fields['name'].widget.attrs['placeholder'] = 'Your Name'
+        self.fields['email'].widget.attrs['placeholder'] = 'Your Email'
+        self.fields['message'].widget.attrs['placeholder'] ='Enter your message here...'
 
     def clean_email(self):
         # Custom validation for the email field if needed
