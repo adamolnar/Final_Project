@@ -4,7 +4,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.template.defaultfilters import slugify
 from django.urls import reverse_lazy
 from django.http import HttpResponseRedirect
-from .models import Post, Comment
+from .models import Post, Comment, Category, Tag
 from author.models import Author
 from .forms import CommentForm
 from django.contrib.auth.decorators import login_required
@@ -25,7 +25,26 @@ class PostListView(ListView):
     queryset = Post.objects.filter(status=1).order_by("-created_on")
     template_name = "blog/index.html"
     context_object_name = 'post_list'
-    paginate_by = 10
+    paginate_by = 5
+
+    def get_queryset(self):
+        queryset = Post.objects.filter(status=1).order_by("-created_on")
+        category_id = self.request.GET.get('category_id')
+        tag = self.request.GET.get('tag')
+
+        if category_id:
+            queryset = queryset.filter(categories__id=category_id)
+
+        if tag:
+            queryset = queryset.filter(tags__name__icontains=tag)
+
+        return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['categories'] = Category.objects.all()
+        context['tags'] = Tag.objects.all()
+        return context
 
 
 # Generic class-based detail view for a post.

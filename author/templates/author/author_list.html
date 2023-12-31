@@ -1,35 +1,49 @@
 {% extends "base.html" %}
 
+{% load static %}
+
 {% block content %}
-    <h1>All bloggers</h1>
+    <div class="container">
+        <h1 class="page-title">All Bloggers</h1>
 
-    {% if author_list %}
-    <ul>
+        {% if author_list %}
+            <div class="authors-list">
+                {% for author in author_list %}
+                    <article class="author">
+                        <header>
+                            {% if author.profile.image %}
+                            <img src="{{ author.profile.image.url }}" alt="{{ author.username }} Avatar">
+                            {% else %}
+                                <!-- If the author doesn't have a profile image, you can use a default avatar image here -->
+                                <img src="{% static 'images/avatar.png' %}" alt="{{ author.username }} Avatar">
+                            {% endif %}
 
-      {% for author in author_list %}
-      <li>
-        <a href="{% url 'author-detail' author.pk %}">{{ author }}</a>
-        <p>{{ author.bio }}</p>
-        {% for post in author.blog_posts.all %}
-          {% if post.status == 1 %}  
-            <div>
-                {% if post.featured_image %}
-                    <img src="{% if 'placeholder' in post.featured_image.url %}https://res.cloudinary.com/dmg7oqpgs/image/upload/v1698830526/Project_4/masthead_wxqbsd.jpg
-                      {% else %}{{ post.featured_image.url }}{% endif %}" style="width: 25px; height: 25px;"  alt="{{ post.title }}"> 
-                        <a href="{% url 'post-detail' post.slug %}" style="text-decoration: none; color: black;">{{ post.title }}</a>
-                {% else %}
-                    <!-- You can use a default icon or leave it empty based on your design -->
-                    <span style="width: 50px; height: 50px; display: inline-block; background-color: lightgray;"></span>
-                {% endif %}
+                            <h2><a href="{% url 'author-detail' author.pk %}">{{ author }}</a></h2>
+                            <p class="author-about">About the author: {{ author.profile.about_me }}</p>
+                        </header>
+                        <div class="author-posts">
+                            {% for post in author.blog_posts.all %}
+                                {% if post.status == 1 %}  
+                                    <div class="post">
+                                        {% if post.featured_image %}
+                                            <img src="{% if 'placeholder' in post.featured_image.url %}https://res.cloudinary.com/dmg7oqpgs/image/upload/v1698830526/Project_4/masthead_wxqbsd.jpg
+                                              {% else %}{{ post.featured_image.url }}{% endif %}" class="featured-image" alt="{{ post.title }}" style=" width: 25px;
+                                              height: 25px;"> 
+                                            <a href="{% url 'post-detail' post.slug %}" class="post-title">{{ post.title }}</a>
+                                        {% else %}
+                                            <div class="placeholder-image" style=" width: 25px;
+                                            height: 25px;"></div>
+                                        {% endif %}
+                                    </div>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    </article>
+                {% endfor %}
             </div>
-          {% endif %}
-        {% endfor %}
-      </li>
-      {% endfor %}
-
-    </ul>
-
-    {% else %}
-      <p>There are no bloggers yet.</p>
-    {% endif %}       
+        {% else %}
+            <p>No bloggers found.</p>
+        {% endif %}       
+        </div>
 {% endblock %}
+
