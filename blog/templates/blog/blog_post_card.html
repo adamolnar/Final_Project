@@ -1,16 +1,18 @@
 {% block content %}
 
+{% load static %}
+{% load cloudinary %}
+
 
 <div class="card mb-4">
     <a href="{% url 'post-detail' post.slug %}">
-        {% if "placeholder" in post.featured_image.url %}
-            <img class="card-img-top" style="max-height: 350px; max-width: 850px"
-                src="https://res.cloudinary.com/dmg7oqpgs/image/upload/v1698830526/Project_4/masthead_wxqbsd.jpg">
-        {% else %}
-            <img class="card-img-top" style="max-height: 350px; max-width: 850px" src="{{ post.featured_image.url }}">
-        {% endif %}
+
+        <img src="{{ post.featured_image }}" alt="Featured Image">
     </a>
+
+    
     <div class="card-body">
+
         <div class="small author">Author: <a href="{{ post.author.get_absolute_url }}">{{ post.author }}</a></div>
         <h2 class="card-title">{{ post.title }}</h2>
         <p class="card-text">{{ post.excerpt }}</p>

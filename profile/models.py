@@ -2,13 +2,14 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.urls import reverse
 # from blog.models import Post, Comment
+from cloudinary.models import CloudinaryField
 
 
 
 # Model assigning Profile Page to each user.
 class Profile(models.Model):
     about_me = models.TextField()
-    image = models.ImageField(upload_to='css/images', default='placeholder')
+    image = CloudinaryField('image', default="placeholder")
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="profile")
 
     def __str__(self):

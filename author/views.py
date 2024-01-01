@@ -73,7 +73,7 @@ class RequestAuthorAccessView(LoginRequiredMixin, FormView):
         form = self.form_class(request.POST)
         if form.is_valid():
             # Update the form.instance.profile with the user's profile
-            form.instance.profile = request.profile
+            form.instance.profile = request.user.profile
             # Process the form data and handle the request
             request_reason = form.cleaned_data['request_reason']
             # Process the request_reason as needed (e.g., save to database)

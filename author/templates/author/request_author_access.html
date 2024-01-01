@@ -1,8 +1,8 @@
 {% extends 'base.html' %}
 
 {% block content %}
-  <div class="container">
-    <h2>Request Author Access</h2>
+  <div class="container text-center">
+    <h2 class=" mt-5 mb-5">Request Author Access</h2>
     <p>
       If you would like to become an author and contribute posts, please submit a request below.
     </p>
@@ -17,7 +17,7 @@
     {% endif %}
 
     <!-- Your author access request form goes here -->
-    <form method="post" action="{% url 'request-author-access' %}">
+    <form method="post" action="{% url 'request-author-access' %}" class="col-md-8 offset-2 mt-5">
       {% csrf_token %}
       {{ form.as_p }}
 

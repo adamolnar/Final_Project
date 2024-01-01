@@ -50,11 +50,11 @@ class AuthorAccessRequest(models.Model):
     is_authorized = models.BooleanField(default=False)
 
     def __str__(self):
-        return f"Request from {self.profile.username}"
+        return f"Request from {self.profile.user.username}"
     
     def authorize_request(self):
         # Method to authorize the request and update the Author model
-        author, created = Author.objects.get_or_create(profile=self.user.profile)
+        author, created = Author.objects.get_or_create(profile=self.profile)
         if created:
             author.grant_access()
         self.is_authorized = True

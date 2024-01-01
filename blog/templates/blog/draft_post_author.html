@@ -5,37 +5,45 @@
 <div class="container">
   <h1 class="text-center" style="margin: 2% auto;">Draft Posts by <strong>{{ user.username }}</strong></h1>
 
-  <div class="row">
-    {% for post in draft_post_list %}
-      <div class="col-lg-6 mb-4">
-        <div class="card">
-          <div class="card-body">
-            {% include 'blog/blog_post_card.html' %}
+  {% if draft_post_list %}
+    <div class="row">
+      {% for post in draft_post_list %}
+        <div class="col-lg-6 mb-4">
+          <div class="card">
+            <div class="card-body">
+              {% include 'blog/blog_post_card.html' %}
+            </div>
           </div>
         </div>
+      {% endfor %}
+    </div>
+  
+    {% if is_paginated %}
+      <div class="pagination">
+        <span class="step-links">
+          {% if draft_post_list.has_previous %}
+            <a href="?page=1">&laquo; first</a>
+            <a href="?page={{ draft_post_list.previous_page_number }}">previous</a>
+          {% endif %}
+
+          <span class="current">
+            Page {{ draft_post_list.number }} of {{ draft_post_list.paginator.num_pages }}.
+          </span>
+
+          {% if draft_post_list.has_next %}
+            <a href="?page={{ draft_post_list.next_page_number }}">next</a>
+            <a href="?page={{ draft_post_list.paginator.num_pages }}">last &raquo;</a>
+          {% endif %}
+        </span>
       </div>
-    {% endfor %}
+    {% endif %}
+
+    {% else %}
+    <div class="alert alert-info" role="alert">
+      There are no draft posts to display.
+    </div>
+  {% endif %}
+
   </div>
   
-  {% if is_paginated %}
-    <div class="pagination">
-      <span class="step-links">
-        {% if draft_post_list.has_previous %}
-          <a href="?page=1">&laquo; first</a>
-          <a href="?page={{ draft_post_list.previous_page_number }}">previous</a>
-        {% endif %}
-
-        <span class="current">
-          Page {{ draft_post_list.number }} of {{ draft_post_list.paginator.num_pages }}.
-        </span>
-
-        {% if draft_post_list.has_next %}
-          <a href="?page={{ draft_post_list.next_page_number }}">next</a>
-          <a href="?page={{ draft_post_list.paginator.num_pages }}">last &raquo;</a>
-        {% endif %}
-      </span>
-    </div>
-
-  </div>
-  {% endif %}
 {% endblock %}

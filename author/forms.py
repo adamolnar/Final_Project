@@ -12,7 +12,7 @@ class AuthorAccessRequestForm(forms.ModelForm):
     class Meta:
         model = AuthorAccessRequest
         fields = ['request_reason']
-        widgets = {'request_reason': forms.Textarea(attrs={'rows': 3})}  # Use a textarea for the request reason
+        widgets = {'request_reason': forms.Textarea(attrs={'rows': 5, 'placeholder': 'Enter your reason for author access...'})}  # Use a textarea for the request reason
 
 
 

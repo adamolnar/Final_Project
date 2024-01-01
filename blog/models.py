@@ -3,6 +3,8 @@ from django.contrib.auth.models import User
 from django.urls import reverse 
 from django.template.defaultfilters import slugify
 from author.models import Author
+from cloudinary.models import CloudinaryField
+
 
 STATUS = ((0, "Draft"), (1, "Published"))
 
@@ -36,7 +38,7 @@ class Post(models.Model):
     author = models.ForeignKey(
         Author, on_delete=models.CASCADE, related_name="blog_posts"
     )
-    featured_image = models.ImageField(upload_to='images/', default='placeholder')
+    featured_image = CloudinaryField('image', default="placeholder")
     excerpt = models.TextField(blank=True)
     updated_on = models.DateTimeField(auto_now=True)
     content = models.TextField()

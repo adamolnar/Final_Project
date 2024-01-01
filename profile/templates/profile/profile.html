@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load cloudinary %}
 
 {% block head_title %}{{ user.username }} | Django Blog{% endblock head_title %}
 
@@ -13,21 +14,20 @@
           <div class="rounded-top text-white d-flex flex-row" style="background-color: #000; height:200px;">
             <div class="ms-4 mt-5 d-flex flex-column" style="width: 150px;">
 
-              {% if profile.image %}
-              <img src="{{ profile.image.url }}" alt="{{ profile }} Avatar" class="img-fluid img-thumbnail mt-4 mb-2"
-              style="width: 150px; z-index: 1">
+              {% if user.profile.image %}
+                  {% cloudinary user.profile.image format="jpg" width=150 height=150 crop="fill" class="img-fluid img-thumbnail mt-4 mb-2"  style="width: 150px; z-index: 1" %}
               {% else %}
-                  <!-- If the author doesn't have a profile image, you can use a default avatar image here -->
-                  <img src="{% static 'images/avatar.png' %}" alt="{{ profile.image}} Avatar" class="img-fluid img-thumbnail mt-4 mb-2"
-                  style="width: 150px; z-index: 1">
+                  {% cloudinary "v1704034646/static/images/avatar.b2e01619cc46" format="jpg" width=150 height=150 crop="fill" class="img-fluid img-thumbnail mt-4 mb-2"  style="width: 150px; z-index: 1" %}
               {% endif %}
 
-              <!-- <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-profiles/avatar-1.webp"
+
+              
+                <!-- <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-profiles/avatar-1.webp"
                 alt="Generic placeholder image" class="img-fluid img-thumbnail mt-4 mb-2"
                 style="width: 150px; z-index: 1"> -->
               {% if request.user.id == user.id %}
               <a type="button" class="btn btn-outline-dark" data-mdb-ripple-color="dark"
-                style="z-index: 1;" href="{% url 'profile-update' user.pk %}" >
+                style="z-index: 1; background-color: #212529; color: white;" href="{% url 'profile-update' user.pk %}" >
                 Edit profile
               </a>
               {% endif %}
@@ -36,10 +36,10 @@
               <h3>{{ user.username }}</h3>
               <p>{{ user.email }}</p>
               <hr>
-              <p style="margin-top: 15px; font-size: small;">Last LogIn: {{user.last_login}}</p>
+              <p style="margin-top: 15px; font-size: small;">Last Loged: {{user.last_login}}</p>
             </div>
           </div>
-          <div class="p-4 text-black" style="background-color: #f8f9fa;">
+          <div class="p-4 text-black" style="background-color: #d9d9d9">
             <div class="d-flex justify-content-end text-center py-1">
               <div>
                 <i class="fas fa-pen"></i>

@@ -10939,3 +10939,10 @@ textarea.form-control-lg {
 form input {
   width: 80%; /* Adjust the width as needed */
 }
+
+.btn-outline-dark:hover {
+  background-color: #4CAF50; /* Change the background color to green on hover */
+  color: white;
+  transform: scale(1.1); /* Enlarge the button on hover */
+  transition: all 0.3s; /* Add a smooth transition effect */
+}
