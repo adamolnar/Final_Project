@@ -2,17 +2,19 @@
 
 {% block content %}
 
+{% load static %}
+{% load cloudinary %}
+
 {% load crispy_forms_tags %}
 {% load social_share %}
 <div class="masthead" style="padding-top: 10px;">
     <div class="container">
         <div class="row col-md-12 masthead-image" >
-            <!-- The featured image URL goes in the src attribute -->
-            {% if "placeholder" in post.featured_image.url %}
-            <img src="https://res.cloudinary.com/dmg7oqpgs/image/upload/v1698830526/Project_4/masthead_wxqbsd.jpg" width="100%">
-            {% else %}
-            <img src=" {{ post.featured_image.url }}" width="100%">
-            {% endif %}
+        {% if post.featured_image %}
+            {% cloudinary post.featured_image.url alt=post.title %}
+        {% else %}
+            {% cloudinary "v1699179858/lakyrzjrxgfb05kpyi2r" format="png" alt="Placeholder Image" %}
+        {% endif %}
         </div>
         <div class="g-0">
             <div class="col-md-4 masthead-text">

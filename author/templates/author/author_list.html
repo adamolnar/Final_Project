@@ -12,7 +12,7 @@
                 <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
                     <div class="card">
                         {% if author.profile.image %}
-                            {% cloudinary author.profile.image format="jpg" width=150 height=150 crop="fill" class="img-fluid img-thumbnail mt-2 mb-2" style="width: 50px; z-index: 1" %}
+                            {% cloudinary author.profile.image.url format="jpg" width=150 height=150 crop="fill" class="img-fluid img-thumbnail mt-2 mb-2" style="width: 50px; z-index: 1" %}
                         {% else %}
                             {% cloudinary "v1704034646/static/images/avatar.b2e01619cc46" format="png" width=150 height=150 crop="fill" class="img-fluid img-thumbnail mt-4 mb-2" style="width: 150px; z-index: 1" %}
                         {% endif %}

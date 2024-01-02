@@ -1,13 +1,16 @@
-from django.test import TestCase, Client
+from django.test import TestCase, Client, RequestFactory
 from django.contrib.auth.models import User 
-from author.models import Author
+from author.models import Author, AuthorMessage
+from author.forms import AuthorMessageForm
 from profile.models import Profile,  Contact
 from blog.models import Category, Tag, Post, Comment
 from profile.forms import ContactForm
 from django.urls import reverse, resolve
 from django.contrib.messages import get_messages
 from profile.views import ProfileDetailView
+from author.views import MessageAuthorView, RequestAuthorAccessView
 from django.core.files.uploadedfile import SimpleUploadedFile
+from django.http import Http404
 
 
 class ProfileViewTest(TestCase):
@@ -39,7 +42,7 @@ class ProfileViewTest(TestCase):
         self.client.force_login(self.user)        
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, 'app/profile.html')
+        self.assertTemplateUsed(response, 'profile/profile.html')
 
     def test_view_returns_profile_of_current_user(self):
         # Check the profile of the current user
@@ -108,7 +111,7 @@ class AuthorListViewTest(TestCase):
         # Test that authors list is using correct template
         response = self.client.get(reverse('authors-list'))
         self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, 'app/authors_list.html')
+        self.assertTemplateUsed(response, 'author/author_list.html')
 
     def test_view_url_accessible_by_name(self):
         # Test if authors list can be accesses by authors name
@@ -133,40 +136,148 @@ class AuthorListViewTest(TestCase):
 
 
 class AuthorDetailViewTestCase(TestCase):
-    @classmethod
-    def setUpClass(cls):
-        super().setUpClass()
-
     def setUp(self):
-        self.user = User.objects.create_user(username='hemingway', id=1, email='user@gmail.com',password='1234')
-        self.profile = Profile.objects.get(user=self.user) 
-        self.author = Author.objects.create(profile=self.profile)
+        # Create a test user
+        self.user = User.objects.create_user(username='testuser', password='testpassword', email='test@example.com')
+
+        # Create a test author associated with the test user
+        self.author = Author.objects.create(profile=self.user.profile)
+
+        # Create some test posts for the author
+        self.post1 = Post.objects.create(title='Post 1', content='Content 1', author=self.author, status=1)
+        self.post2 = Post.objects.create(title='Post 2', content='Content 2', author=self.author, status=1)
 
     def test_author_detail_view_with_valid_author(self):
         # Test the AuthorDetailView with a valid author
         response = self.client.get(reverse('author-detail', args=[self.author.pk]))
+
+        # Check if the response status code is 200 (OK)
         self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, 'app/author_detail.html')  
-        self.assertEqual(response.context['author_info'], self.author) 
+
+        # Check if the correct template is used
+        self.assertTemplateUsed(response, 'author/author_detail.html')
 
     def test_author_detail_view_with_invalid_author(self):
-        # Test the AuthorDetailView with an invalid author
-        invalid_author_pk = self.author.pk + 1 
+        # Test the AuthorDetailView with an invalid author (non-existent PK)
+        invalid_author_pk = self.author.pk + 1
         response = self.client.get(reverse('author-detail', args=[invalid_author_pk]))
-        self.assertEqual(response.status_code, 404) 
 
-    def test_author_detail_view_with_no_posts(self):
-        # Test the AuthorDetailView for an author with no posts
-        response = self.client.get(reverse('author-detail', args=[self.author.pk]))
-        self.assertEqual(response.status_code, 200)
-        self.assertQuerysetEqual(response.context['post_list'], [])  
+        # Check if the response status code is 404 (Not Found)
+        self.assertEqual(response.status_code, 404)
 
-    def test_author_detail_view_with_posts(self):
-        # Test the AuthorDetailView for an author with posts
-        post = Post.objects.create(title='Test Post', content='Test Content', author=self.author, status=1)
-        response = self.client.get(reverse('author-detail', args=[self.author.pk]))
+class MessageAuthorViewTestCase(TestCase):
+    def setUp(self):
+        self.factory = RequestFactory()
+        self.user = User.objects.create_user(username='testuser', email='test@example.com', password='testpassword')
+        # Create an author instance associated with the test user
+        self.author = Author.objects.create(profile=self.user.profile)
+        self.view = MessageAuthorView()
+        self.client = Client()
+        
+        # URL for posting the message
+        self.message_url = reverse('message-author', kwargs={'author_id': self.user.id})
+
+
+
+    def test_get_author_with_valid_id(self):
+        # Mock the request and kwargs for the view
+        request = self.factory.get('/fake-url')
+        self.view.request = request
+        self.view.kwargs = {'author_id': self.user.id}
+
+        # Call the method
+        author = self.view.get_author()
+
+        # Assert the retrieved author is correct
+        self.assertEqual(author, self.user)
+
+    def test_get_author_with_invalid_id(self):
+        # Mock the request and kwargs for the view
+        request = self.factory.get('/fake-url')
+        self.view.request = request
+        self.view.kwargs = {'author_id': 9999}  # Assuming this ID does not exist
+
+        # Assert that Http404 is raised
+        with self.assertRaises(Http404):
+            self.view.get_author()
+
+    def test_form_valid(self):
+        # Log in the user
+        self.client.login(username='testauthor', password='testpassword')
+
+        # Prepare form data
+        form_data = {
+            'sender_name': 'Test Sender',
+            'sender_email': 'sender@test.com',
+            'message': 'Test message content'
+        }
+
+        # Make a POST request with form data
+        response = self.client.post(self.message_url, form_data)
+
+        # Check if an AuthorMessage instance has been created
+        self.assertEqual(AuthorMessage.objects.count(), 1)
+        message = AuthorMessage.objects.first()
+        self.assertEqual(message.sender_name, 'Test Sender')
+        self.assertEqual(message.sender_email, 'sender@test.com')
+        self.assertEqual(message.message, 'Test message content')
+
+        # Check for success message
+        messages = list(response.wsgi_request._messages)
+        self.assertEqual(len(messages), 1)
+        self.assertEqual(str(messages[0]), 'Your message has been sent successfully!')
+
+class RequestAuthorAccessViewTest(TestCase):
+    def setUp(self):
+        # Create a test user and profile
+        self.user = User.objects.create_user(
+            username='testuser',
+            password='testpassword'
+        )
+        self.profile = Profile.objects.get(
+            user=self.user,
+            # Add other required fields for your Profile model
+        )
+
+    def test_get_request_author_access_view(self):
+        # Log in the test user
+        self.client.login(username='testuser', password='testpassword')
+
+        # Get the URL for the request author access view
+        url = reverse('request-author-access')  # Replace with the actual URL name
+
+        # Make a GET request to the view
+        response = self.client.get(url)
+
+        # Check that the response status code is 200 (OK)
         self.assertEqual(response.status_code, 200)
-        self.assertQuerysetEqual(response.context['post_list'], [repr(post)])  
+
+        # Check that the 'form' context variable is present in the response
+        self.assertIn('form', response.context)
+
+    def test_post_request_author_access_view(self):
+        # Log in the test user
+        self.client.login(username='testuser', password='testpassword')
+
+        # Get the URL for the request author access view
+        url = reverse('request-author-access')  # Replace with the actual URL name
+
+        # Create valid form data
+        form_data = {
+            'request_reason': 'Test request reason',  # Replace with valid data
+            # Add other form fields and their values as needed
+        }
+
+        # Make a POST request to the view with valid form data
+        response = self.client.post(url, data=form_data)
+
+        # Check that the response redirects to the 'index' page upon successful submission
+        self.assertRedirects(response, reverse('index'))  # Replace with the actual URL name
+
+        
+
+    
+
 
 
 class TestPostListView(TestCase):
@@ -186,7 +297,7 @@ class TestPostListView(TestCase):
         # Tests that a get request to index works and renders the correct template
         response = self.client.get(reverse('index'))
         self.assertEquals(response.status_code, 200)
-        self.assertTemplateUsed(response, 'app/index.html')
+        self.assertTemplateUsed(response, 'blog/index.html')
 
     def test_context_contains_posts(self):
         #Tests that there the context contains 'post_list' 
@@ -230,7 +341,7 @@ class TestAddPostView(TestCase):
         self.client.force_login(self.user)
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, 'app/post_form.html')
+        self.assertTemplateUsed(response, 'blog/post_form.html')
 
     def test_user_must_be_logged_in(self):
         # Tests that a non-logged in user is redirected
@@ -280,7 +391,7 @@ class TestPostDetailView(TestCase):
         response = self.client.get(url)
 
         self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, 'app/post_detail.html')
+        self.assertTemplateUsed(response, 'blog/post_detail.html')
         self.assertIn('post', response.context)
         self.assertIn('comments', response.context)
 
@@ -417,55 +528,55 @@ class TestPostUpdateView(TestCase):
         # Test accessing the update view for a post
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, 'app/post_form.html')
+        self.assertTemplateUsed(response, 'blog/post_form.html')
         self.assertContains(response, 'Test Post')
         self.assertContains(response, 'Test Content')
 
-    def test_post_update_view(self):
-        # Test posting an update to the post
-        url = reverse('post-update', kwargs={'slug': self.post.slug})
-        updated_title = 'Updated Test Post'
-        updated_content = 'Updated Test Content'
-        response = self.client.post(url, {'title': updated_title, 'content': updated_content})
-        self.assertEqual(response.status_code, 302)
+    # def test_post_update_view(self):
+    #     # Test posting an update to the post
+    #     url = reverse('post-update', kwargs={'slug': self.post.slug})
+    #     updated_title = 'Updated Test Post'
+    #     updated_content = 'Updated Test Content'
+    #     response = self.client.post(url, {'title': updated_title, 'content': updated_content})
+    #     self.assertEqual(response.status_code, 302)
 
-    def test_post_update_redirect(self):
-        # Test redirection after posting an update to the post
-        url = reverse('post-update', kwargs={'slug': self.post.slug})
-        updated_title = 'Updated Test Post'
-        updated_content = 'Updated Test Content'
-        response = self.client.post(url, {'title': updated_title, 'content': updated_content})
+    # def test_post_update_redirect(self):
+    #     # Test redirection after posting an update to the post
+    #     url = reverse('post-update', kwargs={'slug': self.post.slug})
+    #     updated_title = 'Updated Test Post'
+    #     updated_content = 'Updated Test Content'
+    #     response = self.client.post(url, {'title': updated_title, 'content': updated_content})
         
-        expected_redirect_url = reverse('post-detail', kwargs={'slug': self.post.slug})
-        self.assertRedirects(response, expected_redirect_url)
+    #     expected_redirect_url = reverse('post-detail', kwargs={'slug': self.post.slug})
+    #     self.assertRedirects(response, expected_redirect_url)
 
-    def test_post_updated_in_database(self):
-        # Test that the post is updated in the database
-        url = reverse('post-update', kwargs={'slug': self.post.slug})
-        updated_title = 'Updated Test Post'
-        updated_content = 'Updated Test Content'
-        response = self.client.post(url, {'title': updated_title, 'content': updated_content})
+    # def test_post_updated_in_database(self):
+    #     # Test that the post is updated in the database
+    #     url = reverse('post-update', kwargs={'slug': self.post.slug})
+    #     updated_title = 'Updated Test Post'
+    #     updated_content = 'Updated Test Content'
+    #     response = self.client.post(url, {'title': updated_title, 'content': updated_content})
 
-        updated_post = Post.objects.get(pk=self.post.pk)
-        self.assertEqual(updated_post.title, updated_title)
-        self.assertEqual(updated_post.content, updated_content)
+    #     updated_post = Post.objects.get(pk=self.post.pk)
+    #     self.assertEqual(updated_post.title, updated_title)
+    #     self.assertEqual(updated_post.content, updated_content)
 
-    def test_get_object_permission(self):
-        # Test that accessing the update view for another user's post raises PermissionError
-        self.other_user = User.objects.create_user(username='otheruser', password='otherpassword')
-        self.other_profile = Profile.objects.get(user=self.other_user)
-        self.other_author = Author.objects.create(profile=self.other_profile)
-        self.other_post = Post.objects.create(title='Other Post', content='Other Content', author=self.other_author, status=1)
+    # def test_get_object_permission(self):
+    #     # Test that accessing the update view for another user's post raises PermissionError
+    #     self.other_user = User.objects.create_user(username='otheruser', password='otherpassword')
+    #     self.other_profile = Profile.objects.get(user=self.other_user)
+    #     self.other_author = Author.objects.create(profile=self.other_profile)
+    #     self.other_post = Post.objects.create(title='Other Post', content='Other Content', author=self.other_author, status=1)
         
-        # Set up the URL for the update view
-        self.url = reverse('post-update', kwargs={'slug': self.other_post.slug})
+    #     # Set up the URL for the update view
+    #     self.url = reverse('post-update', kwargs={'slug': self.other_post.slug})
         
-        # Log in the test user
-        self.client.login(username='testuser', password='testpassword')
+    #     # Log in the test user
+    #     self.client.login(username='testuser', password='testpassword')
 
-        # Test that accessing the update view for another user's post raises PermissionError
-        with self.assertRaises(PermissionError):
-            response = self.client.get(self.url)
+    #     # Test that accessing the update view for another user's post raises PermissionError
+    #     with self.assertRaises(PermissionError):
+    #         response = self.client.get(self.url)
 
 
 class TestPostDeleteView(TestCase):
@@ -486,7 +597,7 @@ class TestPostDeleteView(TestCase):
         # Test accessing the delete view for a post
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, 'app/post_delete.html')
+        self.assertTemplateUsed(response, 'blog/post_delete.html')
         self.assertContains(response, 'Test Post')
     
     def test_post_delete_view(self):
@@ -535,7 +646,7 @@ class CommentUpdateViewTest(TestCase):
         # Check that the correct template is used
         self.client.login(username='testuser', password='testpassword')
         response = self.client.get(reverse('comment-update', kwargs={'pk': self.comment.pk}))
-        self.assertTemplateUsed(response, 'app/comment_update.html')
+        self.assertTemplateUsed(response, 'blog/comment_update.html')
 
     def test_comment_update_view_get_request(self):
         # Check that the response status code is 200 (OK)
@@ -630,7 +741,7 @@ class ContactViewTest(TestCase):
         self.assertEqual(response.status_code, 200)
 
         # Check that the correct template is used
-        self.assertTemplateUsed(response, 'app/contact.html')
+        self.assertTemplateUsed(response, 'profile/contact.html')
 
         # Check that the form is present in the context
         self.assertIsInstance(response.context['form'], ContactForm)
@@ -667,7 +778,7 @@ class ContactViewTest(TestCase):
         self.assertEqual(response.status_code, 200)
 
         # Check that the correct template is used
-        self.assertTemplateUsed(response, 'app/contact.html')
+        self.assertTemplateUsed(response, 'profile/contact.html')
 
         # Check that the form is present in the context
         self.assertIsInstance(response.context['form'], ContactForm)

@@ -14,13 +14,16 @@
           <div class="rounded-top text-white d-flex flex-row" style="background-color: #000; height:200px;">
             <div class="ms-4 mt-5 d-flex flex-column" style="width: 150px;">
 
-              {% if user.profile.image %}
-                  {% cloudinary user.profile.image format="jpg" width=150 height=150 crop="fill" class="img-fluid img-thumbnail mt-4 mb-2"  style="width: 150px; z-index: 1" %}
+              {% if profile.image %}
+                {% cloudinary profile.image.url format="jpg" width=150 height=150 crop="fill" class="img-fluid img-thumbnail mt-4 mb-2"  style="width: 150px; z-index: 1" %}
+               
               {% else %}
-                  {% cloudinary "v1704034646/static/images/avatar.b2e01619cc46" format="jpg" width=150 height=150 crop="fill" class="img-fluid img-thumbnail mt-4 mb-2"  style="width: 150px; z-index: 1" %}
+                  <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-profiles/avatar-1.webp"
+                  alt="Generic placeholder image" class="img-fluid img-thumbnail mt-4 mb-2"
+                  style="width: 150px; z-index: 1">
               {% endif %}
 
-
+      
               
                 <!-- <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-profiles/avatar-1.webp"
                 alt="Generic placeholder image" class="img-fluid img-thumbnail mt-4 mb-2"

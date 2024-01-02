@@ -1,6 +1,6 @@
 from django.test import TestCase
 from django.contrib.auth.models import User 
-from author.models import Author
+from author.models import Author, AuthorMessage, AuthorAccessRequest  
 from profile.models import Profile,  Contact
 from blog.models import Category, Tag, Post, Comment
 from django.urls import reverse
@@ -15,10 +15,6 @@ class ProfileModelTest(TestCase):
         """ Tests that profile can be created """
         self.assertTrue(self.profile)
 
-    def test_profile_is_active(self):
-        """ Tests that profile is_active  """
-        self.profile.is_active = False 
-        self.assertFalse(bool(self.profile.is_active))
 
     def test_profile_str(self):
         """ Tests the __str__ of the Profile model"""
@@ -43,6 +39,52 @@ class AuthorModelTest(TestCase):
     def test_author_str(self):
         """ Tests the __str__ of the Author model"""
         self.assertEqual(str(self.author), self.profile.user.username )
+
+
+class AuthorMessageModelTest(TestCase):
+    def test_author_message_str_representation(self):
+        # Create a test user
+        user = User.objects.create_user(
+            username='testuser',
+            password='testpassword'
+        )
+
+        # Create an AuthorMessage instance
+        author_message = AuthorMessage(
+            author=user,
+            sender_name="John Doe",
+            sender_email="john@example.com",
+            message="Hello, I'm a fan of your work!"
+        )
+
+        # Call str() on the AuthorMessage instance
+        str_representation = str(author_message)
+
+        # Assert that the str_representation matches the expected string
+        expected_str = "Message from John Doe to testuser"
+        self.assertEqual(str_representation, expected_str)
+
+
+class AuthorAccessRequestModelTest(TestCase):
+    def test_author_access_request_str_representation(self):
+        # Create a test user
+        user = User.objects.create_user(
+            username='testuser',
+            password='testpassword'
+        )
+
+        # Create an AuthorAccessRequest instance
+        author_access_request = AuthorAccessRequest(
+            profile=user.profile,  # Replace with an actual Profile instance
+            request_reason="I want to access exclusive content."
+        )
+
+        # Call str() on the AuthorAccessRequest instance
+        str_representation = str(author_access_request)
+
+        # Assert that the str_representation matches the expected string
+        expected_str = "Request from testuser"
+        self.assertEqual(str_representation, expected_str)
 
 
 

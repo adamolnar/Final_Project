@@ -120,4 +120,4 @@ def custom_404(request, exception):
     """
     Custom 404 error view.
     """
-    return render(request, 'profile/404.html', {'exception': exception}, status=404)
+    return render(request, 'blog/404.html', {'exception': exception}, status=404)

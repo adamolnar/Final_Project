@@ -7,10 +7,14 @@
 <div class="card mb-4">
     <a href="{% url 'post-detail' post.slug %}">
 
-        <img src="{{ post.featured_image }}" alt="Featured Image">
-    </a>
+        {% if post.featured_image %}
+            {% cloudinary post.featured_image.url alt=post.title %}
+        {% else %}
+            {% cloudinary "https://res.cloudinary.com/dmg7oqpgs/image/upload/v1699179858/lakyrzjrxgfb05kpyi2r.jpg" alt="Placeholder Image" %}
+        {% endif %}
 
-    
+
+
     <div class="card-body">
 
         <div class="small author">Author: <a href="{{ post.author.get_absolute_url }}">{{ post.author }}</a></div>

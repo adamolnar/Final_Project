@@ -9,7 +9,7 @@ from cloudinary.models import CloudinaryField
 # Model assigning Profile Page to each user.
 class Profile(models.Model):
     about_me = models.TextField()
-    image = CloudinaryField('image', default="placeholder")
+    image = CloudinaryField('image', default="v1704034646/static/images/avatar.b2e01619cc46")
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="profile")
 
     def __str__(self):
