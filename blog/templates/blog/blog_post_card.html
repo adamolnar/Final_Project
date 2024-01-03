@@ -1,41 +1,61 @@
-{% block content %}
-
 {% load static %}
 {% load cloudinary %}
 
-
-<div class="card mb-4">
-    <a href="{% url 'post-detail' post.slug %}">
-
-        {% if post.featured_image %}
-            {% cloudinary post.featured_image.url alt=post.title %}
-        {% else %}
-            {% cloudinary "https://res.cloudinary.com/dmg7oqpgs/image/upload/v1699179858/lakyrzjrxgfb05kpyi2r.jpg" alt="Placeholder Image" %}
-        {% endif %}
-
-
-
+{% block content %}
+<div class="card mb-4" style="height: 480px;">
     <div class="card-body">
+        <div class="image-container">
+            <a href="{% url 'post-detail' post.slug %}">
+                {% if post.image %}
+                    <!-- Display the post's image using Cloudinary, with fallback if image is missing -->
+                    {% cloudinary post.image alt=post.title width=380 height=150 crop="fill" class="img-fluid"%}
+                {% else %}
+                    <!-- Display a placeholder image if the post doesn't have an image -->
+                    <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-profiles/avatar-1.webp"
+                        alt="Generic placeholder image"
+                        style="max-width: 100px; max-height: 100px; object-fit: cover;"
+                        class="img-fluid">
+                {% endif %}
+            </a>
+        </div>
 
+        <!-- Display the post author with a link to their profile -->
         <div class="small author">Author: <a href="{{ post.author.get_absolute_url }}">{{ post.author }}</a></div>
+        
+        <!-- Display the post title -->
         <h2 class="card-title">{{ post.title }}</h2>
+        
+        <!-- Display a brief excerpt from the post -->
         <p class="card-text">{{ post.excerpt }}</p>
+        
+        <!-- Link to read the full post -->
         <a class="btn btn-primary" href="{% url 'post-detail' post.slug %}">Read more →</a>
+        
         <hr />
-        <p class="card-text text-muted h6">{{ post.created_on}} 
+        
+        <!-- Display post metadata: creation date, like button, and comment count -->
+        <p class="card-text text-muted h6">{{ post.created_on }}
             <strong style="float: right;">
                 {% if liked %}
-                    <button style="padding: 0; border: none; background: none;" type="submit" name="blogpost_id" value="{{post.slug}}" class="btn-like"><i class="fas fa-heart" style="color: red;"></i></button>
+                    <!-- Display a filled heart icon for liked posts -->
+                    <button style="padding: 0; border: none; background: none;" type="submit" name="blogpost_id" value="{{post.slug}}" class="btn-like">
+                        <i class="fas fa-heart" style="color: red;"></i>
+                    </button>
                 {% else %}
-                    <button style="padding: 0; border: none; background: none;" type="submit" name="blogpost_id" value="{{post.slug}}" class="btn-like"><i class="far fa-heart" style="color: red;"></i></button>
+                    <!-- Display an empty heart icon for unliked posts -->
+                    <button style="padding: 0; border: none; background: none;" type="submit" name="blogpost_id" value="{{post.slug}}" class="btn-like">
+                        <i class="far fa-heart" style="color: red;"></i>
+                    </button>
                 {% endif %}
-                <span class="text-secondary">{{ post.number_of_likes }}</span> 
+                <!-- Display the number of likes for the post -->
+                <span class="text-secondary">{{ post.number_of_likes }}</span>
             </strong>
+            
+            <!-- Display a link to view comments and the comment count -->
             <a href="{% url 'post-detail' slug=post.slug %}" style="padding: 0; border: none; background: none;">
                 <i class="far fa-comments"> {{ post.approved_comments.count }}</i>
-            </a>    
+            </a>
         </p>
     </div>
 </div>
-
 {% endblock %}

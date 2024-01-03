@@ -356,7 +356,7 @@ class TestAddPostView(TestCase):
         self.assertEqual(len(form.fields), 6)
         self.assertIn('title', form.fields)
         self.assertIn('content', form.fields)
-        self.assertIn('featured_image', form.fields)
+        self.assertIn('image', form.fields)
         self.assertIn('status', form.fields)
         self.assertIn('categories', form.fields)
         self.assertIn('tags', form.fields)

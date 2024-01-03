@@ -6,12 +6,16 @@
 <div class="container">
   <div class="row">
     <div class="col-8 offset-2">
+      <!-- Heading for deleting a post -->
       <h2 class=" my-5">Delete post</h2>
       <form method="POST" enctype="multipart/form-data">
         {% csrf_token %}
+        <!-- Confirmation message for deleting the post with its title -->
         <p>Are you sure that you want to delete the post "{{post.title}}"?</p>
         <div>
+          <!-- Button to confirm the deletion -->
           <button type="submit" class="btn btn-danger" value="Yes">Delete</button>
+          <!-- Button to cancel the deletion and return to the post detail page -->
           <button type="submit" class="btn btn-success" value="'No"> 
             <a style="text-decoration: none; color: white;" href="{% url 'post-detail' post.slug %}">Cancel</a></button>
         </div>

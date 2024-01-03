@@ -1,8 +1,8 @@
 {% extends 'base.html' %}
 
 {% block content %}
-
 <div class="container">
+  <!-- Heading displaying the username whose draft posts are being shown -->
   <h1 class="text-center" style="margin: 2% auto;">Draft Posts by <strong>{{ user.username }}</strong></h1>
 
   {% if draft_post_list %}
@@ -11,6 +11,7 @@
         <div class="col-lg-6 mb-4">
           <div class="card">
             <div class="card-body">
+              <!-- Include a separate blog post card template for each draft post -->
               {% include 'blog/blog_post_card.html' %}
             </div>
           </div>
@@ -18,18 +19,22 @@
       {% endfor %}
     </div>
   
+    <!-- Pagination controls if there are multiple pages of draft posts -->
     {% if is_paginated %}
       <div class="pagination">
         <span class="step-links">
+          <!-- Link to the first page and previous page if available -->
           {% if draft_post_list.has_previous %}
             <a href="?page=1">&laquo; first</a>
             <a href="?page={{ draft_post_list.previous_page_number }}">previous</a>
           {% endif %}
 
+          <!-- Display the current page and the total number of pages -->
           <span class="current">
             Page {{ draft_post_list.number }} of {{ draft_post_list.paginator.num_pages }}.
           </span>
 
+          <!-- Link to the next page and the last page if available -->
           {% if draft_post_list.has_next %}
             <a href="?page={{ draft_post_list.next_page_number }}">next</a>
             <a href="?page={{ draft_post_list.paginator.num_pages }}">last &raquo;</a>
@@ -37,13 +42,13 @@
         </span>
       </div>
     {% endif %}
-
-    {% else %}
+  
+  {% else %}
+    <!-- Display a message if there are no draft posts to show -->
     <div class="alert alert-info" role="alert">
       There are no draft posts to display.
     </div>
-  {% endif %}
-
-  </div>
+  {% endif}
+</div>
   
 {% endblock %}

@@ -22,7 +22,7 @@ class TagAdmin(admin.ModelAdmin):
 @admin.register(Post)
 class PostAdmin(SummernoteModelAdmin):
     # Display these fields in the list view
-    list_display = ('title', 'author', 'slug', 'status', 'created_on', 'featured_image')
+    list_display = ('title', 'author', 'slug', 'status', 'created_on', 'image')
     # Add search functionality for the list view
     search_fields = ['title', 'content', 'author__profile__user__username']
     # Add filters for the list view

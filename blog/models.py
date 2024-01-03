@@ -5,11 +5,10 @@ from django.template.defaultfilters import slugify
 from author.models import Author
 from cloudinary.models import CloudinaryField
 
-
+# Model representing the status of a blog post (Draft or Published)
 STATUS = ((0, "Draft"), (1, "Published"))
 
-
-# Model representing a category.
+# Model representing a category for blog posts
 class Category(models.Model):
     title = models.CharField(max_length=20)
     slug = models.SlugField(max_length=200, unique=True, null=False)
@@ -21,8 +20,7 @@ class Category(models.Model):
     def __str__(self):
         return self.title
 
-
-# Model representing a tag.
+# Model representing a tag for blog posts
 class Tag(models.Model):
     name = models.CharField(max_length=50, unique=True)
     slug = models.SlugField(max_length=200, unique=True, null=True)
@@ -30,15 +28,14 @@ class Tag(models.Model):
     def __str__(self):
         return self.name
     
-
-# Model representing a blog post.
+# Model representing a blog post
 class Post(models.Model):
-    title = models.CharField(max_length=200, unique=True )
+    title = models.CharField(max_length=200, unique=True)
     slug = models.SlugField(max_length=200, unique=True)
     author = models.ForeignKey(
         Author, on_delete=models.CASCADE, related_name="blog_posts"
     )
-    featured_image = CloudinaryField('image', default="v1699179858/lakyrzjrxgfb05kpyi2r")
+    image = CloudinaryField('image', default='placeholder')
     excerpt = models.TextField(blank=True)
     updated_on = models.DateTimeField(auto_now=True)
     content = models.TextField()
@@ -69,11 +66,8 @@ class Post(models.Model):
     
     def approved_comments(self):
         return self.comments.filter(approved=True)
-    
-    
 
-
-# Model representing a comment against a blog post.
+# Model representing a comment against a blog post
 class Comment(models.Model):
     post = models.ForeignKey(Post, on_delete=models.CASCADE,
                              related_name="comments")

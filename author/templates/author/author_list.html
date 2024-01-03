@@ -10,30 +10,42 @@
         {% if author_list %}
             {% for author in author_list %}
                 <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
-                    <div class="card">
+                    <div class="card p-3">
+                        <!-- Author Profile Image -->
                         {% if author.profile.image %}
-                            {% cloudinary author.profile.image.url format="jpg" width=150 height=150 crop="fill" class="img-fluid img-thumbnail mt-2 mb-2" style="width: 50px; z-index: 1" %}
+                            {% cloudinary author.profile.image.url format="jpg" width=100 height=100 crop="fill" class="img-fluid img-thumbnail mt-2 mb-2" style="z-index: 1" %}
                         {% else %}
                             {% cloudinary "v1704034646/static/images/avatar.b2e01619cc46" format="png" width=150 height=150 crop="fill" class="img-fluid img-thumbnail mt-4 mb-2" style="width: 150px; z-index: 1" %}
                         {% endif %}
-                        <h2><a href="{% url 'author-detail' author.pk %}">{{ author }}</a></h2>
-                        <p class="author-about">About the author: {{ author.profile.about_me }}</p>
 
+                        <!-- Author Name -->
+                        <h2><a href="{% url 'author-detail' author.pk %}">{{ author }}</a></h2>
+                        
+                        <!-- Author About -->
+                        <p class="author-about" style="margin-bottom: 0;"><strong>About: </strong>{{ author.profile.about_me }}</p>
+                        <hr>
+
+                        <!-- Author Posts -->
                         <div class="author-posts">
+                            <p style="margin-bottom: 0;"><strong>Latest posts:</strong> </p>
                             {% for post in author.blog_posts.all %}
                                 {% if post.status == 1 %}  
                                     {% if forloop.counter <= 5 %} {# Display up to 5 posts in one column #}
-                                        <div class="post">
-                                            {% if post.featured_image %}
-                                                <img src="{% if 'placeholder' in post.featured_image.url %}https://res.cloudinary.com/dmg7oqpgs/image/upload/v1698830526/Project_4/masthead_wxqbsd.jpg
-                                                {% else %}{{ post.featured_image.url }}{% endif %}" class="featured-image" alt="{{ post.title }}" style="width: 25px; height: 25px;"> 
+                                        <div class="post mt-2">
+                                            <!-- Post Image -->
+                                            {% if post.image %}
+                                                {% cloudinary post.image alt=post.title width=40 height=40 crop="fill"  %}
                                             {% else %}
-                                                <div class="placeholder-image" style="width: 25px; height: 25px;"></div>
+                                                <img src="https://res.cloudinary.com/dmg7oqpgs/image/upload/v1698830526/Project_4/masthead_wxqbsd.jpg"
+                                                    alt="Generic placeholder image"
+                                                    style="width: 150px; z-index: 1" crop="fill">
                                             {% endif %}
-                                            <a href="{% url 'post-detail' post.slug %}" class="post-title">{{ post.title }}</a>
+                                            
+                                            <!-- Post Title -->
+                                            <a href="{% url 'post-detail' post.slug %}" class="post-title">{{ post.title|truncatewords_html:5 }}</a>
                                         </div>
                                     {% endif %}
-                                {% endif %}
+                                {% endif %} 
                             {% endfor %}
                         </div>
                     </div>

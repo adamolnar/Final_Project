@@ -2,6 +2,7 @@
 
 {% block content %}
   <div class="container text-center">
+    <!-- Page Heading -->
     <h2 class=" mt-5 mb-5">Request Author Access</h2>
     <p>
       If you would like to become an author and contribute posts, please submit a request below.
@@ -10,17 +11,19 @@
     <!-- Display form errors if any -->
     {% if form.errors %}
       <div class="alert alert-danger">
+        <!-- Loop through form errors and display them -->
         {% for error in form.errors %}
           <strong>{{ error }}</strong><br>
         {% endfor %}
       </div>
     {% endif %}
 
-    <!-- Your author access request form goes here -->
+    <!-- Author access request form -->
     <form method="post" action="{% url 'request-author-access' %}" class="col-md-8 offset-2 mt-5">
       {% csrf_token %}
       {{ form.as_p }}
 
+      <!-- Submit Button -->
       <button type="submit" class="btn btn-primary">Submit Request</button>
     </form>
   </div>

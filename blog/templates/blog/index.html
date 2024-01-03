@@ -1,24 +1,21 @@
 {% extends "base.html" %}
 
-{% block content %}
-
 {% load static %}
 {% load cloudinary %}
+{% load social_share %}
 
-    {% load social_share %}
-
-
-    <!-- Page header with logo and tagline-->
+{% block content %}
+    <!-- Page header with logo and tagline -->
     <header class="py-5 bg-light border-bottom mb-4">
         <div class="container">
             <div class="text-center my-5">
-                <h1 class="fw-bolder">Welcome to the Sinabelkirchen!</h1>
-                <p class="lead mb-0">A Bootstrap 5 starter layout for your next blog homepage</p>
+                <h1 class="fw-bolder">Building Tomorrow's Tech Today!</h1>
+                <p class="lead mb-0">Welcome to the tech blog</p>
             </div>
         </div>
     </header>
 
-    <!-- Page content-->
+    <!-- Page content -->
     <div class="container">
         <div class="row">
             <!-- Main post (full width) -->
@@ -30,9 +27,9 @@
                 {% endfor %}
             </div>
 
-            <!-- Side widgets-->
+            <!-- Side widgets -->
             <div class="col-lg-4">
-                <!-- Search widget-->
+                <!-- Search widget -->
                 <!-- Tags Widget -->
                 <div class="card mb-4">
                     <div class="card-header">Tags</div>
@@ -44,7 +41,7 @@
                         </ul>
                     </div>
                 </div>
-                <!-- Categories widget-->
+                <!-- Categories widget -->
                 <div class="card mb-4">
                     <div class="card-header">Categories</div>
                     <div class="card-body">
@@ -56,15 +53,15 @@
                     </div>
                 </div>
 
-                <!-- Side widget-->
+                <!-- Side widget -->
                 <div class="card mb-4">
                     <div class="card-header">Side Widget</div>
-                    <div class="card-body">You can put anything you want inside of these side widgets. They are easy to use, and feature the Bootstrap 5 card component!</div>
+                    <div class="card-body">You can put anything you want inside these side widgets. They are easy to use and feature the Bootstrap 5 card component!</div>
                 </div>
-            </div> 
+            </div>
 
             <!-- Secondary posts -->
-            <div class="col-lg-8">  <!-- This encloses the secondary posts in the main column -->
+            <div class="col-lg-8">
                 <!-- Second and Third Posts -->
                 <div class="row">
                     {% for post in post_list %}
@@ -87,10 +84,9 @@
                     {% endfor %}
                 </div>
             </div>
-                   
         </div>
 
-        <!-- Pagination-->
+        <!-- Pagination -->
         <div class="pagination justify-content-center my-4">
             <ul class="pagination">
                 {% if page_obj.has_previous %}
@@ -105,6 +101,4 @@
             </ul>
         </div>
     </div>
-
-
 {% endblock %}

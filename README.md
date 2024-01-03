@@ -237,6 +237,12 @@ For creating a clone of the repository on your local machine, use<b>Clone</b>:
 * README layout from [Christian Göran](https://github.com/christiangoran/dome-restaurant-repo/blob/main/README.md).
 <hr>
 
+## Media<hr>
+* Image for blog posts 'How to Write an Effective Blog Post: A Step-by-Step Guide' [The Anatomy of a Perfect Blog Post](https://www.salesforce.com/ca/blog/2016/08/anatomy-of-a-perfect-blog-post.html)
+* Image for blog posts 'Django Form: From Zero to Hero - Mastering Form Handling' [Java67](https://www.java67.com/2020/06/top-5-courses-to-learn-django-and-python-for-web-development.html)
+* Image for blog posts 'Navigating Impostor Syndrome as a Software Developer' [Hackernoon](https://hackernoon.com/the-impostor-syndrome-among-us)
+
+
 ## Acknowledgements<hr>
 * Code Institute for providing a great course and support.<br>
 * My mentor Gareth McGirr for great guidance and support.<br>

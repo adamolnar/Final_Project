@@ -16,10 +16,9 @@ class AuthorListView(ListView):
     template_name = "author/authors_list.html"
     model = Author
     context_object_name = 'author_list'
-    paginate_by = 10
+    paginate_by = 6
     
-
-# Generic class-based view to display information about an author and list of created posts . 
+# Generic class-based view to display information about an author and list of created posts. 
 class AuthorDetailView(DetailView):
     template_name ='author/author_detail.html'
     model = Author
@@ -58,7 +57,6 @@ class MessageAuthorView(FormView):
     def form_invalid(self, form):
         author = self.get_author()
         return self.render_to_response({'form': form, 'author': author})   
-    
 
 # Generic class-based view to handle author access requests
 class RequestAuthorAccessView(LoginRequiredMixin, FormView):

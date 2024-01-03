@@ -126,7 +126,7 @@ def is_author(user):
 # Generic class-based view to create new post.
 class PostCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):  
     model = Post
-    fields = ["title", "content", "featured_image", 'status', 'categories',"tags"]
+    fields = ["title", "content", "image", 'status', 'categories',"tags"]
     template_name = 'blog/post_form.html'
 
     def form_valid(self, form):
@@ -166,27 +166,11 @@ class PostCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
         messages.warning(self.request, 'You are not authorized to create a post.')
         return redirect('request-author-access')  # Redirect to the request author access page
 
-    # def form_valid(self, form):
-    #     obj = form.save(commit=False)
-    #     new_author = self.request.user.profile
-    #     obj.author = Author.objects.get(profile = new_author)
-    #     obj.slug = slugify(form.cleaned_data['title'])
-    #     obj.save()
-        
-    #     # Process categories and tags
-    #     categories = form.cleaned_data.get('categories', [])
-    #     tags = form.cleaned_data.get('tags', [])
-
-    #     obj.categories.set(categories)
-    #     obj.tags.set(tags)
-
-    #     return HttpResponseRedirect(self.get_success_url())
-
 
 # Generic class-based view to update post only by the author of the post.       
 class PostUpdateView(LoginRequiredMixin, UpdateView):
     model = Post
-    fields = ["title", "content", "featured_image", "status"]
+    fields = ["title", "content", "image", "status"]
     template_name = 'blog/post_form.html'
 
     def get_success_url(self):
@@ -204,6 +188,7 @@ class PostUpdateView(LoginRequiredMixin, UpdateView):
         obj = super().get_object(queryset)
         # Ensure that the user is the author of the post
         if obj.author.id != self.request.user.pk:
+            print(obj.author.id , self.request.user.pk )
             raise PermissionError("You are not authorized to update this post.")
         return obj
     

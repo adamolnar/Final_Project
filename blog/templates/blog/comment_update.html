@@ -1,10 +1,16 @@
-{% extends 'base.html' %} 
+{% extends 'base.html' %}
 
 {% block content %}
+    <!-- Heading for updating a comment -->
     <h2>Update your comment</h2>
-    <form method="POST" class="write_new_post" >
+    
+    <!-- Form for updating a comment using the POST method -->
+    <form method="POST" class="write_new_post">
         {% csrf_token %}
+        <!-- Render form fields as paragraphs (as_p) -->
         {{ form.as_p }}
+        
+        <!-- Button to save the updated comment -->
         <button type="submit" class="save btn btn-secondary">Save</button>
     </form>
 {% endblock %}

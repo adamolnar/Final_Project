@@ -22,7 +22,7 @@ class CommentForm(forms.ModelForm):
 class PostForm(forms.ModelForm):
     class Meta:
         model = Post
-        fields = ('title','content','featured_image', 'status', 'categories', 'tags')
+        fields = ('title','content','image', 'status', 'categories', 'tags')
 
         # Widget customization for the 'content' field
         widgets = {
