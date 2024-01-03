@@ -3,7 +3,7 @@
 <img src="static/images/" ><br>
 <hr>
 
-This is a simple Django Blog application that allows user to create, edit, and manage blog posts. It also includes user authentication and comment functionality. Bellow is guide through the setup and usage of this application.
+This is a simple Django Blog application that allows user to create, edit, and manage blog posts. It also includes user authentication and comment functionality. Below is guide through the setup and usage of this application.
 <hr>
 
 
@@ -51,9 +51,32 @@ The deployed project can be accessed at [this link](....).
 ## UX
 
 
-**User Stories:** <br>
+**User Stories:** [LInk to User Stories](https://github.com/users/adamolnar/projects/9/views/1)<br>
 
-<img src="static/images/" ><br>
+<img src="static/images/user_stories.png" ><br>
+
+#### 1. As a Visitor
+* As a Site User I can view a list of posts so that I can select one to read.
+* As a Site User, I can view a paginated list of posts so that easily select a post to view.
+* As a Site User I can click on a post so that I can read the full text.
+* As a Site User / Admin I can view comments on an individual post so that I can read the conversation.
+* As a Site User, I can send messages through the contact form, so that I can inquire about needed topic.
+* As a Site User / Admin I can view the number of likes on each post so that I can see which is the most popular or viral
+* As a Site User I can register an account so that I can comment and like
+* As a Site User I can easly navigate to post with similar content so that I can find more information about the topic I am intrested in.
+* As a Site User I can filter posts on category I am intrested in so that I can find relevant information faster.
+* As a Site User I can see newest post so that I can be up to date with the blog content.
+* As a Site User, I am presented with a wide range of options for sharing content so I can have quick access to desired content from my email or any other app.
+
+#### 2. As a Registered User:
+* As a Site User I can like or unlike a post so that I can interact with the content.
+* As a Site User I can leave comments on a post so that I can be involved in the conversation.
+* As a Site Admin I can create draft posts so that I can finish writing the content later.
+
+
+#### 3. As an Author/Staff Member:
+* As a Site Admin I can approve or disapprove comments so that I can filter out objectionable comments.
+* As a Site Admin I can create, read, update and delete posts so that I can manage my blog content.
 
 **Project Goal:**<br>
 The goal for the project is to create a website with good UX/UI in mind that is usefull to users, members and post authors. The website should convey an emotional response in the user.
@@ -140,7 +163,7 @@ The project flowchart was created using <b>LucidChart</b>.<br><br>
 The project design has been adapted to all types of devices using Bootstrap predefined breakpoints. For intermediate devices where the design didn't fit accordingly, a custom breakpoint of max-width of 768px.
 
 ## Testing
-The testing documentation can be found at [TESTING.md](TESTING.md) 
+The testing documentation can be found in [TESTING.md](TESTING.md) 
 
 # Deployment
 This project was deployed using Code Institute's mock terminal for Heroku.
@@ -195,12 +218,12 @@ The project uses ElephantSQL as PostgreSQL relational database for storing the d
     
 ### Fork the repository
 For creating a copy of the repository on your account and change it without affecting the original project, use<b>Fork</b> directly from GitHub:
-- On [My Repository Page], press <i>Fork</i> in the top right of the page
+- On [My Repository Page](https://github.com/adamolnar/Final_Project?tab=readme-ov-file), press <i>Fork</i> in the top right of the page
 - A forked version of my project will appear in your repository<br></br>
 
 ### Clone the repository
 For creating a clone of the repository on your local machine, use<b>Clone</b>:
-- On [My Repository Page](), click the <i>Code</i> green button, right above the code window
+- On [My Repository Page](https://github.com/adamolnar/Final_Project?tab=readme-ov-file), click the <i>Code</i> green button, right above the code window
 - Chose from <i>HTTPS, SSH and GitClub CLI</i> format and copy (preferably <i>HTTPS</i>)
 - In your <i>IDE</i> open <i>Git Bash</i>
 - Enter the command <code>git clone</code> followed by the copied URL
@@ -209,14 +232,18 @@ For creating a clone of the repository on your local machine, use<b>Clone</b>:
 
 
 # Credits
-* Code Institute for the deployment terminal.
-* Code Institute Project Scope [Code Institute](h).
-* Further studies with []().
-* Bootstrap documentation [documentation](https://getbootstrap.com).
-* Database setup with []().
-* Automated testing with []().
+* Code Institute for the deployment terminal [CodeInstitute: FST101](https://learn.codeinstitute.net/courses/course-v1:CodeInstitute+FST101+2/courseware/b31493372e764469823578613d11036b/ae7923cfce7f4653a3af9f51825d2eba/).
+* Code Institute Project Scope [Code Institute || I Think Therefore I Blog](https://learn.codeinstitute.net/courses/course-v1:CodeInstitute+FST101+2/courseware/b31493372e764469823578613d11036b/fe4299adcd6743328183aab4e7ec5d13/).
+* Django Tutorial [Mmdm](https://developer.mozilla.org/en-US/docs/Learn/Server-side/Django/Models).
+* Bootstrap documentation [Bootstrap Documentetion](https://getbootstrap.com).
+* How to add Social Share buttons in Django [Tutorialspoint](https://www.tutorialspoint.com/how-to-add-social-share-buttons-in-django).
+* 404 page [CodePen](https://codepen.io/Navedkhan012/pen/vrWQMY).
+* Bootstrap blog theme [Startbootstrap](https://startbootstrap.com/previews/blog-home).
+* Django blog tutorial [Dontrepeatyourself](https://dontrepeatyourself.org/post/django-blog-tutorial-part-3-users-authentication/#profile-page?utm_content=cmp-true).
+* Automated testing with [Code Institute || Python Testing](https://learn.codeinstitute.net/courses/course-v1:CodeInstitute+PT101+2021_T1/courseware/f20cd699fac3480b99004d1fc3f265ef/bfd6dc4d46c94af89af71f2525c66e0f/).
+* Automated testing with [Realpython](https://realpython.com/testing-in-django-part-1-best-practices-and-examples/#testing-models).
 * README layout from [Christian Göran](https://github.com/christiangoran/dome-restaurant-repo/blob/main/README.md).
-* 
+
 
 ## Acknowledgements
 * Code Institute for providing a great course and support.<br>
