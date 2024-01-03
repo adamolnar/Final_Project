@@ -10,14 +10,9 @@ This is a simple Django Blog application that allows user to create, edit, and m
 ## Table of contents
   * [Overview](#overview)
   * [UX](#ux)
-    + [Strategy](#strategy)
+    + [User Stories](#user-stories)
     + [Scope](#scope-hr-)
     + [Structure](#structure-hr-)
-    + [Skeleton](#skeleton-hr-)
-    + [Surface](#surface-hr-)
-      - [Color Scheme & Fonts](#color-scheme-and-fonts)
-      - [Visual Effects](#visual-effects)
-  * [Agile Methodology](#agile-methodology)
   * [Features](#features)
     + [Existing Features](#existing-features)
       - [Client bookints management](#client-bookings-management)
@@ -27,29 +22,24 @@ This is a simple Django Blog application that allows user to create, edit, and m
       - [Information](#information)
     + [Potential Future Features](#pontential-future-features)
   * [Responsive Layout and Design](#responsive-layout-and-design)
-  * [Tools Used](#tools-used)
-    + [Python packages](#python-packages)
   * [Testing](#testing)
   * [Deployment](#deployment)
+    + [Requirements](#requirements)
     + [Deploy on heroku](#deploy-on-heroku)
     + [FORK THE REPOSITORY](#fork-the-repository)
     + [CLONE THE REPOSITORY](#clone-the-repository)
   * [Credits](#credits)
-    + [Content](#content)
-    + [Media](#media)
-    + [Code](#code)
   * [Acknowledgements](#acknowledgements)
 
 
-## Overview
+## Overview<hr>
 Django Blog is a robust and customizable blog application built using the Django web framework. It provides the foundation for creating and managing a fully functional blog website with ease. This overview provides a comprehensive understanding of the key features, benefits, and usage of Django Blog.
 
 <br><br>
 The deployed project can be accessed at [this link](....).
 <br><br>
 
-## UX
-
+## UX<hr>
 
 **User Stories:** [LInk to User Stories](https://github.com/users/adamolnar/projects/9/views/1)<br>
 
@@ -77,6 +67,8 @@ The deployed project can be accessed at [this link](....).
 #### 3. As an Author/Staff Member:
 * As a Site Admin I can approve or disapprove comments so that I can filter out objectionable comments.
 * As a Site Admin I can create, read, update and delete posts so that I can manage my blog content.
+
+These user stories cover a range of user types, including visitors, registered users, and authors/staff members, and address various functionalities and features of Blog application. Due to hard deadline the User Story : "As a Site User I can find content by searching for particular words so that I have a quick or less complex way to find content." was not accomplished. 
 
 **Project Goal:**<br>
 The goal for the project is to create a website with good UX/UI in mind that is usefull to users, members and post authors. The website should convey an emotional response in the user.
@@ -136,7 +128,7 @@ The project flowchart was created using <b>LucidChart</b>.<br><br>
 
 
 
-### Features
+## Features<hr>
 * Use a WYSIWYG (What You See Is What You Get) editor to allow authors to format their posts with headings, lists, images, and other rich media.
 * Create author profiles with bio information, profile pictures, and links to their other published posts.
 * Organize blog posts into categories to help readers find content related to specific topics or interests.
@@ -165,8 +157,28 @@ The project design has been adapted to all types of devices using Bootstrap pred
 ## Testing
 The testing documentation can be found in [TESTING.md](TESTING.md) 
 
-# Deployment
+# Deployment<hr>
 This project was deployed using Code Institute's mock terminal for Heroku.
+
+1. Create Pipfile 
+ In the terminal enter the command ` pip3 freeze > requirements.txt`, and a file with all requirements will be created. 
+ 
+ 2. Setting up Heroku
+    * Go to the Heroku website (https://www.heroku.com/) 
+    * Login to Heroku and choose *Create App* 
+    * Click *New* and *Create a new app*
+    * Choose a name and select your location
+    * Go to the *Resources* tab 
+    * From the Resources list select *Heroku Postgres*
+    * Navigate to the *Deploy* tab
+    * Click on *Connect to Github* and search for your repository
+    * Navigate to the *Settings* tab
+    * Reveal Config Vars and add your Cloudinary, Database URL (from Heroku-Postgres) and Secret key.    
+
+3. Deployment on Heroku
+    * Go to the Deploy tab.
+    * Choose the main branch for deploying and enable automatic deployment 
+    * Select manual deploy for building the App 
 
 ### Requirements (Prerequisites)
 Tools and packages required to successfully install this project:
@@ -195,26 +207,6 @@ Tools and packages required to successfully install this project:
 
 **Database**<br>
 The project uses ElephantSQL as PostgreSQL relational database for storing the data.<br>
-
-1. Create Pipfile 
- In the terminal enter the command ` pip3 freeze > requirements.txt`, and a file with all requirements will be created. 
- 
- 2. Setting up Heroku
-    * Go to the Heroku website (https://www.heroku.com/) 
-    * Login to Heroku and choose *Create App* 
-    * Click *New* and *Create a new app*
-    * Choose a name and select your location
-    * Go to the *Resources* tab 
-    * From the Resources list select *Heroku Postgres*
-    * Navigate to the *Deploy* tab
-    * Click on *Connect to Github* and search for your repository
-    * Navigate to the *Settings* tab
-    * Reveal Config Vars and add your Cloudinary, Database URL (from Heroku-Postgres) and Secret key.    
-
-3. Deployment on Heroku
-    * Go to the Deploy tab.
-    * Choose the main branch for deploying and enable automatic deployment 
-    * Select manual deploy for building the App 
     
 ### Fork the repository
 For creating a copy of the repository on your account and change it without affecting the original project, use<b>Fork</b> directly from GitHub:
@@ -245,7 +237,7 @@ For creating a clone of the repository on your local machine, use<b>Clone</b>:
 * README layout from [Christian Göran](https://github.com/christiangoran/dome-restaurant-repo/blob/main/README.md).
 
 
-## Acknowledgements
+## Acknowledgements<hr>
 * Code Institute for providing a great course and support.<br>
 * My mentor Gareth McGirr for great guidance and support.<br>
 * Slack community for solving roadblocks together and helping each other unconditionally.<br>
