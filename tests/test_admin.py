@@ -1,9 +1,10 @@
 from django.contrib.admin.sites import AdminSite
+from django.contrib.admin.sites import site as default_admin_site 
 from django.test import TestCase, RequestFactory
-from author.models import Author
+from author.models import Author, AuthorAccessRequest
 from blog.models import Post
 from django.contrib.auth.models import User 
-from author.admin import AuthorAdmin
+from author.admin import AuthorAdmin, AuthorAccessRequestAdmin
 from blog.admin import CommentAdmin  
 from blog.models import Comment 
 
@@ -15,15 +16,13 @@ class AuthorAdminTestCase(TestCase):
         self.author = Author.objects.create(profile=self.user.profile, first_name='John', last_name='Doe', is_authorized=False)
 
     def test_make_author_action(self):
-        # Create an admin site and register AuthorAdmin
-        admin_site = AdminSite()
-        author_admin = AuthorAdmin(Author, admin_site)
-
-        # Create a mock request object
+        # Create a mock request object with session and messages enabled
         request = RequestFactory().get('/admin/')
-        
-       # Call the make_author action on the AuthorAdmin
-        author_admin.make_author(request, queryset=[self.author])
+        request.session = {}
+        request._messages = []
+
+        # Call the make_author action on the AuthorAdmin
+        AuthorAdmin(Author, None).make_author(request, queryset=[self.author])
 
         # Reload the author object from the database
         self.author.refresh_from_db()
@@ -31,13 +30,40 @@ class AuthorAdminTestCase(TestCase):
         # Check if the author is now authorized
         self.assertTrue(self.author.is_authorized)
 
-       
-
     def tearDown(self):
         # Clean up by deleting the test user and author
         self.user.delete()
         self.author.delete()
 
+class AuthorAccessRequestAdminTestCase(TestCase):
+    def setUp(self):
+        # Create a user and an author access request object for testing
+        self.user = User.objects.create_user(username='testuser', password='password')
+        self.author_access_request = AuthorAccessRequest.objects.create(
+            profile=self.user.profile,
+            request_reason='Test reason',
+            is_authorized=False
+        )
+
+    def test_make_author_action(self):
+        # Create a mock request object with session and messages enabled
+        request = RequestFactory().get('/admin/')
+        request.session = {}
+        request._messages = []
+
+        # Call the make_author action on the AuthorAccessRequestAdmin
+        AuthorAccessRequestAdmin(AuthorAccessRequest, None).make_author(request, queryset=[self.author_access_request])
+
+        # Reload the author access request object from the database
+        self.author_access_request.refresh_from_db()
+
+        # Check if the author access request is now authorized
+        self.assertTrue(self.author_access_request.is_authorized)
+
+    def tearDown(self):
+        # Clean up by deleting the test user and author access request
+        self.user.delete()
+        self.author_access_request.delete()
 
 class CommentAdminTest(TestCase):
     def setUp(self):
