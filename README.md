@@ -15,22 +15,18 @@ This is a simple Django Blog application that allows user to create, edit, and m
     + [Structure](#structure-hr-)
   * [Features](#features)
     + [Existing Features](#existing-features)
-      - [Client bookints management](#client-bookings-management)
-      - [Staff bookings management](#staff-bookings-management)
-      - [Create bookings](#create-bookings)
-      - [Menu](#menu)
-      - [Information](#information)
     + [Potential Future Features](#pontential-future-features)
   * [Responsive Layout and Design](#responsive-layout-and-design)
   * [Testing](#testing)
   * [Deployment](#deployment)
-    + [Requirements](#requirements)
     + [Deploy on heroku](#deploy-on-heroku)
-    + [FORK THE REPOSITORY](#fork-the-repository)
-    + [CLONE THE REPOSITORY](#clone-the-repository)
+    + [Fork the repository](#fork-the-repository)
+    + [Clone the repository](#clone-the-repository)
+    + [Requirements](#requirements)
   * [Credits](#credits)
   * [Acknowledgements](#acknowledgements)
 
+<hr>
 
 ## Overview<hr>
 Django Blog is a robust and customizable blog application built using the Django web framework. It provides the foundation for creating and managing a fully functional blog website with ease. This overview provides a comprehensive understanding of the key features, benefits, and usage of Django Blog.
@@ -153,11 +149,15 @@ The project flowchart was created using <b>LucidChart</b>.<br><br>
 
 ## Responsive Layout and Design
 The project design has been adapted to all types of devices using Bootstrap predefined breakpoints. For intermediate devices where the design didn't fit accordingly, a custom breakpoint of max-width of 768px.
+<hr>
 
-## Testing
+## Testing <hr>
 The testing documentation can be found in [TESTING.md](TESTING.md) 
 
-# Deployment<hr>
+
+<hr>
+
+## Deployment<hr>
 This project was deployed using Code Institute's mock terminal for Heroku.
 
 1. Create Pipfile 
@@ -180,7 +180,7 @@ This project was deployed using Code Institute's mock terminal for Heroku.
     * Choose the main branch for deploying and enable automatic deployment 
     * Select manual deploy for building the App 
 
-### Requirements (Prerequisites)
+#### Requirements (Prerequisites)
 Tools and packages required to successfully install this project:
 
 * asgiref==3.7.2
@@ -205,15 +205,15 @@ Tools and packages required to successfully install this project:
 * requests-oauthlib==1.3.1
 * sqlparse==0.4.4
 
-**Database**<br>
+#### Database
 The project uses ElephantSQL as PostgreSQL relational database for storing the data.<br>
     
-### Fork the repository
+#### Fork the repository
 For creating a copy of the repository on your account and change it without affecting the original project, use<b>Fork</b> directly from GitHub:
 - On [My Repository Page](https://github.com/adamolnar/Final_Project?tab=readme-ov-file), press <i>Fork</i> in the top right of the page
 - A forked version of my project will appear in your repository<br></br>
 
-### Clone the repository
+#### Clone the repository
 For creating a clone of the repository on your local machine, use<b>Clone</b>:
 - On [My Repository Page](https://github.com/adamolnar/Final_Project?tab=readme-ov-file), click the <i>Code</i> green button, right above the code window
 - Chose from <i>HTTPS, SSH and GitClub CLI</i> format and copy (preferably <i>HTTPS</i>)
@@ -223,7 +223,7 @@ For creating a clone of the repository on your local machine, use<b>Clone</b>:
 <hr>
 
 
-# Credits
+## Credits<hr>
 * Code Institute for the deployment terminal [CodeInstitute: FST101](https://learn.codeinstitute.net/courses/course-v1:CodeInstitute+FST101+2/courseware/b31493372e764469823578613d11036b/ae7923cfce7f4653a3af9f51825d2eba/).
 * Code Institute Project Scope [Code Institute || I Think Therefore I Blog](https://learn.codeinstitute.net/courses/course-v1:CodeInstitute+FST101+2/courseware/b31493372e764469823578613d11036b/fe4299adcd6743328183aab4e7ec5d13/).
 * Django Tutorial [Mmdm](https://developer.mozilla.org/en-US/docs/Learn/Server-side/Django/Models).
@@ -235,7 +235,7 @@ For creating a clone of the repository on your local machine, use<b>Clone</b>:
 * Automated testing with [Code Institute || Python Testing](https://learn.codeinstitute.net/courses/course-v1:CodeInstitute+PT101+2021_T1/courseware/f20cd699fac3480b99004d1fc3f265ef/bfd6dc4d46c94af89af71f2525c66e0f/).
 * Automated testing with [Realpython](https://realpython.com/testing-in-django-part-1-best-practices-and-examples/#testing-models).
 * README layout from [Christian Göran](https://github.com/christiangoran/dome-restaurant-repo/blob/main/README.md).
-
+<hr>
 
 ## Acknowledgements<hr>
 * Code Institute for providing a great course and support.<br>
