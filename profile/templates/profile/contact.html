@@ -3,11 +3,14 @@
 {% block head_title %}Contact{% endblock %}
 
 {% block content %}
-  <div class="container contact-container" style="max-width: 600px; margin: 5% auto; padding: 20px; border-radius: 10px;
+  
+<div class="container contact-container" style="max-width: 600px; margin: 5% auto; padding: 20px; border-radius: 10px;
       box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);">
-    <h2 class="text-center">Contact Us</h2>
+    <h2 class="text-center">Contact Us</h2>  <!-- Displays the "Contact Us" heading -->
+
     <div class='text-center' style="margin: 20px auto;">
       <i class="fa-regular fa-envelope envelope text-center" style="font-size: xxx-large; box-shadow: none; border: none;"></i>
+      <!-- Displays an envelope icon in the center -->
     </div>
 
     <!-- Display Success Message -->
@@ -18,6 +21,7 @@
         </div>
       {% endfor %}
     {% endif %}
+    <!-- Displays success messages if any -->
 
     <!-- Display Form Errors -->
     {% if form.errors %}
@@ -25,42 +29,57 @@
         Please correct the errors below.
       </div>
     {% endif %}
+    <!-- Displays form errors if any -->
 
     <!-- Django Form Rendering -->
-    <form action="{% url 'contact' %}" method="post">
-      {% csrf_token %}
+    <form action="{% url 'contact' %}" method="post">  <!-- Defines a form with a post method -->
+      {% csrf_token %}  <!-- Generates a CSRF token for security -->
+
       <div class="form-group text-center">
         <label for="name"></label>
         {{ form.name }}
+        <!-- Displays the 'name' field in the form -->
 
         {% if form.name.errors %}
           <div class="alert alert-danger" role="alert">
             {{ form.name.errors|join:", " }}
           </div>
         {% endif %}
+        <!-- Displays errors related to the 'name' field -->
       </div>
+
       <div class="form-group text-center" >
         <label for="email" ></label>
         {{ form.email }}
+        <!-- Displays the 'email' field in the form -->
+
         {% if form.email.errors %}
           <div class="alert alert-danger" role="alert">
             {{ form.email.errors|join:", " }}
           </div>
         {% endif %}
+        <!-- Displays errors related to the 'email' field -->
       </div>
+
       <div class="form-group text-center" >
         <label for="message" ></label>
         {{ form.message }}
+        <!-- Displays the 'message' field in the form -->
+
         {% if form.message.errors %}
           <div class="alert alert-danger" role="alert">
             {{ form.message.errors|join:", " }}
           </div>
         {% endif %}
+        <!-- Displays errors related to the 'message' field -->
       </div>
+
       <div class="text-center">
         <button type="submit" class="btn btn-success">Submit</button>
+        <!-- Displays a "Submit" button -->
       </div>
       
     </form>
-  </div>
+</div>
+
 {% endblock %}

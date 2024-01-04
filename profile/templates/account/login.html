@@ -22,29 +22,34 @@
         <div class="col-12 text-center align-self-center py-5">
             <div class="section pb-5 pt-5 pt-sm-2 text-center">
                 <div class="col-md-8 mt-3 offset-md-2">
-                    <h3>{% trans "Log In" %}</h3>
-                    <p id="welcome">{% blocktrans %}Welcome back to the blog. If you don't have an account please               
-                        <a class="link" href="{{ signup_url }}">Register</a> instead.{% endblocktrans %}</p>
+                    <h3>{% trans "Log In" %}</h3>  <!-- Displays the "Log In" heading with translation support -->
+                    <p id="welcome">
+                        {% blocktrans %}Welcome back to the blog. If you don't have an account please
+                            <a class="link" href="{{ signup_url }}">Register</a> instead.{% endblocktrans %}
+                        <!-- Displays a welcome message with a link to registration -->
+                    </p>
                 </div>
-            <div class="card-3d-wrap mx-auto" id="login-card">
-                <div class="card-3d-wrapper">
-                    <div class="card-front">
-                        <div class="center-wrap">
-                            <form class="login" method="POST" action="{% url 'account_login' %}">
-                                {% csrf_token %}
-                                {{ form.as_p }}
-                                {% if redirect_field_value %}
-                                <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
-                                {% endif %}
-                                <button class="btn btn-signup right" type="submit">{% trans "Submit" %}</button>
-                            </form>  
-
+                <div class="card-3d-wrap mx-auto" id="login-card">
+                    <div class="card-3d-wrapper">
+                        <div class="card-front">
+                            <div class="center-wrap">
+                                <form class="login" method="POST" action="{% url 'account_login' %}">
+                                    {% csrf_token %}  <!-- Generates a CSRF token for security -->
+                                    {{ form.as_p }}  <!-- Displays the login form fields -->
+                                    {% if redirect_field_value %}
+                                    <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+                                    {% endif %}
+                                    <!-- Handles redirect information if available -->
+                                    <button class="btn btn-signup right" type="submit">{% trans "Submit" %}</button>
+                                    <!-- Displays a "Submit" button with translation support -->
+                                </form>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    <!-- </div> -->
+    </div>
 </div>
 
 {% endblock content %}

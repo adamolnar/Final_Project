@@ -17,10 +17,15 @@
         </div>
         <div class="text-center">
             <h1>Thank you !</h1>
+            <!-- Display a "Thank you!" heading -->
             <p>Your contact information and message was successfully submitted</p>
-            <button class="btn btn-primary"><a class="nav-link" href="{% url 'index'  %}">Back Home</a></button>
+            <!-- Display a success message -->
+            <button class="btn btn-primary">
+                <a class="nav-link" href="{% url 'index'  %}">Back Home</a>
+                <!-- Display a "Back Home" button with a link -->
+            </button>
         </div>
     </div>
-
+</div>
 
 {% endblock %}

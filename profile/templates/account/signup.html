@@ -16,10 +16,13 @@
 <div class="container">
   <div class="row">
     <div class="col-md-8 mt-3 offset-md-2">
-      <h3>{% trans "Create your account" %}</h3>
+      <h3>{% trans "Create your account" %}</h3>  <!-- Displays the "Create your account" heading with translation support -->
 
-      <p id="welcome">{% blocktrans %}Welcome back to the blog. Do you already have an account? Then please <a class="link"
-          href="{{ login_url }}">Log In</a> instead.{% endblocktrans %}</p>
+      <p id="welcome">
+        {% blocktrans %}Welcome back to the blog. Do you already have an account? Then please <a class="link"
+          href="{{ login_url }}">Log In</a> instead.{% endblocktrans %}
+        <!-- Displays a welcome message with a link to the login page -->
+      </p>
     </div>
   </div>
   <div class="my-row card-3d-wrap mx-auto " id="card" style="margin-top: 7%;">
@@ -28,7 +31,7 @@
             <div class="center-wrap">
                 
                 <form class="signup" method="post" action="{% url 'account_signup' %}" id="signup_form">
-                    {% csrf_token %}
+                    {% csrf_token %}  <!-- Generates a CSRF token for security -->
 
                     <input type="hidden" name="remember" value="true" />
                     <div class="-space-y-px rounded-md shadow-sm">
@@ -36,30 +39,33 @@
                         {{ form.username.errors | safe }}
                         <label for="id_login" class="form-inline" ></label>
                         {% render_field form.username placeholder="Username" id="username" name="username" type="text" autocomplete="username" required=True class="relative block w-full px-3 py-2 text-gray-900 placeholder-gray-500 border border-gray-300 rounded-none appearance-none rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm" %}
+                        <!-- Renders the username field with possible errors -->
                       </p>
                       <p>
                         {{ form.email.errors | safe }}
                         <label for="id_email" class="form-inline"></label>
                         {% render_field form.email id="email" name="email" placeholder="Email" type="email" autocomplete="email" required="True" class="relative block w-full px-3 py-2 text-gray-900 placeholder-gray-500 border border-gray-300 rounded-none appearance-none focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm" %}
+                        <!-- Renders the email field with possible errors -->
                       </p>
                       <p>
                         {{ form.password1.errors | safe }}
                         <label for="id_password" class="form-inline"></label>
                         {% render_field form.password1 id="password1" name="password1" placeholder="Password" type="password" autocomplete="current-password" required="True" class="relative block w-full px-3 py-2 text-gray-900 placeholder-gray-500 border border-gray-300 rounded-none appearance-none focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm" %}
+                        <!-- Renders the password field with possible errors -->
                       </p>
                       <p>
                         {{ form.password2.errors | safe }}
                         <label for="id_password" class="form-inline"></label>
                         {% render_field form.password2 id="password2" name="password2"  placeholder="Cofirm Password" type="password" autocomplete="current-password" required="True" class="relative block w-full px-3 py-2 text-gray-900 placeholder-gray-500 border border-gray-300 rounded-none appearance-none rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm" %}
+                        <!-- Renders the password confirmation field with possible errors -->
                       </p>
                     </div>
 
-
-                    
                     {% if redirect_field_value %}
                     <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
                     {% endif %}
-                    <button  class="btn col-md-3 mt-5" type="submit" id="submit">{% trans "Submit" %}</button>
+                    <!-- Handles redirect information if available -->
+                    <button  class="btn col-md-3 mt-5" type="submit" id="submit">{% trans "Submit" %}</button>  <!-- Displays a "Submit" button with translation support -->
                 </form>   
 
             </div>

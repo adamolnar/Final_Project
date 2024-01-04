@@ -12,25 +12,26 @@
 
 
 {% block content %}
+
 <div class="container">
     <div class="row">
         <div class="col-md-12 center-block" id="height">
-            <h3>{% trans "Sign Out" %}</h3>
-
-            <p id="are-you-sure">{% trans 'Are you sure you want to Sign Out?' %}</p>
+            <h3>{% trans "Sign Out" %}</h3>  <!-- Displays the "Sign Out" heading with translation support -->
+            <p id="are-you-sure">{% trans 'Are you sure you want to Sign Out?' %}</p>  <!-- Displays a confirmation message with translation support -->
         </div>
     </div>
     <div class="row">
         <div class="col-md-12 mt-3 center-block">
-
             <form method="post" action="{% url 'account_logout' %}" class=" col-12 text-center align-self-center py-5">
-                {% csrf_token %}
+                {% csrf_token %}  <!-- Generates a CSRF token for security -->
                 {% if redirect_field_value %}
                 <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
                 {% endif %}
-                <button class="btn-lg btn-signup right" type="submit">{% trans 'Sign Out' %}</button>
+                <!-- Handles redirect information if available -->
+                <button class="btn-lg btn-signup right" type="submit">{% trans 'Sign Out' %}</button>  <!-- Displays a "Sign Out" button with translation support -->
             </form>
         </div>
     </div>
 </div>
+
 {% endblock %}
