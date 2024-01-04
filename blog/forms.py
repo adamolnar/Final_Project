@@ -1,5 +1,6 @@
 from django import forms
 from .models import Post, Comment
+from django.shortcuts import render, redirect
 
 
 class CommentForm(forms.ModelForm):
@@ -7,16 +8,28 @@ class CommentForm(forms.ModelForm):
         model = Comment
         fields = ('body',) 
 
-        # Widget customization for the 'body' field
-        widgets = {
-            'body': forms.Textarea(attrs={'rows': 3, 'placeholder': 'Enter your comment here...'}),
-        }
+        def __init__(self, *args, **kwargs):
+            super(CommentForm, self).__init__(*args, **kwargs)
+            # Set the label for the 'body' field to an empty string
+            self.fields['body'].label = ''
 
         def clean_body(self):
             # Custom validation for the comment body if needed
             body = self.cleaned_data.get('body')
             # Your validation logic here
             return body
+        
+    def comment_view(request):
+        if request.method == 'POST':
+            form = CommentForm(request.POST)
+            if form.is_valid():
+                # Process the form data, save to the database, etc.
+                form.save()
+                return redirect('post-detail')  # Redirect to the same view to display an empty form again
+        else:
+            form = CommentForm()
+
+        return render(request, 'blog/post_detail.html', {'form': form})
 
 
 class PostForm(forms.ModelForm):

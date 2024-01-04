@@ -2,17 +2,17 @@
 {% load cloudinary %}
 
 {% block content %}
-<div class="card mb-4" style="height: 480px;">
+<div class="card mb-4">
     <div class="card-body">
         <div class="image-container">
-            <a href="{% url 'post-detail' post.slug %}" class="img-fluid" style="max-width: 100%;">
+            <a href="{% url 'post-detail' post.slug %}" >
                 {% if post.image %}
-                    <!-- Display the post's image using Cloudinary, with fallback if image is missing -->
-                    {% cloudinary post.image alt=post.title class="img-fluid" style="width: 100%; height:250px; object-fill:cover;"  %}
+                    <!-- Display the post's image using Cloudinary with responsive class -->
+                    {% cloudinary post.image alt=post.title class="img-fluid" %}
                 {% else %}
                     <!-- Display a placeholder image if the post doesn't have an image -->
                     <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-profiles/avatar-1.webp"
-                        alt="Generic placeholder image">
+                        alt="Generic placeholder image" class="img-fluid">
                 {% endif %}
             </a>
         </div>
@@ -42,7 +42,7 @@
                 {% else %}
                     <!-- Display an empty heart icon for unliked posts -->
                     <button style="padding: 0; border: none; background: none;" type="submit" name="blogpost_id" value="{{post.slug}}" class="btn-like">
-                        <i class="far fa-heart" style="color: red;"></i>
+                        <i class="fas fa-heart" style="color: red;"></i>
                     </button>
                 {% endif %}
                 <!-- Display the number of likes for the post -->
@@ -50,9 +50,13 @@
             </strong>
             
             <!-- Display a link to view comments and the comment count -->
-            <a href="{% url 'post-detail' slug=post.slug %}" style="padding: 0; border: none; background: none;">
-                <i class="far fa-comments"> {{ post.approved_comments.count }}</i>
-            </a>
+            
+            <strong class="text-secondary">
+                <a href="{% url 'post-detail' slug=post.slug %}" style="padding: 0; border: none; background: none; 
+                            text-decoration: none; color: black; float: right; margin-right: 3%;">
+                    <i class="fas fa-comments" style="color:#0d6efd;"></i> {{ post.approved_comments.count }}
+                </a>
+            </strong>
         </p>
     </div>
 </div>

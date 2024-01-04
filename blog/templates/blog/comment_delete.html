@@ -2,26 +2,27 @@
 
 {% load crispy_forms_tags %}
 {% block content %}
+
 <div class="container">
-    <div class="row mt-5">
-        <div class="col-md-3 col-sm-6">
-            <!-- Link to go back to the feed page -->
-            <a href="#" class="btn btn-light">Back to Feed</a>
-        </div>
-    </div>
     <div class="row justify-content-center mt-5">
-        <div class="col-md-5 col-sm-12">
-            <h5>Are You Sure?</h5>
+        <div class="col-sm-4 text-center mt-5">
+            <h4>Are You Sure?</h4>
             <!-- Confirmation message for deleting a comment -->
-            <p>You are about to delete this comment, this cannot be undone.</p>
+            <p class="mt-5">You are about to delete this comment, this cannot be undone.</p>
             <form method="POST">
                 {% csrf_token %}
-                <div class="d-grid gap-2">
-                    <!-- Delete button for confirming the deletion -->
-                    <button type="submit" class="btn btn-danger">Delete</button>
+                <div class="col-sm-12 text-center mt-5">
+                    <!-- Delete and Back to Feed buttons with the same size and next to each other -->
+                    <div class="d-flex justify-content-between">
+                        <button type="submit" class="btn btn-danger btn-block" style="max-height: 40px;">Delete</button>
+                        <button class="btn btn-success btn-block ml-2 mt-0" style="max-height: 40px;">
+                            <a href="{% url 'index' %}" style="text-decoration: none; color: white;" >Back to Feed</a>
+                        </button>
+                    </div>
                 </div>
             </form>
         </div>
     </div>
 </div>
+
 {% endblock content %}

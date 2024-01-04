@@ -11,19 +11,19 @@
         <div class="row col-md-12 masthead-image">
             <!-- Display the post image -->
             {% if post.image %}
-                {% cloudinary post.image.url alt=post.title width=100 height=600 %}
+                {% cloudinary post.image.url alt=post.title width=100  %}
             {% else %}
                 {% cloudinary "https://res.cloudinary.com/dmg7oqpgs/image/upload/v1699179858/lakyrzjrxgfb05kpyi2r.jpg" alt="Placeholder Image" %}
             {% endif %}
         </div>
         <div class="g-0">
-            <div class="col-md-4 masthead-text">
+            <div class="col-md-12 masthead-text">
                 <!-- Display post tags -->
                 {% for tag in post.tags.all %}
-                    <p><a href="" class="badge text-decoration-none bg-secondary">{{ tag }}</a></p>
+                    <p class="badge text-decoration-none bg-secondary">{{ tag }}</p>
                 {% endfor %}
                 <!-- Display post title -->
-                <h1 class="post-title">{{ post.title }}</h1>
+                <h2 class="post-title" >{{ post.title }}</h2>
                 <!-- Display post author and creation date -->
                 <p class="post-subtitle">
                     Author: <a href="{{ post.author.get_absolute_url }}">{{ post.author }}</a> | {{ post.created_on }}
@@ -80,16 +80,16 @@
                     <div class="col-1">
                         <!-- Display total comments count -->
                         {% with comments.count as total_comments %}
-                            <strong class="text-secondary"><i class="far fa-comments"></i> {{ total_comments }}</strong>
+                            <strong class="text-secondary"><i class="fas fa-comments" style="color: #0d6efd;"></i> {{ total_comments }}</strong>
                         {% endwith %}
                     </div>
                     <div class="col-10 text-end">
                         <!-- Social sharing buttons -->
                         <div class="social-sharing" style="margin-right: 0;">
+                            <button class="btn btn-social">{% post_to_whatsapp object_or_url '<i class="fa fa-whatsapp" style="color: #25D366;"></i>' %}</button>
+                            <button class="btn btn-social">{% post_to_twitter "A good article: {{ object.title }} - Check it out!" object_or_url '<i class="fa fa-twitter" aria-hidden="true" style="color: #1DA1F2;"></i>' %}</button>
                             <button class="btn btn-social">{% post_to_facebook object_or_url '<i class="fa fa-facebook" aria-hidden="true" style="color: #4267B2;"></i>' %}</button>
                             <button class="btn btn-social">{% post_to_linkedin object_or_url %}</button>
-                            <button class="btn btn-social">{% post_to_twitter "A good article: {{ object.title }} - Check it out!" object_or_url '<i class="fa fa-twitter" aria-hidden="true" style="color: #1DA1F2;"></i>' %}</button>
-                            <button class="btn btn-social">{% post_to_whatsapp object_or_url '<i class="fa fa-whatsapp" style="color: #25D366;"></i>' %}</button>
                         </div>
                     </div>
                 </div>
@@ -117,11 +117,7 @@
                     </p>
                     {{ comment.body | linebreaks }}
                 </div>
-                <div class="row">
-                    <div class="col">
-                        <hr>
-                    </div>
-                </div>
+                
                 {% if comment.author == user %}
                 <div>
                     <!-- Display update and delete buttons for the comment author -->
@@ -129,6 +125,11 @@
                     <a class="btn btn-danger btn-sm mt-1 mb-1" href="{% url 'comment-delete' comment.id %}">Delete</a> 
                 </div>
                 {% endif %}
+                <div class="row">
+                    <div class="col">
+                        <hr>
+                    </div>
+                </div>
                 {% empty %}
                 <p>There are no comments yet.</p>
                 {% endfor %}
@@ -138,17 +139,11 @@
             <div class="card-body">
                 {% if user.is_authenticated %}
                     {% if commented %} 
-                        {% if not comment.approved %}
-                        <div id="msg" class="alert alert-success" role="alert"> 
-                            Your comment is awaiting approval.         
-                        </div> 
-                        {% else %}
                         <div id="msg" class="alert alert-success" role="alert"> 
                             Your comment was successfully added.
                         </div>     
-                        {% endif %}
                     {% endif %}
-                    <p id="x" style="display: block;">Posting as: {{ user.username }}</p>
+                    <p id="x" style="display: block;">Posting as: <strong>{{ user.username }}</strong></p>
                     <!-- Display comment form for authenticated users -->
                     <form id="x" method="post" style="margin-top: 1.3em; display: block;">
                         {% csrf_token %}
