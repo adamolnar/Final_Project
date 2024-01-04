@@ -5,6 +5,8 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.urls import reverse_lazy
 from .models import Profile
+from author.models import Author
+from blog.models import Post
 from .forms import ContactForm, ProfileUpdateForm
 from django.views.generic import (
     DetailView,
@@ -17,7 +19,26 @@ from django.views.generic import (
 class ProfileDetailView(LoginRequiredMixin, DetailView):
     model = Profile
     template_name = 'profile/profile.html'
-   
+
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        # Check if the user is an author
+        try:
+            profile = Profile.objects.get(user=self.request.user)
+            author = Author.objects.get(profile=profile)
+        except Author.DoesNotExist:
+            context['is_author'] = False  # Add a flag to indicate the user is not an author
+            return context  # Return the context dictionary
+        
+        # Check if the user has any draft posts
+        has_draft_posts = Post.objects.filter(author=author, status='0').exists()
+        
+        context['has_draft_posts'] = has_draft_posts
+        context['is_author'] = True  # Add a flag to indicate the user is an author
+        return context
+    
     
 # Generic class-based view to update logged-in user profile.
 class ProfileUpdateView(LoginRequiredMixin, UpdateView):

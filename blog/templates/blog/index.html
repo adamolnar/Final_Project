@@ -17,18 +17,18 @@
 
     <!-- Page content -->
     <div class="container">
-        <div class="row">
+        <div class="row" style="display: flex;">
             <!-- Main post (full width) -->
-            <div class="col-lg-8">
+            <div class="col-lg-8" style="height: 100%;">
                 {% for post in post_list %}
                     {% if forloop.first %}
-                        {% include 'blog/blog_post_card.html' %}
+                        {% include 'blog/blog_post_card.html'  %}
                     {% endif %}
                 {% endfor %}
             </div>
 
             <!-- Side widgets -->
-            <div class="col-lg-4">
+            <div class="col-lg-4" style="height: 100%;">
                 <!-- Search widget -->
                 <!-- Tags Widget -->
                 <div class="card mb-4">
@@ -47,20 +47,9 @@
                     <div class="card-body">
                         <ul class="list-unstyled mb-0">
                             {% for category in categories %}
-                                <li><a href="{% url 'index' %}?category_id={{ category.id }}">{{ category.title }}</a></li>
+                                <li ><a href="{% url 'index' %}?category_id={{ category.id }}">{{ category.title }}</a></li>
                             {% endfor %}
                         </ul>
-                    </div>
-                </div>
-
-                <!-- Side widget -->
-                <div class="card mb-4">
-                    <div class="card-header">Abaut us</div>
-                    <div class="card-body">
-                        Welcome to Byte by Byte's Tech Blog, your go-to destination for in-depth insights, tutorials,
-                        and thought-provoking articles on the latest trends, technologies, and developments in the tech world.
-                        Whether you're a seasoned developer, a tech enthusiast, 
-                        or just someone curious about the digital realm, our blog has something for everyone.
                     </div>
                 </div>
             </div>

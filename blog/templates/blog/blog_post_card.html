@@ -5,16 +5,14 @@
 <div class="card mb-4" style="height: 480px;">
     <div class="card-body">
         <div class="image-container">
-            <a href="{% url 'post-detail' post.slug %}">
+            <a href="{% url 'post-detail' post.slug %}" class="img-fluid" style="max-width: 100%;">
                 {% if post.image %}
                     <!-- Display the post's image using Cloudinary, with fallback if image is missing -->
-                    {% cloudinary post.image alt=post.title width=380 height=150 crop="fill" class="img-fluid"%}
+                    {% cloudinary post.image alt=post.title class="img-fluid" style="width: 100%; height:250px; object-fill:cover;"  %}
                 {% else %}
                     <!-- Display a placeholder image if the post doesn't have an image -->
                     <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-profiles/avatar-1.webp"
-                        alt="Generic placeholder image"
-                        style="max-width: 100px; max-height: 100px; object-fit: cover;"
-                        class="img-fluid">
+                        alt="Generic placeholder image">
                 {% endif %}
             </a>
         </div>
@@ -23,7 +21,7 @@
         <div class="small author">Author: <a href="{{ post.author.get_absolute_url }}">{{ post.author }}</a></div>
         
         <!-- Display the post title -->
-        <h2 class="card-title">{{ post.title }}</h2>
+        <h2 class="card-title h4">{{ post.title|truncatewords_html:7 }}</h2>
         
         <!-- Display a brief excerpt from the post -->
         <p class="card-text">{{ post.excerpt }}</p>

@@ -155,8 +155,6 @@ class PostCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
         return reverse_lazy('index')
 
     
-
-    
     def test_func(self):
         # Check if the user is associated with an Author model
         return Author.objects.filter(profile=self.request.user.profile).exists()
@@ -170,7 +168,7 @@ class PostCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
 # Generic class-based view to update post only by the author of the post.       
 class PostUpdateView(LoginRequiredMixin, UpdateView):
     model = Post
-    fields = ["title", "content", "image", "status"]
+    fields = ["title", "content", "image"]
     template_name = 'blog/post_form.html'
 
     def get_success_url(self):

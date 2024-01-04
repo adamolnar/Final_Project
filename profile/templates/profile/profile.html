@@ -94,16 +94,20 @@
 
             <hr>
             {% if request.user.id == user.id %}
-              <!-- Button to view draft post list -->
-              <a type="button" class="btn btn-outline-dark" data-mdb-ripple-color="dark"
-                style="z-index: 1; background-color:#04AA6D; color: white; border-radius: 0%;"
-                href="{% url 'draft-post-author-list' %}" class="btn btn-info">View Draft Posts</a>
-
               <a type="button" class="btn btn-outline-dark" data-mdb-ripple-color="dark"
                 style="z-index: 1; background-color:#dc3545; color: white; border-radius: 0%;"
                 href="{% url 'profile-delete' user.pk %}">
                 Delete Profile
               </a>
+              
+              {% if request.user.id == user.id and has_draft_posts %}
+              <!-- Button to view draft post list -->
+              <a type="button" class="btn btn-outline-dark" data-mdb-ripple-color="dark"
+                style="z-index: 1; background-color:#04AA6D; color: white; border-radius: 0%;"
+                href="{% url 'draft-post-author-list' %}" class="btn btn-info">View Draft Posts
+              </a>
+              {% endif %}
+
             {% endif %}
           </div>
         </div>

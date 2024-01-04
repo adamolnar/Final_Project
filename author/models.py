@@ -58,7 +58,7 @@ class AuthorMessage(models.Model):
 
 # Model to store author access requests
 class AuthorAccessRequest(models.Model):
-    # ForeignKey relationship to the user's profile (assuming 'Profile' model exists)
+    # ForeignKey relationship to the user's profile 
     profile = models.ForeignKey(Profile, on_delete=models.CASCADE, null=True)
     
     # Reason for requesting author access
@@ -67,17 +67,24 @@ class AuthorAccessRequest(models.Model):
     # Timestamp of when the request was created
     created_at = models.DateTimeField(auto_now_add=True)
     
-    # Indicates whether the request is authorized
-    is_authorized = models.BooleanField(default=False)
+    # Indicates whether the request is authorized by an admin
+    is_approved = models.BooleanField(default=False)
+    
+    # Indicates whether the user has become an author
+    is_author = models.BooleanField(default=False)
 
     def __str__(self):
         # String representation of the request
         return f"Request from {self.profile.user.username}"
     
-    def authorize_request(self):
-        # Method to authorize the request and update the Author model
-        author, created = Author.objects.get_or_create(profile=self.profile)
-        if created:
-            author.grant_access()
-        self.is_authorized = True
+    def approve_request(self):
+        # Method to approve the request by an admin
+        self.is_approved = True
         self.save()
+        # After approval, you can now create an Author instance if not already an author
+        if not self.is_author:
+            author, created = Author.objects.get_or_create(profile=self.profile)
+            if created:
+                author.grant_access()
+            self.is_author = True
+            self.save()

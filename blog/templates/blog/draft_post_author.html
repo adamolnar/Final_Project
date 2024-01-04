@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 
 {% block content %}
+
 <div class="container">
   <!-- Heading displaying the username whose draft posts are being shown -->
   <h1 class="text-center" style="margin: 2% auto;">Draft Posts by <strong>{{ user.username }}</strong></h1>
@@ -42,13 +43,12 @@
         </span>
       </div>
     {% endif %}
-  
   {% else %}
     <!-- Display a message if there are no draft posts to show -->
     <div class="alert alert-info" role="alert">
       There are no draft posts to display.
     </div>
-  {% endif}
+  {% endif %}
 </div>
   
 {% endblock %}

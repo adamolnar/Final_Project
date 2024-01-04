@@ -37,7 +37,7 @@ class AuthorMessageAdmin(admin.ModelAdmin):
 @admin.register(AuthorAccessRequest)
 class AuthorAccessRequestAdmin(admin.ModelAdmin):
     # Admin configuration for the AuthorAccessRequest model
-    list_display = ('profile', 'request_reason', 'created_at', 'is_authorized')
+    list_display = ('profile', 'request_reason', 'created_at', 'is_approved')
     search_fields = ['profile__username', 'profile__email', 'request_reason']
 
     # Define a custom admin action

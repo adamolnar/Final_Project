@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from .models import Author, AuthorMessage
+from profile.models import Profile
 from blog.models import Post
 from .forms import AuthorMessageForm, AuthorAccessRequestForm
 from django.views.generic import (
@@ -22,16 +23,19 @@ class AuthorListView(ListView):
 class AuthorDetailView(DetailView):
     template_name ='author/author_detail.html'
     model = Author
+    context_object_name = 'author'
     
-    def get_queryset(self):
-        author_id = self.kwargs['pk']
-        return Post.objects.filter(author_id=author_id)
+    # def get_queryset(self):
+
+    #     profile_id = Profile.objects.get(user_id=self.kwargs['pk'])
+    #     author_id =  Author.objects.get(profile_id= profile_id)
+    #     return Post.objects.filter(author_id=author_id)
     
-    def get_context_data(self, **kwargs):
-        context = super(AuthorDetailView, self).get_context_data(**kwargs)
-        author_info = self.get_object()
-        context['author_info'] = author_info
-        return context
+    # def get_context_data(self, **kwargs):
+    #     context = super(AuthorDetailView, self).get_context_data(**kwargs)
+    #     author_info = self.get_object()
+    #     context['author_info'] = author_info
+    #     return context
 
 # Generic class-based view to store all messages sent by users to authors.
 class MessageAuthorView(FormView):
@@ -74,11 +78,14 @@ class RequestAuthorAccessView(LoginRequiredMixin, FormView):
             form.instance.profile = request.user.profile
             # Process the form data and handle the request
             request_reason = form.cleaned_data['request_reason']
-            # Process the request_reason as needed (e.g., save to database)
-
+            
+            # Create an AuthorAccessRequest instance
+            request_instance = form.save(commit=False)
+            request_instance.save()
+            
             # Authorize the request
-            form.instance.authorize_request()
-
+            request_instance.approve_request()
+            
             messages.success(request, 'Your request has been submitted. We will review it soon.')
             return redirect('index')  # Redirect to the desired page after successful submission
 

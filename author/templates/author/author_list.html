@@ -4,25 +4,24 @@
 
 {% block content %}
 <div class="container">
-    <h1 class="page-title mb-4">All Bloggers</h1>
+    <h1 class="page-title mb-4 mt-4">All Bloggers</h1>
 
     <div class="row">
         {% if author_list %}
             {% for author in author_list %}
                 <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
-                    <div class="card p-3">
+                    <div class="card p-3" style="height: 450px;">
                         <!-- Author Profile Image -->
                         {% if author.profile.image %}
-                            {% cloudinary author.profile.image.url format="jpg" width=100 height=100 crop="fill" class="img-fluid img-thumbnail mt-2 mb-2" style="z-index: 1" %}
+                            {% cloudinary author.profile.image.url format="jpg" width=100 height=100 crop="fill" class="img-fluid img-thumbnail mt-2 mb-2" style="height:100px; width:100px; z-index: 1" %}
                         {% else %}
                             {% cloudinary "v1704034646/static/images/avatar.b2e01619cc46" format="png" width=150 height=150 crop="fill" class="img-fluid img-thumbnail mt-4 mb-2" style="width: 150px; z-index: 1" %}
                         {% endif %}
-
                         <!-- Author Name -->
                         <h2><a href="{% url 'author-detail' author.pk %}">{{ author }}</a></h2>
                         
                         <!-- Author About -->
-                        <p class="author-about" style="margin-bottom: 0;"><strong>About: </strong>{{ author.profile.about_me }}</p>
+                        <p class="author-about" style="margin-bottom: 0;"><strong>About: </strong>{{ author.profile.about_me|truncatewords_html:5 }}</p>
                         <hr>
 
                         <!-- Author Posts -->
@@ -30,7 +29,7 @@
                             <p style="margin-bottom: 0;"><strong>Latest posts:</strong> </p>
                             {% for post in author.blog_posts.all %}
                                 {% if post.status == 1 %}  
-                                    {% if forloop.counter <= 5 %} {# Display up to 5 posts in one column #}
+                                    {% if forloop.counter <= 3 %} {# Display up to 3 posts in one column #}
                                         <div class="post mt-2">
                                             <!-- Post Image -->
                                             {% if post.image %}
