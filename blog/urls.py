@@ -13,4 +13,5 @@ urlpatterns = [
     path('post/<int:pk>/comment/update/',views.CommentUpdateView.as_view(), name='comment-update'),
     path('post/<int:pk>/comment/delete/',views.CommentDeleteView.as_view(), name='comment-delete'),
     path('drafts/author/', views.DraftPostAuthorListView.as_view(), name='draft-post-author-list'),
+    path('blog/byte_by_byte/', views.byte_by_byte_view, name='byte-by-byte'),
 ]

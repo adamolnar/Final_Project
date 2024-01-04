@@ -282,3 +282,16 @@ def custom_404(request, exception):
     Custom 404 error view.
     """
     return render(request, 'blog/404.html', {'exception': exception}, status=404)
+
+
+def byte_by_byte_view(request):
+    # Define a view function for rendering the "byte_by_byte.html" template.
+    
+    # Optionally, you can prepare context data to pass to the template.
+    context = {
+        'page_title': 'Byte by Byte Tech Blog',  # Example: Set the page title.
+        'blog_content': 'Welcome to the Byte by Byte Tech Blog!',  # Example: Add some content.
+    }
+    
+    # Render the "byte_by_byte.html" template with the provided context data.
+    return render(request, 'blog/byte_by_byte.html', context)
