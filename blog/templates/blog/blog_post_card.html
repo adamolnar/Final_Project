@@ -21,7 +21,7 @@
         <div class="small author">Author: <a href="{{ post.author.get_absolute_url }}">{{ post.author }}</a></div>
         
         <!-- Display the post title -->
-        <h2 class="card-title h4">{{ post.title|truncatewords_html:7 }}</h2>
+        <h2 class="card-title h4 mt-2">{{ post.title|truncatewords_html:7 }}</h2>
         
         <!-- Display a brief excerpt from the post -->
         <p class="card-text">{{ post.excerpt }}</p>

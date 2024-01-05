@@ -10946,3 +10946,37 @@ form input {
   transform: scale(1.1); /* Enlarge the button on hover */
   transition: all 0.3s; /* Add a smooth transition effect */
 }
+
+/* -------------------------Index.html------------------------------------------  */
+
+#header {
+  background-color:#f7f7f7;
+}
+
+a {
+  text-decoration: none;
+  color: #6c757d;
+  font-weight: bold;
+}
+
+@media screen and (max-width: 1400px) {
+  .post-title {font-size: medium;}
+}
+
+@media screen and (max-width: 767px) {
+  .card {height: fit-content;}
+}
+
+
+@media screen and (max-width: 600px) {
+  #header {background-color: #d9d9d9;}
+  .navbar {padding: auto 3%;}
+  .card {border: 3px solid #d9d9d9;}
+  .post-title {font-size: small;}
+}
+
+/* -------------------------Message Author.html------------------------------------------  */
+
+.help-block {
+  display: none;
+}
