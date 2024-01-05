@@ -279,7 +279,7 @@ h3, .h3 {
 }
 
 #height {
-  margin-top: 5vh auto;
+  margin-top: 5vh;
 }
 
 .btn-lg {
@@ -406,4 +406,8 @@ label {
   input#email {width: -webkit-fill-available;}
   input#password1 {width: -webkit-fill-available;}
   input#password2 {width: -webkit-fill-available;}
+}
+
+.section.pb-5.pt-5.pt-sm-2.text-center {
+  min-height: 80vh;
 }
