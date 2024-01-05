@@ -1,27 +1,35 @@
 {% extends "base.html" %}
 
-{% block head_title %}Delete post{% endblock head_title %}
+{% block head_title %}Delete Post{% endblock head_title %}
 
 {% block content %}
-<div class="container">
+<div class="container d-flex align-items-center justify-content-center">
   <div class="row">
-    <div class="col-8 offset-2">
+    <div class="col-md-12  text-center">
       <!-- Heading for deleting a post -->
-      <h2 class=" my-5">Delete post</h2>
+      <h2 class="my-5">Delete Post</h2>
       <form method="POST" enctype="multipart/form-data">
         {% csrf_token %}
         <!-- Confirmation message for deleting the post with its title -->
-        <p>Are you sure that you want to delete the post "{{post.title}}"?</p>
-        <div>
-          <!-- Button to confirm the deletion -->
-          <button type="submit" class="btn btn-danger" value="Yes">Delete</button>
-          <!-- Button to cancel the deletion and return to the post detail page -->
-          <button type="submit" class="btn btn-success" value="'No"> 
-            <a style="text-decoration: none; color: white;" href="{% url 'post-detail' post.slug %}">Cancel</a></button>
+        <p>Are you sure you want to delete the post "{{ post.title }}"?</p>
+        <div class="row mt-5">
+          <!-- Confirm Delete Button -->
+          <div class="col-12 col-md-6 mb-2 mb-md-0">
+            <button type="submit" class="btn btn-danger w-100">
+              <i class="fas fa-trash-alt"></i> Confirm Delete
+            </button>
+          </div>
+          <!-- Cancel Deletion Button -->
+          <div class="col-12 col-md-6">
+            <a href="{% url 'post-detail' post.slug %}" class="btn btn-secondary w-100">
+              <i class="fas fa-times"></i> Cancel Deletion
+            </a>
+          </div>
         </div>
-        </button>
       </form>
     </div>
   </div>
 </div>
+
 {% endblock content %}
+

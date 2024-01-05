@@ -59,7 +59,7 @@
 
             <div class="row g-2" id="postContainer">
               {% for post in author.blog_posts.all %}
-              <div class="col-md-6 mb-2 post-card">
+              <div class="col-md-6 mb-2 post-card" id="extrapost">
                 <div class="card" style="height: 500px;">
                   <!-- Post Image -->
                   <img src="{% if 'placeholder' in post.image.url %}https://res.cloudinary.com/dmg7oqpgs/image/upload/v1698830526/Project_4/masthead_wxqbsd.jpg{% else %}{{ post.image.url }}{% endif %}"

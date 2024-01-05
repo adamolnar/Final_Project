@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 
 {% block head_title %}
+  <!-- Dynamically set the page title based on the action (create or update) -->
   {% if update %}
     Update post
   {% else %}
@@ -9,105 +10,100 @@
 {% endblock head_title %}
 
 {% block content %}
-<div class="container">
-  <div class="row">
-    <div class="col-8 offset-2">
-      <!-- Heading for creating or updating a post -->
-      <h2 class=" my-5">
+<!-- Main container for the post form -->
+<div class="container my-4">
+  <div class="row justify-content-center">
+    <!-- Responsive column layout -->
+    <div class="col-md-10 col-lg-8">
+      <!-- Heading, conditionally displayed based on action -->
+      <h2 class="text-center mb-4">
         {% if update %}
-          Update post
+          Update Post
         {% else %}
-          Create a post
+          Create a Post
         {% endif %}
       </h2>
       
-      <!-- Form for creating or updating a post using the POST method -->
-      <form method="post" enctype="multipart/form-data">
+      <!-- Form setup with POST method and multipart data for file upload -->
+      <form method="post" enctype="multipart/form-data" class="needs-validation" novalidate>
         {% csrf_token %}
         
-        <!-- Form field for the post title -->
-        <div class="form-group">
+        <!-- Form group for title input -->
+        <div class="mb-3">
           {{ form.title.label_tag }}
-          <input type="text" class="form-control {% if form.title.errors %}is-invalid{% endif %}" id="id_title"
-            name="title" value='{{ form.title.value|default:"" }}'>
+          <input type="text" class="form-control {% if form.title.errors %}is-invalid{% endif %}" id="id_title" name="title" value='{{ form.title.value|default:"" }}'>
           {% if form.title.errors %}
-          <div class="invalid-feedback">{{ form.title.errors }}</div>
+            <div class="invalid-feedback">{{ form.title.errors }}</div>
           {% endif %}
         </div>
         
-        <!-- Form field for the post content -->
-        <div class="form-group">
+        <!-- Form group for content textarea -->
+        <div class="mb-3">
           {{ form.content.label_tag }}
-          <textarea type="text" class="form-control {% if form.content.errors %}is-invalid{% endif %}" id="id_content"
-            name="content" cols="40" rows="10">{{ form.content.value|default:"" }}</textarea>
+          <textarea class="form-control {% if form.content.errors %}is-invalid{% endif %}" id="id_content" name="content" rows="5">{{ form.content.value|default:"" }}</textarea>
           {% if form.content.errors %}
-          <div class="invalid-feedback">{{ form.content.errors }}</div>
+            <div class="invalid-feedback">{{ form.content.errors }}</div>
           {% endif %}
         </div>
         
-        <!-- Form field for uploading an image -->
-        <div class="form-group">
-          {{ form.image.label_tag }}<br>
-          <input type="file" class="{% if form.image.errors %}is-invalid{% endif %}" id="id_image" name="image"
-            accept="image/*">
+        <!-- Form group for image upload -->
+        <div class="mb-3">
+          {{ form.image.label_tag }}
+          <input type="file" class="form-control {% if form.image.errors %}is-invalid{% endif %}" id="id_image" name="image" accept="image/*">
           {% if form.image.errors %}
-          <div class="invalid-feedback">{{ form.image.errors }}</div>
+            <div class="invalid-feedback">{{ form.image.errors }}</div>
           {% endif %}
         </div>
-       
-        <!-- Form field for selecting post status (if not updating) -->
+
+        <!-- Additional form fields displayed only when not updating an existing post -->
         {% if not update %}
-        <div class="form-group">
-            {{ form.status.label_tag }}<br>
-            <select class="custom-select w-25" name="status" id="id_status" multiple>
+        <div class="mb-3">
+            {{ form.status.label_tag }}
+            <select class="form-select" name="status" id="id_status">
               {% for status, value in form.status.field.choices %}
-              <option value="{{ status }}">{{ value }}</option>
+                <option value="{{ status }}">{{ value }}</option>
               {% endfor %}
             </select>
             {% if form.status.errors %}
-            <div class="invalid-feedback">{{ form.status.errors }}</div>
+              <div class="invalid-feedback">{{ form.status.errors }}</div>
             {% endif %}
         </div>
-        {% endif %}
 
-        <!-- Form field for selecting post categories (if not updating) -->
-        {% if not update %}
-        <div class="form-group">
-            {{ form.categories.label_tag }}<br>
-            <select class="custom-select w-25" name="categories" id="id_categories" multiple>
+        <div class="mb-3">
+            {{ form.categories.label_tag }}
+            <select class="form-select" name="categories" id="id_categories" multiple>
               {% for title, value in form.categories.field.choices %}
-              <option value="{{ title }}">{{ value }}</option>
+                <option value="{{ title }}">{{ value }}</option>
               {% endfor %}
             </select>
-            {% if form.categorie.errors %}
-            <div class="invalid-feedback">{{ form.categorie.errors }}</div>
+            {% if form.categories.errors %}
+              <div class="invalid-feedback">{{ form.categories.errors }}</div>
             {% endif %}
         </div>
-        {% endif %}
 
-        <!-- Form field for selecting post tags (if not updating) -->
-        {% if not update %}
-        <div class="form-group">
-          {{ form.tags.label_tag }}<br>
-          <select class="custom-select w-25 multiselect" name="tags" id="id_tags" multiple="multiple">
+        <div class="mb-3">
+          {{ form.tags.label_tag }}
+          <select class="form-select" name="tags" id="id_tags" multiple="multiple">
             {% for name, value in form.tags.field.choices %}
-            <option value="{{ name }}"><a href="" class="badge text-decoration-none bg-secondary"></a>{{ value }}</option>
+              <option value="{{ name }}">{{ value }}</option>
             {% endfor %}
           </select>
           {% if form.tags.errors %}
-          <div class="invalid-feedback">{{ form.tags.errors }}</div>
+            <div class="invalid-feedback">{{ form.tags.errors }}</div>
           {% endif %}
         </div>
         {% endif %}
         
-        <!-- Button to create or update the post -->
-        <button type="submit" class="btn btn-primary">
-          {% if update %}
-            Update the post
-          {% else %}
-            Create a post
-          {% endif %}
-        </button>
+        <!-- Submit button, text changes based on action -->
+        <div class="text-center">
+          <button type="submit" class="btn btn-success">
+            {% if update %}
+              Update Post
+            {% else %}
+              Create Post
+            {% endif %}
+          </button>
+        </div>
       </form>
     </div>
   </div>

@@ -5,52 +5,58 @@
 {% block head_title %}{{ user.username }} | Django Blog{% endblock head_title %}
 
 {% block content %}
-
+<!-- Main Section -->
 <section class="h-100 gradient-custom-2">
   <div class="container py-5 h-100">
     <div class="row d-flex justify-content-center align-items-center h-100">
-      <div class="col col-lg-9 col-xl-7">
+      <div class="col-12 col-md-9 col-lg-7">
         <div class="card">
-          <div class="rounded-top text-white d-flex flex-row" style="background-color: #000; height: 200px;">
-            <div class="ms-4 mt-5 d-flex flex-column" style="width: 150px;">
-                {% if author.profile.image %}
-                    {% cloudinary author.profile.image.url format="jpg" width=100 height=100 crop="fill" class="img-fluid img-thumbnail mt-2 mb-2" style="height:100px; width:100px; z-index: 1" %}
-                {% else %}
-                    {% cloudinary "v1704034646/static/images/avatar.b2e01619cc46" format="png" width=150 height=150 crop="fill" class="img-fluid img-thumbnail mt-4 mb-2" style="width: 150px; z-index: 1" %}
-                {% endif %}
-                 {% if request.user.id == user.id %}
-                <a type="button" class="btn btn-outline-dark" data-mdb-ripple-color="dark"
-                  style="z-index: 1; background-color: #212529; color: white;" href="{% url 'profile-update' user.pk %}">
+          <!-- User Profile Header -->
+          <div class="rounded-top text-white d-flex flex-column flex-md-row" style="background-color: #000; height: auto;">
+            <div class="p-4 d-flex flex-column align-items-center">
+              <!-- Profile Image -->
+              {% if profile.image %}
+                {% cloudinary profile.image.url format="jpg" width=150 height=150 crop="fill" class="img-fluid img-thumbnail my-2" %}
+              {% else %}
+                <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-profiles/avatar-1.webp"
+                  alt="Generic placeholder image" class="img-fluid img-thumbnail my-2">
+              {% endif %}
+              <!-- Edit Profile Button -->
+              {% if request.user.id == user.id %}
+                <a class="btn btn-outline-dark" data-mdb-ripple-color="dark" style="color: white; border-color: white;" href="{% url 'profile-update' user.pk %}">
                   Edit Profile
                 </a>
               {% endif %}
             </div>
-            <div class="ms-3" style="margin-top: 70px;">
+            <!-- User Information -->
+            <div class="ms-md-3 p-4">
               <h3>{{ user.username }}</h3>
               <p>{{ user.email }}</p>
               <hr>
-              <p style="margin-top: 15px; font-size: small;">Last Logged In: {{ user.last_login }}</p>
+              <p>Last Logged In: {{ user.last_login }}</p>
             </div>
           </div>
+          <!-- User Statistics -->
           <div class="p-4 text-black" style="background-color: #d9d9d9">
-            <div class="d-flex justify-content-end text-center py-1">
+            <div class="d-flex justify-content-around text-center py-1">
               <div>
                 <i class="fas fa-pen"></i>
-                <p class="mb-1 h5" style="margin: 0.25rem !important; font-size: 0.9rem;">{{ object.post_count }}</p>
+                <p class="mb-1 h5">{{ object.post_count }}</p>
                 <p class="small text-muted mb-0">Posts</p>
               </div>
-              <div class="px-3">
+              <div>
                 <i class="fas fa-comment"></i>
-                <p class="mb-1 h5" style="margin: 0.25rem !important; font-size: 0.9rem;">{{ object.comment_count }}</p>
+                <p class="mb-1 h5">{{ object.comment_count }}</p>
                 <p class="small text-muted mb-0">Comments</p>
               </div>
               <div>
                 <i class="fas fa-share-alt"></i>
-                <p class="mb-1 h5" style="margin: 0.25rem !important; font-size: 0.9rem;">{{ object.shared_count }}</p>
+                <p class="mb-1 h5">{{ object.shared_count }}</p>
                 <p class="small text-muted mb-0">Shared</p>
               </div>
             </div>
           </div>
+          <!-- About Me Section -->
           <div class="card-body p-4 text-black">
             <div class="mb-5">
               <p class="lead fw-normal mb-1">About</p>
@@ -59,6 +65,21 @@
               </div>
             </div>
 
+            <!-- Placeholder for Published Content -->
+            <div class="d-flex justify-content-between align-items-center mb-4">
+              Nothing published yet.
+            </div>
+
+            <!-- Delete Profile Button -->
+            <hr>
+            <div class="text-center">
+              {% if request.user.id == user.id %}
+                <a class="btn btn-outline-dark" data-mdb-ripple-color="dark" style="background-color: red; color: white;"
+                  href="{% url 'profile-delete' user.pk %}">
+                  Delete Profile
+                </a>
+              {% endif %}
+            </div>
           </div>
         </div>
       </div>

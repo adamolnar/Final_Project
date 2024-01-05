@@ -1,59 +1,63 @@
 {% extends 'base.html' %}
 
-{% block head_title %}Edit profile{% endblock head_title %}
+{% block head_title %}Edit Profile{% endblock head_title %}
 
 {% block content %}
 
 <section class="container my-5">
   <div class="row">
-    <div class="col-md-6 offset-md-3">
-      <h2 class="mb-5">Edit Profile</h2>  <!-- Displays the "Edit Profile" heading -->
-
-      <form method="post" enctype="multipart/form-data">  <!-- Defines a form with a POST method and enctype for file upload -->
-        {% csrf_token %}  <!-- Generates a CSRF token for security -->
-        
-        <div class="mb-3">
-          {{ form.username.label_tag }}  <!-- Displays the label for the username field -->
-          <input  id="id_username" type="text" id="readonlyInput" readonly class="form-control"
-             name="username" value='{{ form.username.value|default:user.username }}'>
-          <!-- Displays the username field with a value, and sets it as read-only -->
-          {% if form.username.errors %}
-             <div class="invalid-feedback">{{ form.username.errors }}</div>
-             <!-- Displays username field errors if any -->
-          {% endif %}
-       </div>
-
-        <div class="mb-3">
-          {{ form.about_me.label_tag }}  <!-- Displays the label for the about_me field -->
-          <textarea type="text" class="form-control {% if form.about_me.errors %}is-invalid{% endif %}" id="id_about_me"
-            name="about_me" rows="5">{{ form.about_me.value }}</textarea>
-          <!-- Displays the about_me field as a textarea and handles validation errors -->
-          {% if form.about_me.errors %}
-          <div class="invalid-feedback">{{ form.about_me.errors }}</div>
-          <!-- Displays about_me field errors if any -->
-          {% endif %}
+    <div class="col-md-8 offset-md-2">
+      <div class="card">
+        <div class="card-header">
+          <h2 class="m-0">Edit Profile</h2>
         </div>
+        <div class="card-body">
+          <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
 
-        <div class="mb-3">
-          {{ form.image.label_tag }}<br>  <!-- Displays the label for the image field -->
-          <input type="file" class="{% if form.image.errors %}is-invalid{% endif %}" id="id_image" name="image"
-            accept="image/*">
-          <!-- Allows the user to upload an image and handles validation errors -->
-          {% if form.image.errors %}
-          <div class="invalid-feedback">{{ form.image.errors }}</div>
-          <!-- Displays image field errors if any -->
-          {% endif %}
+            <!-- Username (Read-only) -->
+            <div class="mb-3">
+              {{ form.username.label_tag }}
+              <input type="text" class="form-control-plaintext" id="id_username" readonly 
+                     value="{{ form.username.value|default:user.username }}">
+              {% if form.username.errors %}
+                <div class="text-danger">{{ form.username.errors }}</div>
+              {% endif %}
+            </div>
+
+            <!-- About Me -->
+            <div class="mb-3">
+              {{ form.about_me.label_tag }}
+              <textarea class="form-control {% if form.about_me.errors %}is-invalid{% endif %}" 
+                        id="id_about_me" name="about_me" rows="4">{{ form.about_me.value }}</textarea>
+              {% if form.about_me.errors %}
+                <div class="invalid-feedback">{{ form.about_me.errors }}</div>
+              {% endif %}
+            </div>
+
+            <!-- Image Upload -->
+            <div class="mb-3">
+              {{ form.image.label_tag }}
+              <input type="file" class="form-control {% if form.image.errors %}is-invalid{% endif %}" 
+                     id="id_image" name="image" accept="image/*">
+              {% if form.image.errors %}
+                <div class="invalid-feedback">{{ form.image.errors }}</div>
+              {% endif %}
+            </div>
+
+            <!-- Non-field Errors -->
+            {% if form.non_field_errors %}
+              <div class="alert alert-danger" role="alert">
+                  {{ form.non_field_errors.as_text }}
+              </div>
+            {% endif %}
+
+            <!-- Submit Button -->
+            <button type="submit" class="btn btn-success">Save Changes</button>
+
+          </form>
         </div>
-
-        {% if form.non_field_errors %}
-        <div class="alert alert-danger" role="alert">
-            {{ form.non_field_errors.as_text }}
-        </div>
-        <!-- Displays non-field errors if any -->
-        {% endif %}
-
-        <button type="submit" class="btn btn-primary">Submit</button>  <!-- Displays a "Submit" button -->
-      </form>
+      </div>
     </div>
   </div>
 </section>

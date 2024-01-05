@@ -1,16 +1,31 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <!-- Heading for updating a comment -->
-    <h2>Update your comment</h2>
-    
-    <!-- Form for updating a comment using the POST method -->
-    <form method="POST" class="write_new_post">
-        {% csrf_token %}
-        <!-- Render form fields as paragraphs (as_p) -->
-        {{ form.as_p }}
-        
-        <!-- Button to save the updated comment -->
-        <button type="submit" class="save btn btn-secondary">Save</button>
-    </form>
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card mt-5 text-center">
+                <div class="card-header"><strong>Update Your Comment</strong></div>
+
+                <div class="card-body">
+                    <!-- Form for updating a comment using the POST method -->
+                    <form method="POST" class="write-new-comment">
+                        {% csrf_token %}
+                        <!-- Render form fields with Bootstrap form-group -->
+                        {% for field in form %}
+                            <div class="form-group ">
+                                {{ field }}
+                                {% if field.help_text %}
+                                    <small class="form-text text-muted">{{ field.help_text }}</small>
+                                {% endif %}
+                            </div>
+                        {% endfor %}
+                        <!-- Button to save the updated comment -->
+                        <button type="submit" class="btn btn-primary">Save</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}

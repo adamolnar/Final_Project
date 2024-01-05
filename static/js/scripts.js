@@ -24,7 +24,7 @@ function formatTags() {
 document.addEventListener('DOMContentLoaded', function() {
   // Get references to HTML elements
   var postContainer = document.getElementById('postContainer');
-  var postCards = postContainer.getElementsByClassName('post-card');
+  var postCards = postContainer.getElementsByClassName('extrapost');
   var showMoreLink = document.getElementById('showMoreLink');
 
   // Set the number of initially visible posts

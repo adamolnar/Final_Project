@@ -1,4 +1,4 @@
-# Manual Testing for base.html Template
+# Manual Testing for Base Template
 
 ## Test Case ID: TC001
 
@@ -116,7 +116,7 @@
 ---------------------------------------------------------------------------------------------------------
 
 
-# Manual Testing for index.html Template
+# Manual Testing for Blog Landing Page Template
 
 ## Test Case ID: TC001
 
@@ -132,7 +132,7 @@
 
 1. Open a web browser.
 
-2. Navigate to the URL of the blog page, e.g., [index.html](https://final-project-ada-02b27917ae0c.herokuapp.com/).
+2. Navigate to the URL of the blog page, e.g., [Home](https://final-project-ada-02b27917ae0c.herokuapp.com/).
 
 **Expected Results:**
 - The blog page should load without errors.
@@ -263,7 +263,7 @@
 
 <hr>
 
-# Manual Testing for byte_by_byte.html Template
+# Manual Testing for Byte by Byte Tech Page Template
 
 ## Test Case ID: TC001
 
@@ -279,7 +279,7 @@
 
 1. Open a web browser.
 
-2. Navigate to the URL of the landing page, e.g., [byte_by_byte.html](https://final-project-ada-02b27917ae0c.herokuapp.com/blog/byte_by_byte/).
+2. Navigate to the URL of the landing page, e.g., [Byte by Byte](https://final-project-ada-02b27917ae0c.herokuapp.com/blog/byte_by_byte/).
 
 **Expected Results:**
 - The landing page should load without errors.
@@ -328,7 +328,7 @@
 ---------------------------------------------------------------------------------------------------------
 
 
-# Manual Testing for post_detail.html Template
+# Manual Testing for Blog Post Page Template
 
 ## Test Case ID: TC001
 
@@ -344,7 +344,7 @@
 
 1. Open a web browser.
 
-2. Navigate to the URL of a specific blog post, e.g., [post_detail.html](https://final-project-ada-02b27917ae0c.herokuapp.com/post/jumpstart-your-python-journey/).
+2. Navigate to the URL of a specific blog post, e.g., [Blog Post](https://final-project-ada-02b27917ae0c.herokuapp.com/post/jumpstart-your-python-journey/).
 
 **Expected Results:**
 - The blog post page should load without errors.
@@ -455,10 +455,10 @@
 
 
 <hr>
----------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------
 
 
-# Manual Testing for author_list.html Template
+# Manual Testing for Blogger List Page Template
 
 ## Test Case ID: TC001
 
@@ -474,7 +474,7 @@
 
 1. Open a web browser.
 
-2. Navigate to the URL of the blogger list page, e.g., [author_list.html](https://final-project-ada-02b27917ae0c.herokuapp.com/authors/).
+2. Navigate to the URL of the blogger list page, e.g., [Bloggers](https://final-project-ada-02b27917ae0c.herokuapp.com/authors/).
 
 **Expected Results:**
 - The blogger list page should load without errors.
@@ -572,7 +572,7 @@
 ---------------------------------------------------------------------------------------------------------
 
 
-# Manual Testing for author_detail.html Template
+# Manual Testing for Author Profile Page Template
 
 ## Test Case ID: TC001
 
@@ -588,7 +588,7 @@
 
 1. Open a web browser.
 
-2. Navigate to the URL of the author profile page, e.g., [author_detail.html](https://final-project-ada-02b27917ae0c.herokuapp.com/authors/1/), where `author_id` is the ID of the author.
+2. Navigate to the URL of the author profile page, e.g., [Author Profile](https://final-project-ada-02b27917ae0c.herokuapp.com/authors/1/), where `author_id` is the ID of the author.
 
 **Expected Results:**
 - The author profile page should load without errors.
@@ -663,13 +663,13 @@
 ---------------------------------------------------------------------------------------------------------
 
 
-# Manual Testing for message_to_author.html Template
+# Manual Testing for Send Message to Author Page Template
 
 ## Test Case ID: TC001
 
 ### Test Case Title: Template Rendering
 
-**Test Description:** This test case ensures that the `message_to_author.html` template renders correctly and displays all required elements.
+**Test Description:** This test case ensures that the template renders correctly and displays all required elements.
 
 ### Preconditions:
 - The Django web application is running.
@@ -679,7 +679,7 @@
 
 1. Open a web browser.
 
-2. Navigate to the URL where the [message_to_author.html](https://final-project-ada-02b27917ae0c.herokuapp.com/message-author/1/) template is used.
+2. Navigate to the URL where the [Send Message](https://final-project-ada-02b27917ae0c.herokuapp.com/message-author/1/) template is used.
 
 **Expected Results:**
 - The template should render without errors.
@@ -692,7 +692,7 @@
 - The template should render correctly.
 
 ### Test Status:
-- [X] Pass
+- [ ] Pass
 - [ ] Fail
 
 ---
@@ -721,9 +721,9 @@
 - The message submission functionality should work correctly.
 
 ### Test Status:
-- [X] Pass
+- [ ] Pass
 - [ ] Fail
-
+ 
 ---
 
 ## Test Case ID: TC003
@@ -746,7 +746,7 @@
 - Form field validation should work correctly.
 
 ### Test Status:
-- [X] Pass
+- [ ] Pass
 - [ ] Fail
 
 ---
@@ -808,7 +808,7 @@
 ---------------------------------------------------------------------------------------------------------
 
 
-# Manual Testing for request_author_access.html Template
+# Manual Testing for Author Access Request Page Template
 
 ## Test Case ID: TC001
 
@@ -824,7 +824,7 @@
 
 1. Open a web browser.
 
-2. Navigate to the URL where the author access request page template is used [request_author_access.html](https://final-project-ada-02b27917ae0c.herokuapp.com/request-author-access/).
+2. Navigate to the URL where the author access request page template is used [Author Access Request](https://final-project-ada-02b27917ae0c.herokuapp.com/request-author-access/).
 
 **Expected Results:**
 - The author access request page template should render without errors.
@@ -901,7 +901,7 @@
 <hr>
 ---------------------------------------------------------------------------------------------------------
 
-# Manual Testing for Django 404.html Template
+# Manual Testing for 404 Error Page Template
 
 ## Test Case ID: TC001
 
@@ -911,7 +911,7 @@
 
 ### Preconditions:
 - The Django web application is running.
-- The 404 error page template is used to handle page not found errors [404.html](https://final-project-ada-02b27917ae0c.herokuapp.com/404).
+- The 404 error page template is used to handle page not found errors [404 Error Page](https://final-project-ada-02b27917ae0c.herokuapp.com/404).
 
 ### Test Steps:
 
@@ -989,7 +989,7 @@
 <hr>
 --------------------------------------------------------------------------------------------------------
 
-# Manual Testing for blog_post_card.html Template
+# Manual Testing for Post Card Template
 
 ## Test Case ID: TC001
 
@@ -1080,7 +1080,7 @@
 <hr>
 --------------------------------------------------------------------------------------------------------
 
-# Manual Testing for comment_delete.html Template
+# Manual Testing for Confirm Delete Comment Page Template
 
 ## Test Case ID: TC001
 
@@ -1167,7 +1167,7 @@
 --------------------------------------------------------------------------------------------------------
 
 
-# Manual Testing for comment_update.html Template
+# Manual Testing for Comment Update Page Template
 
 ## Test Case ID: TC001
 
@@ -1233,7 +1233,7 @@
 <hr>
 --------------------------------------------------------------------------------------------------------
 
-# Manual Testing for draft_post_author.html Template
+# Manual Testing for Draft Posts Page Template
 
 ## Test Case ID: TC001
 
@@ -1303,7 +1303,7 @@
 <hr>
 --------------------------------------------------------------------------------------------------------
 
-# Manual Testing for post_delete.html Template
+# Manual Testing for Post Deletion Page Template
 
 ## Test Case ID: TC001
 
@@ -1370,7 +1370,7 @@
 --------------------------------------------------------------------------------------------------------
 
 
-# Manual Testing for post_detail.html Template
+# Manual Testing for Post Detail Page Template
 
 ## Test Case ID: TC001
 
@@ -1386,7 +1386,7 @@
 
 1. Open a web browser.
 
-2. Navigate to the URL of a specific post detail page, e.g., [post_Detail.html](https://final-project-ada-02b27917ae0c.herokuapp.com/post/jumpstart-your-python-journey/), where `post_slug` is the slug of the post.
+2. Navigate to the URL of a specific post detail page, e.g., [Read more](https://final-project-ada-02b27917ae0c.herokuapp.com/post/jumpstart-your-python-journey/), where `post_slug` is the slug of the post.
 
 **Expected Results:**
 - The post detail page should load without errors.
@@ -1540,7 +1540,7 @@
 <hr>
 --------------------------------------------------------------------------------------------------------
 
-# Manual Testing for post_form.html Template
+# Manual Testing for Create or Update Post Template
 
 ## Test Case ID: TC001
 
@@ -1556,7 +1556,7 @@
 
 1. Open a web browser.
 
-2. Navigate to the URL where the Create Post form is located, e.g., [post_form.html](https://final-project-ada-02b27917ae0c.herokuapp.com/post/create/).
+2. Navigate to the URL where the Create Post form is located, e.g., [Create Post](https://final-project-ada-02b27917ae0c.herokuapp.com/post/create/).
 
 **Expected Results:**
 - The Create Post form should load without errors.
@@ -1673,3 +1673,1057 @@
 <hr>
 --------------------------------------------------------------------------------------------------------
 
+
+# Manual Testing for Login Page Template
+
+## Test Case ID: TC001
+
+### Test Case Title: Display Login Form
+
+**Test Description:** This test case verifies that the Login form is displayed correctly.
+
+### Preconditions:
+- The Django application is up and running.
+
+### Test Steps:
+
+1. Open a web browser.
+
+2. Navigate to the URL where the Login page is located, e.g., [Login](https://final-project-ada-02b27917ae0c.herokuapp.com/accounts/login/).
+
+**Expected Results:**
+- The Login form should load without errors.
+- The following form fields should be displayed correctly:
+  - Username or Email input field.
+  - Password input field.
+  - "Submit" button.
+- The heading "Log In" should be displayed.
+- The "Welcome back to the blog. If you don't have an account please Register instead." message should be displayed with a link to registration.
+
+### Postconditions:
+- The Login form should be displayed as expected.
+
+### Test Status:
+- [X] Pass
+- [ ] Fail
+
+---
+
+## Test Case ID: TC002
+
+### Test Case Title: Login with Valid Credentials
+
+**Test Description:** This test case checks the functionality of logging in with valid credentials.
+
+### Preconditions:
+- The Login form is displayed.
+- A user account with valid login credentials exists in the system.
+
+### Test Steps:
+
+1. Enter valid credentials (username/email and password) in the respective fields.
+
+2. Click the "Submit" button.
+
+**Expected Results:**
+- The user should be successfully logged in.
+- The user should be redirected to the intended page (e.g., the dashboard).
+- The user's session should be active.
+
+### Postconditions:
+- The user should be logged in successfully.
+
+### Test Status:
+- [X] Pass
+- [ ] Fail
+
+---
+
+## Test Case ID: TC003
+
+### Test Case Title: Login with Invalid Credentials
+
+**Test Description:** This test case checks the behavior of the login form when incorrect credentials are provided.
+
+### Preconditions:
+- The Login form is displayed.
+
+### Test Steps:
+
+1. Enter invalid credentials (e.g., incorrect username/email or password) in the respective fields.
+
+2. Click the "Submit" button.
+
+**Expected Results:**
+- The login attempt should fail.
+- An error message should be displayed indicating that the login failed.
+- The user should not be redirected to the intended page.
+- The user's session should remain inactive.
+
+### Postconditions:
+- The login attempt should fail as expected.
+
+### Test Status:
+- [X] Pass
+- [ ] Fail
+
+---
+
+## Test Case ID: TC004
+
+### Test Case Title: Registration Link
+
+**Test Description:** This test case checks if the registration link is working correctly.
+
+### Preconditions:
+- The Login form is displayed.
+
+### Test Steps:
+
+1. Click on the "Register" link provided in the login form.
+
+**Expected Results:**
+- The user should be redirected to the registration page.
+- The registration page should load correctly.
+
+### Postconditions:
+- The user should be able to navigate to the registration page.
+
+### Test Status:
+- [X] Pass
+- [ ] Fail
+
+
+<hr>
+--------------------------------------------------------------------------------------------------------
+
+# Manual Testing for Sign Out (Logout) Template
+
+## Test Case ID: TC001
+
+### Test Case Title: Display Sign Out Confirmation
+
+**Test Description:** This test case verifies that the Sign Out confirmation message is displayed correctly.
+
+### Preconditions:
+- The Django application is up and running.
+- The user is currently authenticated and logged in.
+
+### Test Steps:
+
+1. Open a web browser.
+
+2. Navigate to the URL where the Sign Out (Logout) page is located, e.g., [Logout](https://final-project-ada-02b27917ae0c.herokuapp.com/accounts/logout/).
+
+**Expected Results:**
+- The Sign Out confirmation message should load without errors.
+- The heading "Sign Out" should be displayed.
+- The confirmation message "Are you sure you want to Sign Out?" should be displayed with translation support.
+
+### Postconditions:
+- The Sign Out confirmation message should be displayed as expected.
+
+### Test Status:
+- [X] Pass
+- [ ] Fail
+
+---
+
+## Test Case ID: TC002
+
+### Test Case Title: Perform Sign Out (Logout)
+
+**Test Description:** This test case checks the functionality of performing the Sign Out (Logout) operation.
+
+### Preconditions:
+- The Sign Out confirmation message is displayed.
+- The user is currently authenticated and logged in.
+
+### Test Steps:
+
+1. Click the "Sign Out" button.
+
+**Expected Results:**
+- The user should be successfully logged out (signed out).
+- The user's session should be terminated.
+- The user should be redirected to the application's homepage or a relevant page.
+
+### Postconditions:
+- The user should be logged out successfully.
+
+### Test Status:
+- [X] Pass
+- [ ] Fail
+
+---
+
+## Test Case ID: TC003
+
+### Test Case Title: Redirect After Sign Out
+
+**Test Description:** This test case checks if the user is redirected to the correct page after signing out.
+
+### Preconditions:
+- The Sign Out confirmation message is displayed.
+- The user is currently authenticated and logged in.
+
+### Test Steps:
+
+1. Click the "Sign Out" button.
+
+**Expected Results:**
+- The user should be successfully logged out.
+- The user should be redirected to the application's homepage or a relevant page specified after sign-out.
+
+### Postconditions:
+- The user should be logged out, and the redirection should be as expected.
+
+### Test Status:
+- [X] Pass
+- [ ] Fail
+
+
+<hr>
+--------------------------------------------------------------------------------------------------------
+
+# Manual Testing for Sign-Up (Registration) Page Template
+
+## Test Case ID: TC001
+
+### Test Case Title: Display Sign-Up Form
+
+**Test Description:** This test case verifies that the Sign-Up (Registration) form is displayed correctly with the required fields.
+
+### Preconditions:
+- The Django application is up and running.
+
+### Test Steps:
+
+1. Open a web browser.
+
+2. Navigate to the URL where the Sign-Up (Registration) page is located, e.g., [Register](https://final-project-ada-02b27917ae0c.herokuapp.com/accounts/signup/).
+
+**Expected Results:**
+- The Sign-Up (Registration) form should load without errors.
+- The "Create your account" heading should be displayed with translation support.
+- The form should include fields for:
+  - Username
+  - Email
+  - Password
+  - Confirm Password
+- Each field should have appropriate labels, placeholders, and error handling for validation.
+
+### Postconditions:
+- The Sign-Up (Registration) form should be displayed as expected.
+
+### Test Status:
+- [X] Pass
+- [ ] Fail
+
+---
+
+## Test Case ID: TC002
+
+### Test Case Title: Submit Sign-Up Form
+
+**Test Description:** This test case checks the functionality of submitting the Sign-Up (Registration) form.
+
+### Preconditions:
+- The Sign-Up (Registration) form is displayed.
+
+### Test Steps:
+
+1. Fill in the Sign-Up (Registration) form with valid data:
+   - Username
+   - Email
+   - Password
+   - Confirm Password
+
+2. Click the "Submit" button.
+
+**Expected Results:**
+- The form should be submitted without errors.
+- The user's registration should be successful.
+- The user should be redirected to the application's homepage or a relevant page.
+
+### Postconditions:
+- The user should be registered successfully.
+
+### Test Status:
+- [X] Pass
+- [ ] Fail
+
+---
+
+## Test Case ID: TC003
+
+### Test Case Title: Sign-Up Form Validation
+
+**Test Description:** This test case checks the validation of the Sign-Up (Registration) form.
+
+### Preconditions:
+- The Sign-Up (Registration) form is displayed.
+
+### Test Steps:
+
+1. Fill in the Sign-Up (Registration) form with invalid data:
+   - Invalid email format
+   - Password and Confirm Password do not match
+
+2. Click the "Submit" button.
+
+**Expected Results:**
+- The form submission should be rejected due to validation errors.
+- Validation error messages should be displayed for the respective fields with translation support.
+- The user should not be registered with invalid data.
+
+### Postconditions:
+- The Sign-Up (Registration) form should display validation errors.
+
+### Test Status:
+- [X] Pass
+- [ ] Fail
+
+---
+
+## Test Case ID: TC004
+
+### Test Case Title: Sign-Up Form Redirection
+
+**Test Description:** This test case checks if the user is redirected to the correct page after successful registration.
+
+### Preconditions:
+- The user has successfully registered.
+
+### Test Steps:
+
+1. After successful registration, check if the user is redirected to the application's homepage or a relevant page.
+
+**Expected Results:**
+- The user should be redirected to the home page after successful registration.
+
+### Postconditions:
+- The user should be redirected as expected.
+
+### Test Status:
+- [X] Pass
+- [ ] Fail
+
+---
+
+## Test Case ID: TC005
+
+### Test Case Title: Existing Account Redirect to Log In
+
+**Test Description:** This test case checks if an existing user is redirected to the Log In page instead of registering a new account.
+
+### Preconditions:
+- An existing user is already registered.
+
+### Test Steps:
+
+1. Access the Sign-Up (Registration) page.
+
+**Expected Results:**
+- The user should see a message indicating they already have an account and a link to the Log In page.
+- Clicking on the Log In link should redirect to the Log In page.
+
+### Postconditions:
+- The user should be informed that they already have an account.
+
+### Test Status:
+- [X] Pass
+- [ ] Fail
+
+
+<hr>
+--------------------------------------------------------------------------------------------------------
+
+# Manual Testing for Contact Us Page Template
+
+## Test Case ID: TC001
+
+### Test Case Title: Display Contact Us Form
+
+**Test Description:** This test case verifies that the Contact Us form is displayed correctly with the required fields.
+
+### Preconditions:
+- The Django application is up and running.
+
+### Test Steps:
+
+1. Open a web browser.
+
+2. Navigate to the URL where the Contact Us page is located, e.g., [Contact Us](https://final-project-ada-02b27917ae0c.herokuapp.com/contact/).
+
+**Expected Results:**
+- The Contact Us form should load without errors.
+- The "Contact Us" heading should be displayed.
+- The form should include fields for:
+  - Name
+  - Email
+  - Message
+- Each field should have appropriate labels and placeholders.
+
+### Postconditions:
+- The Contact Us form should be displayed as expected.
+
+### Test Status:
+- [X] Pass
+- [ ] Fail
+
+---
+
+## Test Case ID: TC002
+
+### Test Case Title: Submit Contact Us Form
+
+**Test Description:** This test case checks the functionality of submitting the Contact Us form.
+
+### Preconditions:
+- The Contact Us form is displayed.
+
+### Test Steps:
+
+1. Fill in the Contact Us form with valid data:
+   - Name
+   - Email
+   - Message
+
+2. Click the "Submit" button.
+
+**Expected Results:**
+- The form should be submitted without errors.
+- The submitted information should be sent as a contact message.
+- A success message should be displayed indicating that the message was sent successfully.
+
+### Postconditions:
+- The message should be sent successfully.
+
+### Test Status:
+- [X] Pass
+- [ ] Fail
+
+---
+
+## Test Case ID: TC003
+
+### Test Case Title: Contact Us Form Validation
+
+**Test Description:** This test case checks the validation of the Contact Us form.
+
+### Preconditions:
+- The Contact Us form is displayed.
+
+### Test Steps:
+
+1. Fill in the Contact Us form with invalid data:
+   - Invalid email format
+   - Empty fields (Name, Email, Message)
+
+2. Click the "Submit" button.
+
+**Expected Results:**
+- The form submission should be rejected due to validation errors.
+- Validation error messages should be displayed for the respective fields.
+- The user should not be able to submit an empty form or an invalid email.
+
+### Postconditions:
+- The Contact Us form should display validation errors.
+
+### Test Status:
+- [X] Pass
+- [ ] Fail
+
+---
+
+## Test Case ID: TC004
+
+### Test Case Title: Display Form Submission Success Message
+
+**Test Description:** This test case checks if a success message is displayed after successfully submitting the Contact Us form.
+
+### Preconditions:
+- The Contact Us form is displayed.
+
+### Test Steps:
+
+1. Fill in the Contact Us form with valid data:
+   - Name
+   - Email
+   - Message
+
+2. Click the "Submit" button.
+
+3. Check if a success message is displayed.
+
+**Expected Results:**
+- A success message should be displayed indicating that the message was sent successfully.
+
+### Postconditions:
+- A success message should be displayed as expected.
+
+### Test Status:
+- [X] Pass
+- [ ] Fail
+
+---
+
+## Test Case ID: TC005
+
+### Test Case Title: Form Error Handling
+
+**Test Description:** This test case checks if the Contact Us form correctly handles form submission errors.
+
+### Preconditions:
+- The Contact Us form is displayed.
+
+### Test Steps:
+
+1. Submit the Contact Us form without filling in any fields or with invalid data.
+
+2. Check if form submission errors are displayed.
+
+**Expected Results:**
+- Form submission should be rejected due to errors.
+- Appropriate error messages should be displayed for the respective fields.
+
+### Postconditions:
+- Form submission errors should be displayed as expected.
+
+### Test Status:
+- [X] Pass
+- [ ] Fail
+
+
+<hr>
+
+--------------------------------------------------------------------------------------------------------
+
+# Manual Testing for "Not a published Author" Page Template
+
+## Test Case ID: TC001
+
+### Test Case Title: Display "Not a published Author" Page
+
+**Test Description:** This test case verifies that the "Not a published Author" page is displayed correctly.
+
+### Preconditions:
+- The Django application is up and running.
+
+### Test Steps:
+
+1. Open a web browser.
+
+2. Navigate to the URL where the New Author with unpublished posts page is located, e.g., []().
+
+**Expected Results:**
+- The "Not a published Author" page should load without errors.
+- The page content should include information about the user not being an author.
+
+### Postconditions:
+- The "Not a published Author" page should be displayed as expected.
+
+### Test Status:
+- [ ] Pass
+- [ ] Fail
+
+---
+
+## Test Case ID: TC002
+
+### Test Case Title: Verify User Information Display
+
+**Test Description:** This test case checks whether the user's information is correctly displayed on the "Not a published Author" page.
+
+### Preconditions:
+- The "Not a published Author" page is displayed.
+
+### Test Steps:
+
+1. Check if the user's username is displayed.
+
+2. Check if the user's email address is displayed.
+
+**Expected Results:**
+- The user's username and email should be displayed on the page.
+
+### Postconditions:
+- The user's information should be displayed as expected.
+
+### Test Status:
+- [ ] Pass
+- [ ] Fail
+
+---
+
+
+## Test Case ID: TC003
+
+### Test Case Title: Verify Last Login Information
+
+**Test Description:** This test case checks whether the user's last login information is displayed on the "Not an Author" page.
+
+### Preconditions:
+- The "Not a published Author" page is displayed.
+
+### Test Steps:
+
+1. Check if the user's last login information is displayed.
+
+**Expected Results:**
+- The user's last login information should be displayed on the page.
+
+### Postconditions:
+- The last login information should be displayed as expected.
+
+### Test Status:
+- [ ] Pass
+- [ ] Fail
+
+
+<hr>
+-------------------------------------------------------------------------------------------------------
+
+# Manual Testing for Profile Deletion Confirmation Page Template
+
+## Test Case ID: TC001
+
+### Test Case Title: Display Profile Deletion Confirmation Page
+
+**Test Description:** This test case verifies that the profile deletion confirmation page is displayed correctly.
+
+### Preconditions:
+- The Django application is up and running.
+
+### Test Steps:
+
+1. Open a web browser.
+
+2. Navigate to the URL where the Profile Deletion Confirmation page is located, e.g., [Are You Sure?](https://final-project-ada-02b27917ae0c.herokuapp.com/profile/1/delete/).
+
+**Expected Results:**
+- The Profile Deletion Confirmation page should load without errors.
+- The page should display a confirmation message with the profile name.
+- A form for confirming the deletion should be present.
+
+### Postconditions:
+- The Profile Deletion Confirmation page should be displayed as expected.
+
+### Test Status:
+- [X] Pass
+- [ ] Fail
+
+---
+
+## Test Case ID: TC002
+
+### Test Case Title: Verify Profile Name Display
+
+**Test Description:** This test case checks whether the profile name is correctly displayed on the confirmation page.
+
+### Preconditions:
+- The Profile Deletion Confirmation page is displayed.
+
+### Test Steps:
+
+1. Check if the profile name is displayed within the confirmation message.
+
+**Expected Results:**
+- The profile name should be displayed accurately within the confirmation message.
+
+### Postconditions:
+- The profile name should be displayed as expected.
+
+### Test Status:
+- [X] Pass
+- [ ] Fail
+
+---
+
+
+## Test Case ID: TC003
+
+### Test Case Title: Verify Submit Button
+
+**Test Description:** This test case checks whether the submit button for confirming the deletion is correctly displayed.
+
+### Preconditions:
+- The Profile Deletion Confirmation page is displayed.
+
+### Test Steps:
+
+1. Check if the submit button with the label "Confirm" is present within the confirmation form.
+
+**Expected Results:**
+- The submit button with the label "Confirm" should be present and clearly visible within the confirmation form.
+
+### Postconditions:
+- The presence and visibility of the submit button should be confirmed.
+
+### Test Status:
+- [X] Pass
+- [ ] Fail
+
+
+<hr>
+--------------------------------------------------------------------------------------------------------
+
+
+# Manual Testing for "Edit Profile" Page Template
+
+## Test Case ID: TC001
+
+### Test Case Title: Display "Edit Profile" Page
+
+**Test Description:** This test case verifies that the "Edit Profile" page is displayed correctly.
+
+### Preconditions:
+- The Django application is up and running.
+
+### Test Steps:
+
+1. Open a web browser.
+
+2. Navigate to the URL where the "Edit Profile" page is located, e.g., [Edit Profile](https://final-project-ada-02b27917ae0c.herokuapp.com/profile/1/update/).
+
+**Expected Results:**
+- The "Edit Profile" page should load without errors.
+- The page should display the "Edit Profile" heading.
+
+### Postconditions:
+- The "Edit Profile" page should be displayed as expected.
+
+### Test Status:
+- [X] Pass
+- [ ] Fail
+
+---
+
+## Test Case ID: TC002
+
+### Test Case Title: Verify Username Field
+
+**Test Description:** This test case checks whether the username field is displayed and functional on the "Edit Profile" page.
+
+### Preconditions:
+- The "Edit Profile" page is displayed.
+
+### Test Steps:
+
+1. Check if the username field is displayed.
+
+2. Try entering a new username and verify if it is accepted.
+
+**Expected Results:**
+- The username field should be displayed.
+- Entering a new username should be allowed.
+
+### Postconditions:
+- The username field should function correctly.
+
+### Test Status:
+- [X] Pass
+- [ ] Fail
+
+---
+
+## Test Case ID: TC003
+
+### Test Case Title: Verify About Me Field
+
+**Test Description:** This test case checks whether the "About Me" field is displayed and functional on the "Edit Profile" page.
+
+### Preconditions:
+- The "Edit Profile" page is displayed.
+
+### Test Steps:
+
+1. Check if the "About Me" field is displayed.
+
+2. Try entering text into the "About Me" field and verify if it is accepted.
+
+**Expected Results:**
+- The "About Me" field should be displayed.
+- Entering text into the "About Me" field should be allowed.
+
+### Postconditions:
+- The "About Me" field should function correctly.
+
+### Test Status:
+- [X] Pass
+- [ ] Fail
+
+---
+
+## Test Case ID: TC004
+
+### Test Case Title: Verify Image Upload Field
+
+**Test Description:** This test case checks whether the image upload field is displayed and functional on the "Edit Profile" page.
+
+### Preconditions:
+- The "Edit Profile" page is displayed.
+
+### Test Steps:
+
+1. Check if the image upload field is displayed.
+
+2. Try uploading an image file and verify if it is accepted.
+
+**Expected Results:**
+- The image upload field should be displayed.
+- Uploading an image file should be allowed.
+
+### Postconditions:
+- The image upload field should function correctly.
+
+### Test Status:
+- [X] Pass
+- [ ] Fail
+
+---
+
+## Test Case ID: TC005
+
+### Test Case Title: Verify Submission
+
+**Test Description:** This test case checks whether the submission of the "Edit Profile" form works correctly.
+
+### Preconditions:
+- The "Edit Profile" page is displayed.
+
+### Test Steps:
+
+1. Fill in the "Edit Profile" form with valid data (e.g., new username, "About Me" text, and an image).
+
+2. Click the "Submit" button.
+
+**Expected Results:**
+- The form should be submitted without errors.
+- The submitted information should be updated in the user's profile.
+
+### Postconditions:
+- The form submission should work correctly.
+
+### Test Status:
+- [X] Pass
+- [ ] Fail
+
+---
+
+## Test Case ID: TC006
+
+### Test Case Title: Verify Error Handling
+
+**Test Description:** This test case checks whether the "Edit Profile" form correctly handles errors.
+
+### Preconditions:
+- The "Edit Profile" page is displayed.
+
+### Test Steps:
+
+1. Try submitting the "Edit Profile" form with invalid data (e.g., a duplicate username or an invalid image file).
+
+2. Check if error messages are displayed for the respective fields.
+
+**Expected Results:**
+- Form submission should be rejected due to errors.
+- Appropriate error messages should be displayed for the respective fields.
+
+### Postconditions:
+- Form submission errors should be displayed as expected.
+
+### Test Status:
+- [X] Pass
+- [ ] Fail
+
+
+<hr>
+--------------------------------------------------------------------------------------------------------
+
+# Manual Testing for Profile Page Template
+
+## Test Case ID: TC001
+
+### Test Case Title: Display User Profile Page
+
+**Test Description:** This test case verifies that the User Profile page is displayed correctly.
+
+### Preconditions:
+- The Django application is up and running.
+
+### Test Steps:
+
+1. Open a web browser.
+
+2. Navigate to the URL where the User Profile page is located, e.g., [Profile](https://final-project-ada-02b27917ae0c.herokuapp.com/profile/1/).
+
+**Expected Results:**
+- The User Profile page should load without errors.
+- The page should display the user's profile information, including:
+  - User's name
+  - User's email
+  - User's last login date
+  - Profile picture (if available)
+  - Post count
+  - Comment count
+  - Shared count
+  - "About" section
+- Recent Posts should be displayed (if available).
+- Buttons to edit and delete the profile (if authorized).
+- A button to view draft posts (if authorized and draft posts exist).
+
+### Postconditions:
+- The User Profile page should be displayed as expected.
+
+### Test Status:
+- [X] Pass
+- [ ] Fail
+
+---
+
+## Test Case ID: TC002
+
+### Test Case Title: Verify Edit Profile Button
+
+**Test Description:** This test case checks whether the "Edit Profile" button is displayed and functional on the User Profile page.
+
+### Preconditions:
+- The User Profile page is displayed.
+
+### Test Steps:
+
+1. Check if the "Edit Profile" button is displayed.
+
+2. Click the "Edit Profile" button (if authorized) and verify if it navigates to the Edit Profile page.
+
+**Expected Results:**
+- The "Edit Profile" button should be displayed (if authorized).
+- Clicking the "Edit Profile" button should navigate to the Edit Profile page (if authorized).
+
+### Postconditions:
+- The "Edit Profile" button should function correctly.
+
+### Test Status:
+- [X] Pass
+- [ ] Fail
+
+---
+
+## Test Case ID: TC003
+
+### Test Case Title: Verify Delete Profile Button
+
+**Test Description:** This test case checks whether the "Delete Profile" button is displayed and functional on the User Profile page.
+
+### Preconditions:
+- The User Profile page is displayed.
+
+### Test Steps:
+
+1. Check if the "Delete Profile" button is displayed.
+
+2. Click the "Delete Profile" button (if authorized) and verify if it navigates to the Delete Profile confirmation page.
+
+**Expected Results:**
+- The "Delete Profile" button should be displayed (if authorized).
+- Clicking the "Delete Profile" button should navigate to the Delete Profile confirmation page (if authorized).
+
+### Postconditions:
+- The "Delete Profile" button should function correctly.
+
+### Test Status:
+- [X] Pass
+- [ ] Fail
+
+---
+
+## Test Case ID: TC004
+
+### Test Case Title: Verify View Draft Posts Button
+
+**Test Description:** This test case checks whether the "View Draft Posts" button is displayed and functional on the User Profile page.
+
+### Preconditions:
+- The User Profile page is displayed.
+
+### Test Steps:
+
+1. Check if the "View Draft Posts" button is displayed (if authorized and draft posts exist).
+
+2. Click the "View Draft Posts" button (if authorized and draft posts exist) and verify if it navigates to the Draft Post Author List page.
+
+**Expected Results:**
+- The "View Draft Posts" button should be displayed (if authorized and draft posts exist).
+- Clicking the "View Draft Posts" button should navigate to the Draft Post Author List page (if authorized and draft posts exist).
+
+### Postconditions:
+- The "View Draft Posts" button should function correctly.
+
+### Test Status:
+- [ ] Pass
+- [ ] Fail
+
+---
+
+## Test Case ID: TC005
+
+### Test Case Title: Verify Recent Posts
+
+**Test Description:** This test case checks whether the Recent Posts section is displayed correctly on the User Profile page.
+
+### Preconditions:
+- The User Profile page is displayed.
+
+### Test Steps:
+
+1. Check if the Recent Posts section is displayed.
+
+2. Verify if it shows recent posts (if available) with titles, creation dates, content previews, and "Read More" links.
+
+**Expected Results:**
+- The Recent Posts section should be displayed.
+- Recent posts (if available) should be shown with titles, creation dates, content previews, and "Read More" links.
+
+### Postconditions:
+- The Recent Posts section should display recent posts correctly.
+
+### Test Status:
+- [X] Pass
+- [ ] Fail
+
+
+<hr>
+--------------------------------------------------------------------------------------------------------
+
+# Manual Testing for Success Page Template
+
+## Test Case ID: TC001
+
+### Test Case Title: Display Success
+
+**Test Description:** This test case verifies that the Contact Confirmation page is displayed correctly after submitting a contact form.
+
+### Preconditions:
+- The Django application is up and running.
+- A contact form has been submitted successfully.
+
+### Test Steps:
+
+1. Open a web browser.
+
+2. Navigate to the URL where the Contact Confirmation page is located, e.g., [ThankYou!](https://final-project-ada-02b27917ae0c.herokuapp.com/success/).
+
+**Expected Results:**
+- The Contact Confirmation page should load without errors.
+- The page should display a "Thank you!" heading.
+- A success message should be displayed, confirming that the contact information and message were successfully submitted.
+- A "Back Home" button with a link should be displayed.
+
+### Postconditions:
+- The Contact Confirmation page should be displayed as expected.
+
+### Test Status:
+- [X] Pass
+- [ ] Fail

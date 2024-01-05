@@ -5,59 +5,48 @@
 <div class="card mb-4">
     <div class="card-body">
         <div class="image-container">
-            <a href="{% url 'post-detail' post.slug %}" >
+            <a href="{% url 'post-detail' post.slug %}">
                 {% if post.image %}
                     <!-- Display the post's image using Cloudinary with responsive class -->
-                    {% cloudinary post.image alt=post.title class="img-fluid" %}
+                    {% cloudinary post.image alt=post.title class="img-fluid rounded" %}
                 {% else %}
                     <!-- Display a placeholder image if the post doesn't have an image -->
-                    <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-profiles/avatar-1.webp"
-                        alt="Generic placeholder image" class="img-fluid">
+                    <img src="{% static 'images/placeholder.jpg' %}" alt="Generic placeholder image" class="img-fluid rounded">
                 {% endif %}
             </a>
         </div>
 
-        <!-- Display the post author with a link to their profile -->
-        <div class="small author">Author: <a href="{{ post.author.get_absolute_url }}">{{ post.author }}</a></div>
-        
         <!-- Display the post title -->
-        <h2 class="card-title h4 mt-2">{{ post.title|truncatewords_html:7 }}</h2>
+        <h2 class="card-title h4 mt-3">{{ post.title|truncatewords_html:10 }}</h2>
         
         <!-- Display a brief excerpt from the post -->
         <p class="card-text">{{ post.excerpt }}</p>
         
+        <!-- Display the post author with a link to their profile -->
+        <p class="card-text small author">Author: <a href="{{ post.author.get_absolute_url }}">{{ post.author }}</a></p>
+
         <!-- Link to read the full post -->
         <a class="btn btn-primary" href="{% url 'post-detail' post.slug %}">Read more →</a>
         
         <hr />
         
         <!-- Display post metadata: creation date, like button, and comment count -->
-        <p class="card-text text-muted h6">{{ post.created_on }}
-            <strong style="float: right;">
-                {% if liked %}
-                    <!-- Display a filled heart icon for liked posts -->
-                    <button style="padding: 0; border: none; background: none;" type="submit" name="blogpost_id" value="{{post.slug}}" class="btn-like">
-                        <i class="fas fa-heart" style="color: red;"></i>
-                    </button>
-                {% else %}
-                    <!-- Display an empty heart icon for unliked posts -->
-                    <button style="padding: 0; border: none; background: none;" type="submit" name="blogpost_id" value="{{post.slug}}" class="btn-like">
-                        <i class="fas fa-heart" style="color: red;"></i>
-                    </button>
-                {% endif %}
+        <div class="d-flex justify-content-between align-items-center">
+            <div>
+                {{ post.created_on }}
+            </div>
+            <div class="text-secondary ml-auto">
                 <!-- Display the number of likes for the post -->
-                <span class="text-secondary">{{ post.number_of_likes }}</span>
-            </strong>
-            
-            <!-- Display a link to view comments and the comment count -->
-            
-            <strong class="text-secondary">
-                <a href="{% url 'post-detail' slug=post.slug %}" style="padding: 0; border: none; background: none; 
-                            text-decoration: none; color: black; float: right; margin-right: 3%;">
-                    <i class="fas fa-comments" style="color:#0d6efd;"></i> {{ post.approved_comments.count }}
+                <i class="fas fa-heart" style="color: red;"></i>
+                <span  style="font-weight: bold;">{{ post.number_of_likes }}</span>
+            </div>
+            <div class="text-secondary">
+                <!-- Display a link to view comments and the comment count -->
+                <a href="{% url 'post-detail' slug=post.slug %}" class="text-decoration-none text-dark">
+                    <i class="fas fa-comments ml-2" style="color: #0d6efd;"></i> {{ post.approved_comments.count }}
                 </a>
-            </strong>
-        </p>
+            </div>
+        </div>
     </div>
 </div>
 {% endblock %}

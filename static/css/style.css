@@ -10980,3 +10980,14 @@ a {
 .help-block {
   display: none;
 }
+
+/* ------------------------- profile.html------------------------------------------  */
+
+.card-img-top {
+  width: 100%; /* Ensures the image takes the full width of the card */
+  height: 150px; /* Fixed height for all images */
+  object-fit: cover; /* Ensures images cover the area without stretching */
+}
+
+/* ------------------------- post_detail.html------------------------------------------  */
+

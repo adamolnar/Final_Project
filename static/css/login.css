@@ -383,6 +383,7 @@ ul.errorlist.nonfield {
   border: 1px solid red;
   list-style-type: none;
   text-align: -webkit-auto;
+  padding-right: 5px;
 }
 
 ul.errorlist {
@@ -390,6 +391,7 @@ ul.errorlist {
   border: 1px solid red;
   list-style-type: none;
   text-align: -webkit-auto;
+  padding-right: 5px;
 }
 
 label {
@@ -397,7 +399,7 @@ label {
 }
 
 @media screen and (max-width:600px) {
-  ul.errorlist.nonfield {font-size: 12px;}
+  ul.errorlist.nonfield {font-size: 14px;}
   input#id_login {width: -webkit-fill-available;}
   input#id_password {width: -webkit-fill-available;}
   input#username {width: -webkit-fill-available;}
