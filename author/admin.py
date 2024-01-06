@@ -1,6 +1,6 @@
 from django.contrib import admin
 from .models import Author, AuthorMessage, AuthorAccessRequest
-
+from .forms import AuthorAccessRequestForm
 
 # Register the Author model with the admin site
 @admin.register(Author)
@@ -29,7 +29,7 @@ class AuthorAdmin(admin.ModelAdmin):
 @admin.register(AuthorMessage)
 class AuthorMessageAdmin(admin.ModelAdmin):
     # Display these fields in the list view
-    list_display = ('author', 'sender_name', 'sender_email', 'timestamp')
+    list_display = ( 'sender_name', 'sender_email', 'timestamp')
     # Add search functionality for the list view
     search_fields = ['author__username', 'sender_name', 'sender_email']
 
@@ -38,7 +38,7 @@ class AuthorMessageAdmin(admin.ModelAdmin):
 @admin.register(AuthorAccessRequest)
 class AuthorAccessRequestAdmin(admin.ModelAdmin):
     # Admin configuration for the AuthorAccessRequest model
-    list_display = ('profile', 'request_reason', 'created_at', 'is_approved')
+    list_display = ('profile', 'request_reason', 'created_at', 'is_authorized')
     search_fields = ['profile__username', 'profile__email', 'request_reason']
 
     # Define a custom admin action

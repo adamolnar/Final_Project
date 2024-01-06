@@ -4,6 +4,7 @@ from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from .models import Author, AuthorMessage
 from .forms import AuthorMessageForm, AuthorAccessRequestForm
+from blog.models import Post
 from django.views.generic import (
     ListView,
     DetailView,
@@ -23,19 +24,16 @@ class AuthorListView(ListView):
 class AuthorDetailView(DetailView):
     template_name ='author/author_detail.html'
     model = Author
-    context_object_name = 'author'
     
-    # def get_queryset(self):
-
-    #     profile_id = Profile.objects.get(user_id=self.kwargs['pk'])
-    #     author_id =  Author.objects.get(profile_id= profile_id)
-    #     return Post.objects.filter(author_id=author_id)
+    def get_queryset(self):
+        author_id = self.kwargs['pk']
+        return Post.objects.filter(author_id=author_id)
     
-    # def get_context_data(self, **kwargs):
-    #     context = super(AuthorDetailView, self).get_context_data(**kwargs)
-    #     author_info = self.get_object()
-    #     context['author_info'] = author_info
-    #     return context
+    def get_context_data(self, **kwargs):
+        context = super(AuthorDetailView, self).get_context_data(**kwargs)
+        author_info = self.get_object()
+        context['author_info'] = author_info
+        return context
 
 
 # Generic class-based view to store all messages sent by users to authors.
@@ -80,11 +78,10 @@ class RequestAuthorAccessView(LoginRequiredMixin, FormView):
             form.instance.profile = request.user.profile
             
             # Create an AuthorAccessRequest instance
-            request_instance = form.save(commit=False)
-            request_instance.save()
-            
+            request_reason = form.cleaned_data['request_reason']
+           
             # Authorize the request
-            request_instance.approve_request()
+            form.instance.authorize_request()
             
             messages.success(request, 'Your request has been submitted. We will review it soon.')
             return redirect('index')  # Redirect to the desired page after successful submission

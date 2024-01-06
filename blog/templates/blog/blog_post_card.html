@@ -4,14 +4,15 @@
 {% block content %}
 <div class="card mb-4">
     <div class="card-body">
-        <div class="image-container">
+        <div class="image-container blog-post-card">
             <a href="{% url 'post-detail' post.slug %}">
-                {% if post.image %}
-                    <!-- Display the post's image using Cloudinary with responsive class -->
-                    {% cloudinary post.image alt=post.title class="img-fluid rounded" %}
+                {% if "placeholder" in post.image.url %}
+                    <img class="card-img-top"
+                        src="
+                        https://res.cloudinary.com/dmg7oqpgs/image/upload/v1704527717/static/images/image2-18.28aa1f4dc922.png"
+                        alt="{{ post.title }}" width="{{ image_width }}" height="{{ image_height }}">
                 {% else %}
-                    <!-- Display a placeholder image if the post doesn't have an image -->
-                    <img src="{% static 'images/placeholder.jpg' %}" alt="Generic placeholder image" class="img-fluid rounded">
+                    <img class="card-img-top" src=" {{ post.image.url }}"  alt="{{ post.title }}" width="{{ image_width }}" height="{{ image_height }}">
                 {% endif %}
             </a>
         </div>

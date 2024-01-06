@@ -65,7 +65,7 @@ h6 span{
 .card-3d-wrapper {
   width: 100%;
   height: fit-content;
-  padding: 15px; 
+  padding: 30px 15px 15px; 
 }
 
 .card-back {
@@ -408,6 +408,10 @@ label {
   input#password2 {width: -webkit-fill-available;}
 }
 
-.section.pb-5.pt-5.pt-sm-2.text-center {
-  min-height: 80vh;
+.section.pb-5.pt-5.pt-sm-2.text-center {min-height: 80vh;}
+
+.no-margin {margin: 0;}
+
+@media screen and(max-width:768px){
+  input {width: 100%; padding-left: 0; padding-right: 0;}
 }

@@ -2,7 +2,6 @@
 
 {% load static %}
 
-
 {% block extrahead %}
 <link rel="stylesheet" href="{% static 'css/login.css' %}">
 <title>Sign Out</title>
@@ -10,30 +9,27 @@
 
 {% load i18n %}
 
-
 {% block content %}
-
-<div class="container">
-    <div class="row">
-        <div class="section pb-5 pt-5 pt-sm-2 text-center">
-            <div class="col-md-12 center-block mt-3">
-                <h3>{% trans "Log Out" %}</h3>  <!-- Displays the "Sign Out" heading with translation support -->
-                <p id="are-you-sure" class="mt-5">{% trans 'Are you sure you want to Log Out?' %}</p>  <!-- Displays a confirmation message with translation support -->
-            </div> 
-            <div class="row">
-                <div class="col-md-12 mt-3 center-block">
-                    <form method="post" action="{% url 'account_logout' %}" class=" col-12 text-center align-self-center py-5">
-                        {% csrf_token %}  <!-- Generates a CSRF token for security -->
-                        {% if redirect_field_value %}
-                        <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
-                        {% endif %}
-                        <!-- Handles redirect information if available -->
-                        <button class="btn-lg btn-signup right" type="submit">{% trans 'Log Out' %}</button>  <!-- Displays a "Sign Out" button with translation support -->
-                    </form>
+    <div class="container">
+        <div class="row">
+            <div class="section pb-5 pt-5 pt-sm-2 text-center">
+                <div class="col-md-12 center-block mt-3">
+                    <h3>{% trans "Log Out" %}</h3>  <!-- Displays the "Sign Out" heading with translation support -->
+                    <p id="are-you-sure" class="mt-5">{% trans 'Are you sure you want to Log Out?' %}</p>  <!-- Displays a confirmation message with translation support -->
+                </div> 
+                <div class="row">
+                    <div class="col-md-12 mt-3 center-block">
+                        <form method="post" action="{% url 'account_logout' %}" class=" col-12 text-center align-self-center py-5">
+                            {% csrf_token %}  <!-- Generates a CSRF token for security -->
+                            {% if redirect_field_value %}
+                            <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+                            {% endif %}
+                            <!-- Handles redirect information if available -->
+                            <button class="btn-lg btn-signup right" type="submit">{% trans 'Log Out' %}</button>  <!-- Displays a "Sign Out" button with translation support -->
+                        </form>
+                    </div>
                 </div>
-            </div>
-        </div>   
+            </div>   
+        </div>
     </div>
-</div>
-
 {% endblock %}

@@ -10,10 +10,11 @@
     <div class="container">
         <div class="row col-md-12 masthead-image">
             <!-- Display the post image -->
-            {% if post.image %}
-                {% cloudinary post.image.url alt=post.title width=100  %}
+            {% if "placeholder" in post.image.url %}
+                <img class="card-img-top img-fluid" id="post-image"
+                    src="https://res.cloudinary.com/dmg7oqpgs/image/upload/v1704527717/static/images/image2-18.28aa1f4dc922.png">
             {% else %}
-                {% cloudinary "https://res.cloudinary.com/dmg7oqpgs/image/upload/v1699179858/lakyrzjrxgfb05kpyi2r.jpg" alt="Placeholder Image" %}
+                <img class="card-img-top img-fluid" src=" {{ post.image.url }}">
             {% endif %}
         </div>
         <div class="g-0">
@@ -72,15 +73,18 @@
                                     {% endif %}
                                 </form>
                             {% else %}
-                                <span class="text-secondary"><i class="far fa-heart"></i></span>
+                                <span class="text-secondary"><i class="fas fa-heart" style="color: red;"></i></span>
                             {% endif %}
-                            <span class="text-secondary">{{ post.number_of_likes }}</span>
+                            <span class="text-secondary d-none d-md-block">{{ post.number_of_likes }}</span>
                         </strong>
                     </div>
                     <div class="col-1">
                         <!-- Display total comments count -->
                         {% with comments.count as total_comments %}
-                            <strong class="text-secondary"><i class="fas fa-comments" style="color: #0d6efd;"></i> {{ total_comments }}</strong>
+                            <span class="text-secondary">
+                                <i class="fas fa-comments" style="color: #0d6efd;"></i>
+                                <strong class="d-none d-md-block">{{ total_comments }}</strong>
+                            </span>
                         {% endwith %}
                     </div>
                     <div class="col-10 text-end">

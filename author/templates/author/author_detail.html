@@ -3,7 +3,7 @@
 {% load cloudinary %}
 
 {% block head_title %}
-  {{ author.profile.user.username }} | Django Blog
+  {{  author_info.author.profile.user.username }} | Django Blog
 {% endblock head_title %}
 
 {% block content %}
@@ -17,24 +17,24 @@
             <div class="ms-4 mt-5 d-flex flex-column" style="width: 150px;">
               <!-- Profile Picture -->
               {% if author.profile.image %}
-                  {% cloudinary author.profile.image.url format="png"   class="img-fluid img-thumbnail mt-2 mb-2" style="height:200px; max-width:200px; border:4px solid gray ; object-fit:cover; z-index: 1" %}
+                {% cloudinary author.profile.image.url format="png"   class="img-fluid img-thumbnail mt-2 mb-2" style="height:200px; max-width:200px; border:4px solid gray ; object-fit:cover; z-index: 1" %}
               {% else %}
-                  {% cloudinary "v1704034646/static/images/avatar.b2e01619cc46" format="png" width=150 height=150 crop="fill" class="img-fluid img-thumbnail mt-4 mb-2" style="width: 150px; z-index: 1" %}
+                {% cloudinary "v1704034646/static/images/avatar.b2e01619cc46" format="png" width=150 height=150 crop="fill" class="img-fluid img-thumbnail mt-4 mb-2" style="width: 150px; z-index: 1" %}
               {% endif %}
             </div>
             <div class="ms-3" style="margin-top: 70px;">
               <!-- Author Information -->
-              <h3>{{ author.profile.user.username }}</h3>
-              <p>{{ author.profile.user.email }}</p>
+              <h3>{{ author_info.author.profile.user.username }}</h3>
+              <p>{{ author_info.author.profile.user.email }}</p>
               <hr>
-              <p style="margin-top: 15px; font-size: small;">Last Logged In: {{author.profile.user.last_login }}</p>
+              <p style="margin-top: 15px; font-size: small;">Last Logged In: {{author_info.author.profile.user.last_login }}</p>
             </div>
           </div>
 
           <!-- Message Form Section -->
           <div class="p-4 text-black" style="background-color: #f8f9fa;">
             <div>
-              <form method="post" action="{% url 'message-author' author_id=author.id %}">
+              <form method="post" action="{% url 'message-author' author_id=author_info.author.id %}">
                 {% csrf_token %}
                 {{ form.as_p }}
                 <input type="submit" value="Send Message" class="btn btn-success" style="float: inline-end;">
@@ -47,7 +47,7 @@
             <div class="mb-5">
               <p class="lead fw-normal mb-1">About</p>
               <div class="p-4" style="background-color: #f8f9fa;">
-                <p class="font-italic mb-1">{{ author.profile.about_me }}</p>
+                <p class="font-italic mb-1">{{ author_info.author.profile.about_me }}</p>
               </div>
             </div>
 
@@ -58,12 +58,18 @@
             </div>
 
             <div class="row g-2" id="postContainer">
-              {% for post in author.blog_posts.all %}
+              {% for post in author_info.author.blog_posts.all %}
               <div class="col-md-6 mb-2 post-card" id="extrapost">
                 <div class="card" style="height: 500px;">
                   <!-- Post Image -->
-                  <img src="{% if 'placeholder' in post.image.url %}https://res.cloudinary.com/dmg7oqpgs/image/upload/v1698830526/Project_4/masthead_wxqbsd.jpg{% else %}{{ post.image.url }}{% endif %}"
-                    class="card-img-top img-fluid" alt="{{ post.title }}" style="height: 200px;  max-width: 100%;">
+                  {% if "placeholder" in post.image.url %}
+                    <img class="card-img-top"
+                        src="
+                        https://res.cloudinary.com/dmg7oqpgs/image/upload/v1704527717/static/images/image2-18.28aa1f4dc922.png"
+                        alt="{{ post.title }}" width="{{ image_width }}" height="{{ image_height }}">
+                  {% else %}
+                      <img class="card-img-top" src=" {{ post.image.url }}"  alt="{{ post.title }}" width="{{ image_width }}" height="{{ image_height }}">
+                  {% endif %}
                   <div class="card-body">
                     <!-- Post Title -->
                     <h2 class="card-title">{{ post.title|truncatewords_html:5 }}</h2>

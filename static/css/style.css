@@ -1,4 +1,24 @@
-/* -------------------------Contact.html------------------------------------------  */
+/* -------------------------base.html------------------------------------------  */
+
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh; /* Set the minimum height of the viewport to ensure footer stays at the bottom */
+  margin: 0;
+}
+
+.content-wrapper {
+  flex-grow: 1; /* Allows the content to grow and push the footer down */
+  padding: 20px; /* Add padding as needed */
+}
+
+.footer {
+  background-color: #333; /* Footer background color */
+  color: white; /* Text color */
+  padding: 20px 0; /* Adjust padding as needed */
+}
+
+/* -------------------------contact.html------------------------------------------  */
 
 .contact-form-container {
   display: flex;
@@ -68,7 +88,7 @@ form input {
   width: 100%;
 }
 
-/* -------------------------Index.html------------------------------------------  */
+/* -------------------------index.html------------------------------------------  */
 
 #header {
   background-color:#f7f7f7;
@@ -80,8 +100,22 @@ a {
   font-weight: bold;
 }
 
+.category-list i {
+  font-size: 20px; /* Adjust the icon size */
+  color: #007bff; /* Adjust the icon color */
+  margin-right: 5px; /* Adjust spacing between the icon and category title */
+}
+
+#main-post {
+  height: 350px;
+}
+
 @media screen and (max-width: 1400px) {
   .post-title {font-size: medium;}
+}
+
+@media screen and (max-width: 1000px) {
+  #main-post {height: auto;}
 }
 
 @media screen and (max-width: 767px) {
@@ -96,7 +130,7 @@ a {
  
 }
 
-/* -------------------------Message Author.html------------------------------------------  */
+/* -------------------------author_message.html------------------------------------------  */
 
 .help-block {
   display: none;
@@ -115,3 +149,12 @@ a {
 textarea#id_message {
   width: 80%;
 }
+
+/* ------------------------- post_detail.html------------------------------------------  */
+
+@media screen and (max-width:750px){
+  #post-image{height: auto;}
+}
+
+
+
