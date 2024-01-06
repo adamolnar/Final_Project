@@ -1,5 +1,4 @@
 from django.contrib.admin.sites import AdminSite
-from django.contrib.admin.sites import site as default_admin_site 
 from django.test import TestCase, RequestFactory
 from author.models import Author, AuthorAccessRequest
 from blog.models import Post
@@ -35,6 +34,7 @@ class AuthorAdminTestCase(TestCase):
         self.user.delete()
         self.author.delete()
 
+
 class AuthorAccessRequestAdminTestCase(TestCase):
     def setUp(self):
         # Create a user and an author access request object for testing
@@ -64,6 +64,7 @@ class AuthorAccessRequestAdminTestCase(TestCase):
         # Clean up by deleting the test user and author access request
         self.user.delete()
         self.author_access_request.delete()
+
 
 class CommentAdminTest(TestCase):
     def setUp(self):
@@ -110,4 +111,3 @@ class CommentAdminTest(TestCase):
         self.assertTrue(comment1.approved)
         self.assertTrue(comment2.approved)
 
-    # Add more test cases as needed

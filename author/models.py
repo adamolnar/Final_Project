@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from django.urls import reverse
 from profile.models import Profile  # Assuming you have a 'Profile' model
 
+
 # Model representing a blogger.
 class Author(models.Model):
     # A ForeignKey relationship to the user's profile
@@ -35,6 +36,7 @@ class Author(models.Model):
         self.is_authorized = True
         self.save()
 
+
 # Model to store messages sent by users to authors.    
 class AuthorMessage(models.Model):
     # ForeignKey relationship to the author
@@ -55,6 +57,7 @@ class AuthorMessage(models.Model):
     def __str__(self):
         # String representation of the message
         return f'Message from {self.sender_name} to {self.author.username}'
+
 
 # Model to store author access requests
 class AuthorAccessRequest(models.Model):

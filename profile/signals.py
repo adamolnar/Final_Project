@@ -1,8 +1,7 @@
-from django.db.models.signals import post_save,post_delete, pre_delete
+from django.db.models.signals import post_save, post_delete
 from django.dispatch import receiver
 from django.contrib.auth.models import User
 from .models import Profile
-
 
 
 # Signal handler to create a profile when a user is created
@@ -23,3 +22,4 @@ def save_user_profile(sender, instance, **kwargs):
 def post_delete_user(sender, instance, **kwargs):
     # Delete user when related profile is deleted.
     instance.user.delete()
+

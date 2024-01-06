@@ -3,14 +3,13 @@ from django.contrib.auth.models import User
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from .models import Author, AuthorMessage
-from profile.models import Profile
-from blog.models import Post
 from .forms import AuthorMessageForm, AuthorAccessRequestForm
 from django.views.generic import (
     ListView,
     DetailView,
     FormView
 )
+
 
 # Generic class-based view to generate a list of all authors.
 class AuthorListView(ListView):
@@ -19,6 +18,7 @@ class AuthorListView(ListView):
     context_object_name = 'author_list'
     paginate_by = 6
     
+
 # Generic class-based view to display information about an author and list of created posts. 
 class AuthorDetailView(DetailView):
     template_name ='author/author_detail.html'
@@ -36,6 +36,7 @@ class AuthorDetailView(DetailView):
     #     author_info = self.get_object()
     #     context['author_info'] = author_info
     #     return context
+
 
 # Generic class-based view to store all messages sent by users to authors.
 class MessageAuthorView(FormView):
@@ -62,6 +63,7 @@ class MessageAuthorView(FormView):
         author = self.get_author()
         return self.render_to_response({'form': form, 'author': author})   
 
+
 # Generic class-based view to handle author access requests
 class RequestAuthorAccessView(LoginRequiredMixin, FormView):
     template_name = 'author/request_author_access.html'
@@ -76,8 +78,6 @@ class RequestAuthorAccessView(LoginRequiredMixin, FormView):
         if form.is_valid():
             # Update the form.instance.profile with the user's profile
             form.instance.profile = request.user.profile
-            # Process the form data and handle the request
-            request_reason = form.cleaned_data['request_reason']
             
             # Create an AuthorAccessRequest instance
             request_instance = form.save(commit=False)

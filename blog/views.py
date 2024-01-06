@@ -51,9 +51,7 @@ class PostListView(ListView):
 class PostDetailView(DetailView):   
     def get(self, request, slug, *args, **kwargs):
         # Retrieve the post and associated data
-        queryset = Post.objects.filter(status=1)
         post = get_object_or_404(Post, slug=slug)
-        form = CommentForm()
         comments = post.comments.filter(approved=True).order_by("-created_on")
         liked = False
         if post.likes.filter(id=self.request.user.id).exists():
@@ -123,6 +121,7 @@ class PostLikeView(LoginRequiredMixin, View):
 def is_author(user):
     return user.groups.filter(name='author').exists()
 
+
 # Generic class-based view to create new post.
 class PostCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):  
     model = Post
@@ -154,7 +153,6 @@ class PostCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
         # Default to index if the status is neither 0 nor 1
         return reverse_lazy('index')
 
-    
     def test_func(self):
         # Check if the user is associated with an Author model
         return Author.objects.filter(profile=self.request.user.profile).exists()

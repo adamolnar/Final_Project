@@ -42,31 +42,24 @@ ALLOWED_HOSTS = ['final-project-ada-02b27917ae0c.herokuapp.com', '8000-adamolnar
 
 INSTALLED_APPS = [
     'jazzmin',
-
-
-    # Django built-in apps
     'django.contrib.sites',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
-
-
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
     'cloudinary_storage',
     'django.contrib.staticfiles',
-
     'widget_tweaks',
-    
     'cloudinary',
     'django_summernote',
     'crispy_forms',
     'django_social_share',
     'coverage',
-
+    
     # Custom apps
     'blog',
     'profile',
@@ -137,10 +130,6 @@ WSGI_APPLICATION = 'project.wsgi.application'
 DATABASES = {
    'default': dj_database_url.parse(os.environ.get("DATABASE_URL"))
 }
-
-# DATABASE_URL = os.environ.get('DATABASE_URL', 'sqlite:///db.sqlite3')
-# DATABASES = {'default': dj_database_url.parse(DATABASE_URL)}
-
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators

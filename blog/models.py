@@ -5,6 +5,7 @@ from django.template.defaultfilters import slugify
 from author.models import Author
 from cloudinary.models import CloudinaryField
 
+
 # Model representing the status of a blog post (Draft or Published)
 STATUS = ((0, "Draft"), (1, "Published"))
 
@@ -20,14 +21,17 @@ class Category(models.Model):
     def __str__(self):
         return self.title
 
+
 # Model representing a tag for blog posts
 class Tag(models.Model):
     name = models.CharField(max_length=50, unique=True)
     slug = models.SlugField(max_length=200, unique=True, null=True)
 
     def __str__(self):
+   
         return self.name
     
+
 # Model representing a blog post
 class Post(models.Model):
     title = models.CharField(max_length=200, unique=True)
@@ -66,6 +70,7 @@ class Post(models.Model):
     
     def approved_comments(self):
         return self.comments.filter(approved=True)
+
 
 # Model representing a comment against a blog post
 class Comment(models.Model):

@@ -3,7 +3,6 @@ from django.contrib.auth.models import User
 from author.models import Author, AuthorMessage, AuthorAccessRequest  
 from profile.models import Profile,  Contact
 from blog.models import Category, Tag, Post, Comment
-from django.urls import reverse
 
 
 class ProfileModelTest(TestCase):
@@ -85,7 +84,6 @@ class AuthorAccessRequestModelTest(TestCase):
         # Assert that the str_representation matches the expected string
         expected_str = "Request from testuser"
         self.assertEqual(str_representation, expected_str)
-
 
 
 class CategoryModelTest(TestCase):
@@ -189,4 +187,3 @@ class ContactModelTest(TestCase):
         """ Tests the __str__ of the Contact model"""
         email= Contact.objects.get(email = self.contact.email)
         self.assertEqual(str(email), 'user@gmail.com' )
-       

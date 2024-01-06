@@ -13,9 +13,9 @@
                     <div class="card p-3" style="height: 450px;">
                         <!-- Author Profile Image -->
                         {% if author.profile.image %}
-                            {% cloudinary author.profile.image.url format="jpg" width=100 height=100 crop="fill" class="img-fluid img-thumbnail mt-2 mb-2" style="height:100px; width:100px; z-index: 1" %}
+                            {% cloudinary author.profile.image.url alt='profile-picture' format="jpg" width=100 height=100 crop="fill" class="img-fluid img-thumbnail mt-2 mb-2" style="height:100px; width:100px; z-index: 1" %}
                         {% else %}
-                            {% cloudinary "v1704034646/static/images/avatar.b2e01619cc46" format="png" width=150 height=150 crop="fill" class="img-fluid img-thumbnail mt-4 mb-2" style="width: 150px; z-index: 1" %}
+                            {% cloudinary "v1704034646/static/images/avatar.b2e01619cc46" alt='profile-picture' format="png" width=150 height=150 crop="fill" class="img-fluid img-thumbnail mt-4 mb-2" style="width: 150px; z-index: 1" %}
                         {% endif %}
                         <!-- Author Name -->
                         <h2><a href="{% url 'author-detail' author.pk %}">{{ author }}</a></h2>

@@ -1,6 +1,7 @@
 from django import forms
 from .models import AuthorAccessRequest
 
+
 # Form for composing author messages
 class AuthorMessageForm(forms.Form):
     # Field for sender's name, limited to 255 characters
@@ -22,6 +23,7 @@ class AuthorMessageForm(forms.Form):
         label='',  # Set the label to an empty string
     )
 
+
 # Form for handling author access requests
 class AuthorAccessRequestForm(forms.ModelForm):
     class Meta:
@@ -34,4 +36,3 @@ class AuthorAccessRequestForm(forms.ModelForm):
         widgets = {
             'request_reason': forms.Textarea(attrs={'rows': 5, 'placeholder': 'Enter your reason for author access...'})
         }
-

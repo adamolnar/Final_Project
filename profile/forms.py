@@ -1,7 +1,7 @@
 from django import forms
 from .models import Contact, Profile
 from allauth.account.forms import SignupForm, LoginForm
-from project.utils import DivErrorList
+
 
 # CustomSignUpForm extends the SignupForm
 class CustomSignUpForm(SignupForm):
@@ -9,11 +9,13 @@ class CustomSignUpForm(SignupForm):
         super(CustomSignUpForm, self).__init__(*args, **kwargs)
         # Set the error_class to DivErrorList for customized error rendering
 
+
 # CustomLoginForm extends the LoginForm
 class CustomLoginForm(LoginForm):
     def __init__(self, *args, **kwargs):
         super(CustomLoginForm, self).__init__(*args, **kwargs)
         # Set the error_class to DivErrorList for customized error rendering
+
 
 # ProfileUpdateForm for updating user profiles
 class ProfileUpdateForm(forms.ModelForm):
@@ -21,11 +23,13 @@ class ProfileUpdateForm(forms.ModelForm):
         model = Profile
         fields = ["about_me", 'image']
 
+
 # AuthorMessageForm for sending messages to authors
 class AuthorMessageForm(forms.Form):
     sender_name = forms.CharField(max_length=255)
     sender_email = forms.EmailField()
     message = forms.CharField(widget=forms.Textarea)
+
 
 # ContactForm for handling contact information
 class ContactForm(forms.ModelForm):
