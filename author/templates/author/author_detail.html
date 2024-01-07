@@ -3,7 +3,7 @@
 {% load cloudinary %}
 
 {% block head_title %}
-  {{  author_info.author.profile.user.username }} | Django Blog
+  {{  author.profile.user.username }} | Django Blog
 {% endblock head_title %}
 
 {% block content %}
@@ -24,17 +24,17 @@
             </div>
             <div class="ms-3" style="margin-top: 70px;">
               <!-- Author Information -->
-              <h3>{{ author_info.author.profile.user.username }}</h3>
-              <p>{{ author_info.author.profile.user.email }}</p>
+              <h3>{{ author.profile.user.username }}</h3>
+              <p>{{ author.profile.user.email }}</p>
               <hr>
-              <p style="margin-top: 15px; font-size: small;">Last Logged In: {{author_info.author.profile.user.last_login }}</p>
+              <p style="margin-top: 15px; font-size: small;">Last Logged In: {{author.profile.user.last_login }}</p>
             </div>
           </div>
 
           <!-- Message Form Section -->
           <div class="p-4 text-black" style="background-color: #f8f9fa;">
             <div>
-              <form method="post" action="{% url 'message-author' author_id=author_info.author.id %}">
+              <form method="post" action="{% url 'message-author' author.id %}">
                 {% csrf_token %}
                 {{ form.as_p }}
                 <input type="submit" value="Send Message" class="btn btn-success" style="float: inline-end;">
@@ -47,7 +47,7 @@
             <div class="mb-5">
               <p class="lead fw-normal mb-1">About</p>
               <div class="p-4" style="background-color: #f8f9fa;">
-                <p class="font-italic mb-1">{{ author_info.author.profile.about_me }}</p>
+                <p class="font-italic mb-1">{{ author.profile.about_me }}</p>
               </div>
             </div>
 
@@ -58,7 +58,7 @@
             </div>
 
             <div class="row g-2" id="postContainer">
-              {% for post in author_info.author.blog_posts.all %}
+              {% for post in author.blog_posts.all %}
               <div class="col-md-6 mb-2 post-card" id="extrapost">
                 <div class="card" style="height: 500px;">
                   <!-- Post Image -->

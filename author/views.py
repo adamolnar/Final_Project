@@ -4,6 +4,7 @@ from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from .models import Author, AuthorMessage
 from .forms import AuthorMessageForm, AuthorAccessRequestForm
+from profile.models import Profile
 from blog.models import Post
 from django.views.generic import (
     ListView,
@@ -24,15 +25,14 @@ class AuthorListView(ListView):
 class AuthorDetailView(DetailView):
     template_name ='author/author_detail.html'
     model = Author
-    
-    def get_queryset(self):
-        author_id = self.kwargs['pk']
-        return Post.objects.filter(author_id=author_id)
+   
     
     def get_context_data(self, **kwargs):
-        context = super(AuthorDetailView, self).get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
         author_info = self.get_object()
+        posts = Post.objects.filter(author=author_info)
         context['author_info'] = author_info
+        context['posts'] = posts
         return context
 
 
@@ -48,7 +48,6 @@ class MessageAuthorView(FormView):
     def form_valid(self, form):
         author = self.get_author()
         message = AuthorMessage(
-            author=author,
             sender_name=form.cleaned_data['sender_name'],
             sender_email=form.cleaned_data['sender_email'],
             message=form.cleaned_data['message'],

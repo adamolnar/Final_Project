@@ -7,8 +7,8 @@
     <h1 class="page-title mb-4 mt-4">All Bloggers</h1>
 
     <div class="row">
-        {% if page_obj.has_other_pages %}
-            {% for author in page_obj %}
+       
+            {% for author in author_list %}
                 <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
                     <div class="card p-3" style="height: 450px;">
                         <!-- Author Profile Image -->
@@ -50,9 +50,7 @@
                     </div>
                 </div>
             {% endfor %}
-        {% else %}
-            <p>No bloggers found.</p>
-        {% endif %}
+    
     </div>
 
     <!-- Pagination Controls -->

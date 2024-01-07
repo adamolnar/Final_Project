@@ -80,6 +80,7 @@ class AuthorAccessRequest(models.Model):
     def authorize_request(self):
         # Method to authorize the request and update the Author model
         author, created = Author.objects.get_or_create(profile=self.profile)
+        author.save()
         if created:
             author.grant_access()
         self.is_authorized = True

@@ -27,7 +27,8 @@
         <div class="container ">
             <a class="navbar-brand" href="{% url 'byte-by-byte' %}">Byte by Byte</a>
             <!-- Navbar toggler button for smaller screens -->
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
@@ -47,7 +48,7 @@
                         <a class="nav-link" href="{% url 'account_logout' %}">Logout</a>
                     </li>
                     <li class="nav-item {% if request.path == '/profile/' %}active{% endif %}">
-                        <a class="nav-link" href="{% url 'profile' user.pk %}">Profile</a>
+                        <a class="nav-link" href="{% url 'profile' user.profile.id %}">Profile</a>
                     </li>
                     <li class="nav-item {% if request.path == '/post-create/' %}active{% endif %}">
                         <a class="nav-link {% if request.path == '/post-create/' %}active{% endif %}" href="{% url 'post-create' %}" title='Add new post'>Create Post</a>

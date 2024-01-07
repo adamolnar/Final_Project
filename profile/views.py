@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect
+from django.shortcuts import get_object_or_404
 from django.contrib import messages
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.decorators import login_required
@@ -21,23 +22,8 @@ class ProfileDetailView(LoginRequiredMixin, DetailView):
     template_name = 'profile/profile.html'
 
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-
-        # Check if the user is an author
-        try:
-            profile = Profile.objects.get(user=self.request.user)
-            author = Author.objects.get(profile=profile)
-        except Author.DoesNotExist:
-            context['is_author'] = False  # Add a flag to indicate the user is not an author
-            return context  # Return the context dictionary
-        
-        # Check if the user has any draft posts
-        has_draft_posts = Post.objects.filter(author=author, status='0').exists()
-        
-        context['has_draft_posts'] = has_draft_posts
-        context['is_author'] = True  # Add a flag to indicate the user is an author
-        return context
+    def get_object(self, queryset=None):
+        return get_object_or_404(Profile, pk=self.kwargs['pk'])
     
     
 # Generic class-based view to update logged-in user profile.
@@ -51,17 +37,16 @@ class ProfileUpdateView(LoginRequiredMixin, UpdateView):
         messages.success(self.request, 'Your profile has been updated successfully.')
         return super().form_valid(form)
     
-    def profile_update_view(request, pk):
-        profile = Profile.objects.get(pk=pk)
+    def profile_update_view(request, self):
         if request.method == 'POST':
-            form = ProfileUpdateForm(request.POST, request.FILES, instance=profile)
+            form = ProfileUpdateForm(request.POST, request.FILES)
             if form.is_valid():
                 form.save()
                 # Redirect to success page or any other desired page
                 
                 return redirect('profile')
         else:
-            form = ProfileUpdateForm(instance=profile)
+            form = ProfileUpdateForm()
 
         return render(request, 'profile/profile_form.html', {'form': form})
 

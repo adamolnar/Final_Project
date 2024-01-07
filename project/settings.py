@@ -38,6 +38,8 @@ X_FRAME_OPTIONS = "SAMEORIGIN"
 ALLOWED_HOSTS = ['final-project-ada-02b27917ae0c.herokuapp.com', '8000-adamolnar-finalproject-7sjczftvflx.ws-eu107.gitpod.io' , 'localhost']
 
 
+
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -72,6 +74,8 @@ LOGIN_REDIRECT_URL = '/'
 LOGOT_REDIRECT_URL = '/'
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
+
+
 
 MESSAGE_TAGS = {
     messages.DEBUG: 'alert-info',
@@ -198,3 +202,5 @@ ACCOUNT_FORMS = {
   'signup': 'profile.forms.CustomSignUpForm',
   'login': 'profile.forms.CustomLoginForm',
 }
+
+AUTH_PROFILE_MODULE = 'profile.Profile'

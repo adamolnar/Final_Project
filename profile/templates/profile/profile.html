@@ -26,7 +26,7 @@
               {% endif %}
               {% if request.user.id == user.id %}
                 <!-- Edit Profile button, visible only to the profile owner -->
-                <a class="btn btn-outline-dark" data-mdb-ripple-color="dark" style="color: white; border-color: white;" href="{% url 'profile-update' user.pk %}">
+                <a class="btn btn-outline-dark" data-mdb-ripple-color="dark" style="color: white; border-color: white;" href="{% url 'profile-update' user.profile.id %}">
                   Edit Profile
                 </a>
               {% endif %}
@@ -69,13 +69,14 @@
                   <!-- Individual post card -->
                   <div class="col-12 col-md-6 mb-3 extrapost">
                     <div class="card h-100 border shadow-sm">
-                      {% if post.image %}
-                        <!-- Display post image if it exists -->
-                        {% cloudinary post.image alt=post.title class="card-img-top" %}
+                      <!-- Post Image -->
+                      {% if "placeholder" in post.image.url %}
+                      <img class="card-img-top"
+                          src="
+                          https://res.cloudinary.com/dmg7oqpgs/image/upload/v1704527717/static/images/image2-18.28aa1f4dc922.png"
+                            alt="{{ post.title }}" width="{{ image_width }}" height="{{ image_height }}">
                       {% else %}
-                        <!-- Default placeholder image if no post image exists -->
-                        <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-profiles/avatar-1.webp"
-                             alt="Generic placeholder image" class="card-img-top" >
+                          <img class="card-img-top" src=" {{ post.image.url }}"  alt="{{ post.title }}" width="{{ image_width }}" height="{{ image_height }}">
                       {% endif %}
                       <div class="card-body">
                         <!-- Post title and truncated content -->
