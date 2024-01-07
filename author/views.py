@@ -19,6 +19,10 @@ class AuthorListView(ListView):
     model = Author
     context_object_name = 'author_list'
     paginate_by = 6
+
+    def get_queryset(self):
+        # Define the queryset to fetch all authors
+        return Author.objects.all()
     
 
 # Generic class-based view to display information about an author and list of created posts. 

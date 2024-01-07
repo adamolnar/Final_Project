@@ -19,12 +19,12 @@
         </div>
         <div class="g-0">
             <div class="col-md-12 masthead-text">
-                <!-- Display post tags -->
+                <!-- Display post tags as clickable links -->
                 {% for tag in post.tags.all %}
-                    <p class="badge text-decoration-none bg-secondary">{{ tag }}</p>
+                    <a href="{% url 'tag-detail' tag.slug %}" class="badge text-decoration-none bg-secondary">{{ tag }}</a>
                 {% endfor %}
                 <!-- Display post title -->
-                <h2 class="post-title" >{{ post.title }}</h2>
+                <h2 class="post-title">{{ post.title }}</h2>
                 <!-- Display post author and creation date -->
                 <p class="post-subtitle">
                     Author: <a href="{{ post.author.get_absolute_url }}">{{ post.author }}</a> | {{ post.created_on }}
@@ -38,13 +38,13 @@
     <div class="row">
         <div class="col card mb-4 mt-3 left top">
             {% if request.user.profile == post.author.profile %}
-            <div class="mt-4 mx-3">
+            <div class="d-flex mt-4 mx-3">
                 <!-- Display edit, publish, and delete buttons if the current user is the post author -->
-                <a class="btn btn-primary" href="{% url 'post-update' post.slug %}">Edit</a>
+                <a class="btn btn-primary mr-1" href="{% url 'post-update' post.slug %}">Edit</a>
                 {% if post.status != 1 %}
                 <form method="post" action="{% url 'publish-post' post.slug %}">
                     {% csrf_token %}
-                    <button type="submit" class="btn btn-success">Publish</button>
+                    <button type="submit" class="btn btn-success mr-1">Publish</button>
                 </form>
                 {% endif %}
                 <a class="btn btn-danger" href="{% url 'post-delete' post.slug %}">Delete</a>
@@ -55,45 +55,41 @@
                 <p class="card-text text-justify" >
                     {{ post.content | safe }}
                 </p>
-                <div class="row">
-                    <div class="col-1">
+                <div class="row align-items-center">
+                    <div class="col-auto pl-0">
                         <!-- Display post likes -->
                         <strong class="text-secondary">
                             {% if user.is_authenticated %}
                                 <form class="d-inline" action="{% url 'post-like' post.slug %}" method="POST">
                                     {% csrf_token %}
-                                    {% if liked %}
-                                        <button class="btn-like" type="submit" style="border: none; background-color: white;" name="blogpost_id" value="{{ post.slug }}">
-                                            <i class="fas fa-heart" style="color: red;"></i>
-                                        </button>
-                                    {% else %}
-                                        <button class="btn-like" type="submit" style="border: none; background-color: white;" name="blogpost_id" value="{{ post.slug }}">
-                                            <i class="fas fa-heart" style="color: red;"></i>
-                                        </button>
-                                    {% endif %}
+                                    <button class="btn-like pr-0" type="submit" style="border: none; background-color: transparent;" name="blogpost_id" value="{{ post.slug }}">
+                                        <i class="fas fa-heart" style="color: red;"></i>
+                                    </button>
                                 </form>
                             {% else %}
                                 <span class="text-secondary"><i class="fas fa-heart" style="color: red;"></i></span>
                             {% endif %}
-                            <span class="text-secondary d-none d-md-block">{{ post.number_of_likes }}</span>
+                            <span class="text-secondary">{{ post.number_of_likes }}</span>
                         </strong>
                     </div>
-                    <div class="col-1">
+                
+                    <div class="col-auto">
                         <!-- Display total comments count -->
                         {% with comments.count as total_comments %}
-                            <span class="text-secondary">
-                                <i class="fas fa-comments" style="color: #0d6efd;"></i>
-                                <strong class="d-none d-md-block">{{ total_comments }}</strong>
-                            </span>
+                        <span class="text-secondary">
+                            <i class="fas fa-comments" style="color: #0d6efd;"></i>
+                            <strong>{{ total_comments }}</strong>
+                        </span>
                         {% endwith %}
                     </div>
-                    <div class="col-10 text-end">
-                        <!-- Social sharing buttons -->
-                        <div class="social-sharing" style="margin-right: 0;">
-                            <button class="btn btn-social">{% post_to_whatsapp object_or_url '<i class="fa fa-whatsapp" style="color: #25D366;"></i>' %}</button>
-                            <button class="btn btn-social">{% post_to_twitter "A good article: {{ object.title }} - Check it out!" object_or_url '<i class="fa fa-twitter" aria-hidden="true" style="color: #1DA1F2;"></i>' %}</button>
-                            <button class="btn btn-social">{% post_to_facebook object_or_url '<i class="fa fa-facebook" aria-hidden="true" style="color: #4267B2;"></i>' %}</button>
-                            <button class="btn btn-social">{% post_to_linkedin object_or_url %}</button>
+                
+                    <!-- Social sharing buttons -->
+                    <div class="col">
+                        <div class="social-sharing text-end">
+                            <button class="btn btn-social px-1">{% post_to_whatsapp object_or_url '<i class="fa fa-whatsapp" style="color: #25D366;"></i>' %}</button>
+                            <button class="btn btn-social px-1">{% post_to_twitter "A good article: {{ object.title }} - Check it out!" object_or_url '<i class="fa fa-twitter" aria-hidden="true" style="color: #1DA1F2;"></i>' %}</button>
+                            <button class="btn btn-social px-1">{% post_to_facebook object_or_url '<i class="fa fa-facebook" aria-hidden="true" style="color: #4267B2;"></i>' %}</button>
+                            <button class="btn btn-social px-1">{% post_to_linkedin object_or_url %}</button>
                         </div>
                     </div>
                 </div>
@@ -107,10 +103,10 @@
             <div class="card-body">
                 <!-- Display comments -->
                 {% for comment in comments %}
-                <div class="comments" style="padding: 10px;">
+                <div class="comments {% cycle 'comment-light' 'comment-dark' %}" style="padding: 10px;">
                     <p class="font-weight-bold">
-                        {{ comment.author }}
-                        <span class=" text-muted font-weight-normal">
+                        {{ comment.author.user.profile.id }}
+                        <span class="text-muted font-weight-normal">
                             {{ comment.created_on }}
                         </span>
                         {% if comment.approved %}
@@ -142,14 +138,9 @@
         <div class="col-md-4 card mb-4 mt-3">
             <div class="card-body">
                 {% if user.is_authenticated %}
-                    {% if commented %} 
-                        <div id="msg" class="alert alert-success" role="alert"> 
-                            Your comment was successfully added.
-                        </div>     
-                    {% endif %}
-                    <p id="x" style="display: block;">Posting as: <strong>{{ user.username }}</strong></p>
+                    <p  style="display: block;">Posting as: <strong>{{ user.username }}</strong></p>
                     <!-- Display comment form for authenticated users -->
-                    <form id="x" method="post" style="margin-top: 1.3em; display: block;">
+                    <form id="comment-form" method="post" style="margin-top: 1.3em; display: block;">
                         {% csrf_token %}
                         {{ comment_form | crispy }}
                         <button type="submit" class="btn btn-success btn-lg">Submit</button>

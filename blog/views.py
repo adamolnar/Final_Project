@@ -87,23 +87,11 @@ class PostDetailView(DetailView):
             new_comment.author = request.user
             new_comment.post = post
             new_comment.save()
-            form = CommentForm()           
-        else:
-            form = CommentForm()
 
-        # Render the post detail page with updated data
-        return render(
-            request,
-            "blog/post_detail.html",
-            {
-                "post": post,
-                "comments": comments,
-                "approved":True,
-                "commented": True,
-                "form": form,
-                "liked": liked
-            },
-        )
+            messages.success(request, "Your comment has been posted.")
+
+            ## Redirect back to the same post detail page
+            return redirect(reverse('post-detail', kwargs={'slug': slug}))
 
 
 # Generic class-based view for a like/unlike.
@@ -247,8 +235,11 @@ class CommentUpdateView(LoginRequiredMixin, UpdateView):
     def form_valid(self, form):
         # Save the updated comment
         form.save()
-        messages.success(self.request, "Comment Updated Successfully!!")
-        return HttpResponseRedirect(reverse('index'))
+        messages.success(self.request, "Comment updated successfully!!")
+        
+        # Redirect to the post detail page
+        post_slug = self.object.post.slug
+        return HttpResponseRedirect(reverse('post-detail', args=[post_slug]))
     
 
 # Generic class-based view for author delete comment function.
@@ -265,11 +256,30 @@ class CommentDeleteView(LoginRequiredMixin, DeleteView):
 
     def post(self, request, pk, *args, **kwargs):
         # Handle comment deletion
-        comment = get_object_or_404(Comment, pk=pk)    
-        if request.method == 'POST':
-            comment.delete()
-            messages.success(request, 'The comment has been deleted successfully.')
-        return HttpResponseRedirect(reverse('index'))
+        comment = get_object_or_404(Comment, pk=pk)
+        post_slug = comment.post.slug 
+        comment.delete()
+        messages.success(request, 'The comment has been deleted successfully.')
+        return redirect(reverse('post-detail', args=[post_slug]))
+    
+
+class TagDetailView(ListView):
+    template_name = 'blog/tag_detail.html'
+
+    def get(self, request, slug):
+        # Retrieve the tag based on the tag_slug
+        tag = get_object_or_404(Tag, slug=slug)
+
+        # Retrieve associated posts for the tag
+        associated_posts = Post.objects.filter(tags=tag, status=1)
+
+        # Render the template with the tag and related posts
+        context = {
+            'tag': tag,
+            'associated_posts': associated_posts,
+        }
+
+        return render(request, self.template_name, context)
     
 
 # Function that will be called when a 404 error occurs
@@ -291,3 +301,4 @@ def byte_by_byte_view(request):
     
     # Render the "byte_by_byte.html" template with the provided context data.
     return render(request, 'blog/byte_by_byte.html', context)
+

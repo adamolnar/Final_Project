@@ -39,13 +39,28 @@
               <p>Last Logged In: {{ user.last_login }}</p>
             </div>
           </div>
-          <!-- User statistics section -->
+          
           <div class="p-4 text-black" style="background-color: #d9d9d9">
             <div class="d-flex justify-content-around text-center py-1">
-              <!-- Display user's post, comment, and share counts -->
-              <div><i class="fas fa-pen"></i><p class="mb-1 h5">{{ object.post_count }}</p><p class="small text-muted mb-0">Posts</p></div>
-              <div><i class="fas fa-comment"></i><p class="mb-1 h5">{{ object.comment_count }}</p><p class="small text-muted mb-0">Comments</p></div>
-              <div><i class="fas fa-share-alt"></i><p class="mb-1 h5">{{ object.shared_count }}</p><p class="small text-muted mb-0">Shared</p></div>
+              <!-- Create Post, Draft Posts, and Contact Admin links -->
+              <div>
+                <a href="{% url 'post-create' %}">
+                  <i class="fas fa-pen"></i>
+                </a>
+                <p class="small text-muted mb-0">Create posts</p>
+              </div>
+              <div>
+                <a href="{% url 'draft-post-author-list' %}">
+                  <i class="fas fa-clipboard"></i>
+                </a>
+                <p class="small">Draft posts</p>
+              </div>
+              <div>
+                <a href="{% url 'contact' %}">
+                  <i class="fas fa-comment"></i>
+                </a>
+                <p class="small text-muted mb-0">Contact admin</p>
+              </div>
             </div>
           </div>
           <!-- About me and user posts section -->
@@ -100,16 +115,9 @@
               {% if request.user.id == user.id %}
                 <!-- Delete Profile button, visible only to the profile owner -->
                 <a class="btn btn-outline-dark" data-mdb-ripple-color="dark" style="background-color: red; color: white;"
-                  href="{% url 'profile-delete' user.pk %}">
+                  href="{% url 'profile-delete' user.profile.id %}">
                   Delete Profile
                 </a>
-                {% if has_draft_posts %}
-                  <!-- View Draft Posts button, visible only to the profile owner if they have draft posts -->
-                  <a class="btn btn-outline-dark" data-mdb-ripple-color="dark" style="background-color: #0d6efd; color: white;"
-                    href="{% url 'draft-post-author-list' %}">
-                    View Draft Posts
-                  </a>
-                {% endif %}
               {% endif %}
             </div>
           </div>

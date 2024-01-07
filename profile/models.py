@@ -1,7 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.urls import reverse
-# from blog.models import Post, Comment
 from cloudinary.models import CloudinaryField
 
 
@@ -28,18 +27,14 @@ class Profile(models.Model):
 
     @property
     def is_admin(self):
-        return self.user.groups.filter(name='Admin').exists()
+        return self.user_profile.groups.filter(name='Admin').exists()
     
-    # def post_count(self):
-    #     return Post.objects.filter(author=self.user.profile.user_id).count()
+    def favorite_post(self, post):
+        self.favorite_posts.add(post)
 
-    # def comment_count(self):
-    #     return Comment.objects.filter(author=self.user).count()
+    def has_favorited_post(self, post):
+        return self.favorite_posts.filter(pk=post.pk).exists()
     
-    def shared_count(self):
-        return self.users_profile.aggregate(shared_count=models.Count('blog_posts__likes'))['shared_count'] or 0
-
-
 
 # Model to store contact form informations.
 class Contact(models.Model):

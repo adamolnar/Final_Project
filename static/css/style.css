@@ -156,5 +156,22 @@ textarea#id_message {
   #post-image{height: auto;}
 }
 
+.hide-label label {right: unset;
+  display: none;
+}
 
+.comment-light {
+  background-color: #f0f0f0; /* Light color */
+  /* other styles if needed */
+}
 
+.comment-dark {
+  background-color: #d6d6d6; /* Dark color */
+  /* other styles if needed */
+}
+
+/* ------------------------- tag_detail.html------------------------------------------  */
+
+#title {
+  margin: 25px auto 25px;
+}

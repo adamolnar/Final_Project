@@ -11,7 +11,7 @@ class CommentForm(forms.ModelForm):
         def __init__(self, *args, **kwargs):
             super(CommentForm, self).__init__(*args, **kwargs)
             # Set the label for the 'body' field to an empty string
-            self.fields['body'].label = ''
+            self.fields['body'].widget.attrs.update({'class': 'hide-label'})
 
         def clean_body(self):
             # Custom validation for the comment body if needed

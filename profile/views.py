@@ -6,8 +6,6 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.urls import reverse_lazy
 from .models import Profile
-from author.models import Author
-from blog.models import Post
 from .forms import ContactForm, ProfileUpdateForm
 from django.views.generic import (
     DetailView,
@@ -69,8 +67,7 @@ class ProfileDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
         # Logout the user
         logout(request)
         return super().delete(request, *args, **kwargs)
-        
-
+ 
 
 # View function for a contact form.
 def contact(request):
