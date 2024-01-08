@@ -106,10 +106,6 @@ a {
   margin-right: 5px; /* Adjust spacing between the icon and category title */
 }
 
-#main-post {
-  height: 350px;
-}
-
 @media screen and (max-width: 1400px) {
   .post-title {font-size: medium;}
 }
@@ -169,6 +165,14 @@ textarea#id_message {
   background-color: #d6d6d6; /* Dark color */
   /* other styles if needed */
 }
+
+img#post-image {
+  height: 400px;
+}
+
+@media screen and (max-width: 767px) {
+  img#post-image {height: auto;}
+ }
 
 /* ------------------------- tag_detail.html------------------------------------------  */
 

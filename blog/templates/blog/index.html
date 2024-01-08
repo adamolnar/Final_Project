@@ -17,15 +17,42 @@
 
     <!-- Page content -->
     <div class="container">
-        <div class="row" style="display: flex;">
+        <div class="row">
+            <div class="col-lg-8">
+                <!-- Main post (full width) -->
+                <div id="main-post">
+                    {% for post in post_list %}
+                        {% if forloop.first %}
+                            {% include 'blog/blog_post_card.html' with image_width=400 image_height=800 %}
+                        {% endif %}
+                    {% endfor %}
+                </div>
+                
+                <!-- Secondary posts (Second and Third rows) -->
+                <div class="row">
+                    {% for post in post_list %}
+                        {% if forloop.counter > 1 and forloop.counter <= 6 %}
+                            <div class="col-md-6">
+                                {% include 'blog/blog_post_card.html' %}
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
 
-            <!-- Main post (full width) -->
-            <div class="col-lg-8" id="main-post">
-                {% for post in post_list %}
-                    {% if forloop.first %}
-                        {% include 'blog/blog_post_card.html' with image_width=400 image_height=800 %}
-                    {% endif %}
-                {% endfor %}
+                <!-- Pagination -->
+                <div class="pagination justify-content-center my-4">
+                    <ul class="pagination">
+                        {% if page_obj.has_previous %}
+                            <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}" style="color: black;">Previous</a></li>
+                        {% endif %}
+
+                        <li class="page-item disabled"><span class="page-link">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.</span></li>
+
+                        {% if page_obj.has_next %}
+                            <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}" style="color: black;">Next</a></li>
+                        {% endif %}
+                    </ul>
+                </div>
             </div>
 
             <!-- Side widgets -->
@@ -64,7 +91,7 @@
 
                 <!-- Side widget -->
                 <div class="card mb-4 d-none d-xl-block">
-                    <div class="card-header">Abaut us</div>
+                    <div class="card-header">About Us</div>
                     <div class="card-body">
                         Welcome to Byte by Byte's Tech Blog, your go-to destination for in-depth insights, tutorials,
                         and thought-provoking articles on the latest trends, technologies, and developments in the tech world.
@@ -73,50 +100,6 @@
                     </div>
                 </div>
             </div>
-
-            <!-- Secondary posts -->
-            <div class="col-lg-8" >
-                <!-- Second and Third Posts -->
-                <div class="row d-flex same-size">
-                    {% for post in post_list %}
-                        {% if forloop.counter > 1 and forloop.counter <= 3 %}
-                            <div class="col-md-6" id="secondary-post">
-                                {% include 'blog/blog_post_card.html' %}
-                            </div>
-                        {% endif %}
-                    {% endfor %}
-                </div>
-            </div>
-
-            <!-- Fourth and Fifth Posts -->
-            <div class="col-lg-8">
-                <!-- Second and Third Posts -->
-                <div class="row d-flex same-size">
-                    {% for post in post_list %}
-                        {% if forloop.counter > 3 and forloop.counter <= 5 %}
-                            <div class="col-md-6" style="height: 100%;">
-                                {% include 'blog/blog_post_card.html' %}
-                            </div>
-                        {% endif %}
-                    {% endfor %}
-                </div>
-            </div>
-                
-        </div>
-
-        <!-- Pagination -->
-        <div class="pagination justify-content-center my-4">
-            <ul class="pagination">
-                {% if page_obj.has_previous %}
-                    <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}" style="color: black;">Previous</a></li>
-                {% endif %}
-
-                <li class="page-item disabled"><span class="page-link">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.</span></li>
-
-                {% if page_obj.has_next %}
-                    <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}" style="color: black;">Next</a></li>
-                {% endif %}
-            </ul>
         </div>
     </div>
 {% endblock %}

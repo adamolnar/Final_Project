@@ -9,12 +9,10 @@
     <div class="row">
       {% for post in draft_post_list %}
         <div class="col-lg-6 mb-4">
-          <div class="card">
             <div class="card-body">
               <!-- Include a separate blog post card template for each draft post -->
               {% include 'blog/blog_post_card.html' %}
             </div>
-          </div>
         </div>
       {% endfor %}
     </div>

@@ -34,12 +34,13 @@
                                         <div class="row p-2">
                                             <!-- Post Image -->
                                             <div class="col-md-2">
-                                                {% if post.image %}
-                                                    {% cloudinary post.image alt=post.title width=40 height=40 crop="fill" %}
+                                                {% if "placeholder" in post.image.url %}
+                                                    <img src="https://res.cloudinary.com/dmg7oqpgs/image/upload/v1704527717/static/images/image2-18.28aa1f4dc922.png"
+                                                    alt="Generic placeholder image"
+                                                    style="width: 40px; height: 40px; object-fit: cover; z-index: 1">
+                                                    
                                                 {% else %}
-                                                    <img src="https://res.cloudinary.com/dmg7oqpgs/image/upload/c_fill,w_150,h_150/v1704527717/static/images/image2-18.28aa1f4dc922.png"
-                                                        alt="Generic placeholder image"
-                                                        style="width: 40px; height: 40px; object-fit: cover; z-index: 1">
+                                                    {% cloudinary post.image alt=post.title width=40 height=40 crop="fill" %}
                                                 {% endif %}
                                             </div>
                                             <!-- Post Title -->
