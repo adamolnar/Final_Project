@@ -47,6 +47,7 @@ class PostListView(ListView):
         return context
 
 
+
 # Generic class-based detail view for a post.
 class PostDetailView(DetailView):   
     def get(self, request, slug, *args, **kwargs):

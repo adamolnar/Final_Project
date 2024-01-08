@@ -175,3 +175,13 @@ textarea#id_message {
 #title {
   margin: 25px auto 25px;
 }
+
+/* ------------------------- author_detail.html------------------------------------------  */
+
+div#author-post {
+  height: 480px;
+}
+
+@media screen and (max-width: 767px) {
+ div#author-post {height: auto;}
+}

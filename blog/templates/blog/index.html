@@ -20,7 +20,7 @@
         <div class="row" style="display: flex;">
 
             <!-- Main post (full width) -->
-            <div class="col-lg-8" style="height: 100%;" id="main-post">
+            <div class="col-lg-8" id="main-post">
                 {% for post in post_list %}
                     {% if forloop.first %}
                         {% include 'blog/blog_post_card.html' with image_width=400 image_height=800 %}
@@ -29,7 +29,7 @@
             </div>
 
             <!-- Side widgets -->
-            <div class="col-lg-4" style="height: 100%;">
+            <div class="col-lg-4">
                 <!-- Tags Widget -->
                 <div class="card mb-4 d-none d-lg-block">
                     <div class="card-header">Tags</div>
@@ -54,8 +54,7 @@
                             {% for category in categories %}
                                 <li class="list-inline-item text-muted" >
                                     <strong>
-                                        <i class="{{ category.icon }}"></i> <!-- This displays the FontAwesome icon -->
-                                        <a href="{% url 'index' %}?category_id={{ category.id }}" class="text-reset">{{ category.title }}</a>
+                                        <i class="fa-solid fa-gear" ></i> <a href="{% url 'index' %}?category_id={{ category.id }}" class="text-reset">{{ category.title }}</a>
                                     </strong> 
                                 </li>
                             {% endfor %}
@@ -76,12 +75,12 @@
             </div>
 
             <!-- Secondary posts -->
-            <div class="col-lg-8">
+            <div class="col-lg-8" >
                 <!-- Second and Third Posts -->
                 <div class="row d-flex same-size">
                     {% for post in post_list %}
                         {% if forloop.counter > 1 and forloop.counter <= 3 %}
-                            <div class="col-md-6" style="height: 100%;">
+                            <div class="col-md-6" id="secondary-post">
                                 {% include 'blog/blog_post_card.html' %}
                             </div>
                         {% endif %}

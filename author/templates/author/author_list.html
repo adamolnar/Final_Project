@@ -10,7 +10,7 @@
        
             {% for author in author_list %}
                 <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
-                    <div class="card p-3" style="height: 450px;">
+                    <div class="card p-3" id="author-post">
                         <!-- Author Profile Image -->
                         {% if author.profile.image %}
                             {% cloudinary author.profile.image.url alt='profile-picture' format="jpg" width=100 height=100 crop="fill" class="img-fluid img-thumbnail mt-2 mb-2" style="height:100px; width:100px; z-index: 1" %}
@@ -30,19 +30,24 @@
                             {% for post in author.blog_posts.all %}
                                 {% if post.status == 1 %}  
                                     {% if forloop.counter <= 3 %} {# Display up to 3 posts in one column #}
-                                        <div class="post mt-2">
+                                    <div class="post mt-2">
+                                        <div class="row p-2">
                                             <!-- Post Image -->
-                                            {% if post.image %}
-                                                {% cloudinary post.image alt=post.title width=40 height=40 crop="fill"  %}
-                                            {% else %}
-                                                <img src="https://res.cloudinary.com/dmg7oqpgs/image/upload/v1698830526/Project_4/masthead_wxqbsd.jpg"
-                                                    alt="Generic placeholder image"
-                                                    style="width: 150px; z-index: 1" crop="fill">
-                                            {% endif %}
-                                            
+                                            <div class="col-md-2">
+                                                {% if post.image %}
+                                                    {% cloudinary post.image alt=post.title width=40 height=40 crop="fill" %}
+                                                {% else %}
+                                                    <img src="https://res.cloudinary.com/dmg7oqpgs/image/upload/c_fill,w_150,h_150/v1704527717/static/images/image2-18.28aa1f4dc922.png"
+                                                        alt="Generic placeholder image"
+                                                        style="width: 40px; height: 40px; object-fit: cover; z-index: 1">
+                                                {% endif %}
+                                            </div>
                                             <!-- Post Title -->
-                                            <a href="{% url 'post-detail' post.slug %}" class="post-title">{{ post.title|truncatewords_html:5 }}</a>
+                                            <div class="col-md-10">
+                                                <a href="{% url 'post-detail' post.slug %}" class="post-title">{{ post.title|truncatewords_html:5 }}</a>
+                                            </div>
                                         </div>
+                                    </div>
                                     {% endif %}
                                 {% endif %} 
                             {% endfor %}
