@@ -258,31 +258,32 @@
 - The blog page should be responsive on various devices.
 
 ### Test Status:
-- [ ] Pass
+- [X] Pass
 - [ ] Fail
 
 <hr>
+----------------------------------------------------------------------------------------------------------
 
 # Manual Testing for Byte by Byte Tech Page Template
 
 ## Test Case ID: TC001
 
-### Test Case Title: Landing Page Content
+### Test Case Title: Byte by Byte Page Content
 
-**Test Description:** This test case ensures that the landing page of the Byte by Byte Tech Blog displays the expected content accurately.
+**Test Description:** This test case ensures that the  page of the Byte by Byte Tech Blog displays the expected content accurately.
 
 ### Preconditions:
 - The Django application is up and running.
-- The user is accessing the landing page.
+- The user is accessing the  page.
 
 ### Test Steps:
 
 1. Open a web browser.
 
-2. Navigate to the URL of the landing page, e.g., [Byte by Byte](https://final-project-ada-02b27917ae0c.herokuapp.com/blog/byte_by_byte/).
+2. Navigate to the URL of the  page, e.g., [Byte by Byte](https://final-project-ada-02b27917ae0c.herokuapp.com/blog/byte_by_byte/).
 
 **Expected Results:**
-- The landing page should load without errors.
+- The page should load without errors.
 - The page should display the following content accurately:
   - A title: "Explore Byte by Byte Tech Blog"
   - A description welcoming users to the blog.
@@ -291,7 +292,7 @@
   - A call to action inviting users to explore the blog.
   
 ### Postconditions:
-- The landing page content should be displayed accurately.
+- The  page content should be displayed accurately.
 
 ### Test Status:
 - [X] Pass
@@ -303,21 +304,21 @@
 
 ### Test Case Title: Responsive Design
 
-**Test Description:** This test case verifies the responsiveness of the landing page template on different screen sizes.
+**Test Description:** This test case verifies the responsiveness of the page template on different screen sizes.
 
 ### Preconditions:
-- The landing page is loaded.
+- The page is loaded.
 
 ### Test Steps:
 
 1. Resize the web browser to various screen sizes, including desktop, tablet, and mobile dimensions.
 
 **Expected Results:**
-- The landing page should adapt to different screen sizes, maintaining readability and usability.
+- The page should adapt to different screen sizes, maintaining readability and usability.
 - Text and images should adjust accordingly to provide a good user experience.
 
 ### Postconditions:
-- The landing page should be responsive on various devices.
+- The page should be responsive on various devices.
 
 ### Test Status:
 - [X] Pass
@@ -344,7 +345,7 @@
 
 1. Open a web browser.
 
-2. Navigate to the URL of a specific blog post, e.g., [Blog Post](https://final-project-ada-02b27917ae0c.herokuapp.com/post/jumpstart-your-python-journey/).
+2. Navigate to the URL of a specific blog post, e.g., [Blog Post](https://final-project-ada-02b27917ae0c.herokuapp.com/).
 
 **Expected Results:**
 - The blog post page should load without errors.
@@ -366,7 +367,7 @@
 - The blog post page should display all elements accurately.
 
 ### Test Status:
-- [ ] Pass
+- [X] Pass
 - [ ] Fail
 
 ---
@@ -398,7 +399,7 @@
 - Commenting on the blog post should work as expected.
 
 ### Test Status:
-- [ ] Pass
+- [X] Pass
 - [ ] Fail
 
 ---
@@ -488,7 +489,7 @@
 - The blogger list page should display all elements accurately.
 
 ### Test Status:
-- [ ] Pass
+- [X] Pass
 - [ ] Fail
 
 ---
@@ -514,7 +515,7 @@
 - The blogger list page should be responsive on various devices.
 
 ### Test Status:
-- [ ] Pass
+- [X] Pass
 - [ ] Fail
 
 ---
@@ -679,7 +680,7 @@
 
 1. Open a web browser.
 
-2. Navigate to the URL where the [Send Message](https://final-project-ada-02b27917ae0c.herokuapp.com/message-author/1/) template is used.
+2. Navigate to the URL where the [Send Message](https://final-project-ada-02b27917ae0c.herokuapp.com/authors/1/) template is used.
 
 **Expected Results:**
 - The template should render without errors.
@@ -692,7 +693,7 @@
 - The template should render correctly.
 
 ### Test Status:
-- [ ] Pass
+- [X] Pass
 - [ ] Fail
 
 ---
@@ -721,7 +722,7 @@
 - The message submission functionality should work correctly.
 
 ### Test Status:
-- [ ] Pass
+- [X] Pass
 - [ ] Fail
  
 ---
@@ -746,7 +747,7 @@
 - Form field validation should work correctly.
 
 ### Test Status:
-- [ ] Pass
+- [X] Pass
 - [ ] Fail
 
 ---
@@ -800,7 +801,7 @@
 - Validation for the Message field should work correctly.
 
 ### Test Status:
-- [ ] Pass
+- [X] Pass
 - [ ] Fail
 
 
@@ -1476,7 +1477,7 @@
 - The comment should appear in the comments section.
 
 ### Postconditions:
-- Users should be able to add comments to the post.
+- Registered users should be able to add comments to the post.
 
 ### Test Status:
 - [X] Pass
@@ -1503,7 +1504,7 @@
 - The post should be liked, and the "Like" button should change its appearance (e.g., filled heart icon).
 
 ### Postconditions:
-- Users should be able to like a post.
+- Registered users should be able to like a post.
 
 ### Test Status:
 - [X] Pass
@@ -1593,8 +1594,6 @@
 
 1. Open a web browser.
 
-2. Navigate to the URL where the Update Post form is located, where `post_slug` is the slug of the post to update.
-
 **Expected Results:**
 - The Update Post form should load without errors.
 - The following form fields should be displayed correctly:
@@ -1673,6 +1672,46 @@
 <hr>
 --------------------------------------------------------------------------------------------------------
 
+# Manual Testing for Displaying Posts with Specific Tag Page Template
+
+## Test Case ID: TC001
+
+### Test Case Title: Correct Rendering of Posts with Tag
+
+**Test Description:** 
+This test case ensures that the custom template correctly renders posts associated with a specific tag, while integrating seamlessly with the `tag_detail.html` template.
+
+### Preconditions:
+- The Django web application is running.
+- The `tag_detail.html` template is correctly integrated and functional.
+- There are posts in the database associated with specific tags.
+
+### Test Steps:
+
+1. **Open a Web Browser:**
+   - Launch a web browser of your choice.
+
+2. **Navigate to the Page Displaying Tag-Specific Posts:**
+   - Go to the section or page of the web application where posts associated with tags are displayed.
+
+3. **Inspect Elements and Content:**
+   - Verify that the `<h3>` element correctly displays the tag name.
+   - Ensure that for each `post` in `associated_posts`, a `blog/blog_post_card.html` is included and rendered.
+
+### Expected Results:
+- The page should render without errors.
+- The tag name should be displayed within the `<h3>` element.
+- Each associated post should be correctly displayed using the `blog_post_card.html` template.
+- Elements such as the navigation bar, authentication status, flash messages, and footer from `base.html` should be consistently present and functional.
+
+### Postconditions:
+- The page should maintain its layout and functionality after the test.
+
+### Test Status:
+- [X] Pass
+- [ ] Fail
+
+<hr>----------------------------------------------------------------------------------------------------
 
 # Manual Testing for Login Page Template
 
@@ -2225,7 +2264,7 @@
 - The "Not a published Author" page should be displayed as expected.
 
 ### Test Status:
-- [ ] Pass
+- [X] Pass
 - [ ] Fail
 
 ---
@@ -2252,7 +2291,7 @@
 - The user's information should be displayed as expected.
 
 ### Test Status:
-- [ ] Pass
+- [X] Pass
 - [ ] Fail
 
 ---
@@ -2278,7 +2317,7 @@
 - The last login information should be displayed as expected.
 
 ### Test Status:
-- [ ] Pass
+- [X] Pass
 - [ ] Fail
 
 
@@ -2300,7 +2339,7 @@
 
 1. Open a web browser.
 
-2. Navigate to the URL where the Profile Deletion Confirmation page is located, e.g., [Are You Sure?](https://final-project-ada-02b27917ae0c.herokuapp.com/profile/1/delete/).
+2. Navigate to the URL where the Profile Deletion Confirmation page is located.
 
 **Expected Results:**
 - The Profile Deletion Confirmation page should load without errors.
@@ -2385,7 +2424,7 @@
 
 1. Open a web browser.
 
-2. Navigate to the URL where the "Edit Profile" page is located, e.g., [Edit Profile](https://final-project-ada-02b27917ae0c.herokuapp.com/profile/1/update/).
+2. Navigate to the URL where the "Edit Profile" page is located.
 
 **Expected Results:**
 - The "Edit Profile" page should load without errors.
@@ -2557,7 +2596,7 @@
 
 1. Open a web browser.
 
-2. Navigate to the URL where the User Profile page is located, e.g., [Profile](https://final-project-ada-02b27917ae0c.herokuapp.com/profile/1/).
+2. Navigate to the URL where the User Profile page is located.
 
 **Expected Results:**
 - The User Profile page should load without errors.
@@ -2566,9 +2605,9 @@
   - User's email
   - User's last login date
   - Profile picture (if available)
-  - Post count
-  - Comment count
-  - Shared count
+  - Create Post
+  - Draft post
+  - Contact admin
   - "About" section
 - Recent Posts should be displayed (if available).
 - Buttons to edit and delete the profile (if authorized).
@@ -2662,7 +2701,7 @@
 - The "View Draft Posts" button should function correctly.
 
 ### Test Status:
-- [ ] Pass
+- [X] Pass
 - [ ] Fail
 
 ---

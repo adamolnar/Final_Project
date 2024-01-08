@@ -29,7 +29,7 @@ Access the deployed project at [Byte by Byte](https://final-project-ada-02b27917
 ### User Stories
 Catering to visitors, registered users, and authors/staff members, Byte by Byte covers a wide range of functionalities. Visitors can view and filter posts, registered users can like, comment, and create posts, while authors have extended management capabilities.
 
-Link to the [User Stories](https://github.com/users/adamolnar/projects/9/views/1).
+Go to [User Stories](https://github.com/users/adamolnar/projects/9/views/1).
 
 <img src="static/images/user_stories.png">
 
