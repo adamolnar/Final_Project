@@ -10,16 +10,16 @@ class Author(models.Model):
     profile = models.ForeignKey(
         Profile, on_delete=models.CASCADE, related_name="users_profile"
     )
-    
+
     # First name of the author (with a default value)
     first_name = models.CharField(max_length=100, default="John")
-    
+
     # Last name of the author (with a default value)
     last_name = models.CharField(max_length=100, default="Doe")
-    
+
     # Indicates whether the author is authorized
     is_authorized = models.BooleanField(default=False)
-    
+
     class Meta:
         ordering = ["profile"]
 
@@ -30,27 +30,27 @@ class Author(models.Model):
     def __str__(self):
         # String representation of the Model object.
         return self.profile.user.username
-    
+
     def grant_access(self):
         # Method to grant access to the author
         self.is_authorized = True
         self.save()
 
 
-# Model to store messages sent by users to authors.    
+# Model to store messages sent by users to authors.
 class AuthorMessage(models.Model):
-    # ForeignKey relationship to the user's profile 
+    # ForeignKey relationship to the user's profile
     profile = models.ForeignKey(Profile, on_delete=models.CASCADE, null=True)
-    
+
     # Sender's name for the message
     sender_name = models.CharField(max_length=255)
-    
+
     # Sender's email address for the message
     sender_email = models.EmailField()
-    
+
     # The content of the message
     message = models.TextField()
-    
+
     # Timestamp of when the message was created
     timestamp = models.DateTimeField(auto_now_add=True)
 
@@ -61,15 +61,15 @@ class AuthorMessage(models.Model):
 
 # Model to store author access requests
 class AuthorAccessRequest(models.Model):
-    # ForeignKey relationship to the user's profile 
+    # ForeignKey relationship to the user's profile
     profile = models.ForeignKey(Profile, on_delete=models.CASCADE, null=True)
-    
+
     # Reason for requesting author access
     request_reason = models.TextField()
-    
+
     # Timestamp of when the request was created
     created_at = models.DateTimeField(auto_now_add=True)
-    
+
     # Indicates whether the request is authorized
     is_authorized = models.BooleanField(default=False)
 
@@ -84,5 +84,3 @@ class AuthorAccessRequest(models.Model):
         if created:
             author.grant_access()
         self.is_authorized = True
-    
-

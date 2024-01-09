@@ -19,29 +19,28 @@ class ProfileDetailView(LoginRequiredMixin, DetailView):
     model = Profile
     template_name = 'profile/profile.html'
 
-
     def get_object(self, queryset=None):
         return get_object_or_404(Profile, pk=self.kwargs['pk'])
-    
-    
+
+
 # Generic class-based view to update logged-in user profile.
 class ProfileUpdateView(LoginRequiredMixin, UpdateView):
     model = Profile
     form_class = ProfileUpdateForm
     template_name = 'profile/profile_form.html'
-   
 
     def form_valid(self, form):
-        messages.success(self.request, 'Your profile has been updated successfully.')
+        messages.success(
+            self.request, 'Your profile has been updated successfully.')
         return super().form_valid(form)
-    
+
     def profile_update_view(request, self):
         if request.method == 'POST':
             form = ProfileUpdateForm(request.POST, request.FILES)
             if form.is_valid():
                 form.save()
                 # Redirect to success page or any other desired page
-                
+
                 return redirect('profile')
         else:
             form = ProfileUpdateForm()
@@ -49,25 +48,25 @@ class ProfileUpdateView(LoginRequiredMixin, UpdateView):
         return render(request, 'profile/profile_form.html', {'form': form})
 
 
-# Generic class-based view to delete user profile. 
+# Generic class-based view to delete user profile.
 class ProfileDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = Profile
     template_name = 'profile/profile_confirm_delete.html'
-    success_url = reverse_lazy('index')  # Replace 'index' with the actual URL name
+    success_url = reverse_lazy('index')
 
     def test_func(self):
-        # Check if the user is the owner of the profile or has superuser/admin privileges
+        # Check if the user is the owner of the profile
         return self.request.user.is_superuser or self.request.user == self.get_object().user
 
     def delete(self, request, *args, **kwargs):
         # Delete user when related profile is deleted
         # Add a success message
-        messages.success(request, 'Your profile has been deleted successfully.')
-        
+        messages.success(request, 'Your profile has been deleted successfully')
+
         # Logout the user
         logout(request)
         return super().delete(request, *args, **kwargs)
- 
+
 
 # View function for a contact form.
 def contact(request):
@@ -80,7 +79,6 @@ def contact(request):
             return redirect('success')
         else:
             messages.error(request, 'Please correct the errors below.')
-            
     else:
         form = ContactForm()
     return render(request, 'profile/contact.html', {'form': form})
@@ -94,14 +92,14 @@ def success(request):
 # Function to log out the user and redirect to the registration page.
 def logout_and_redirect(request):
     logout(request)
-    return redirect('register') 
+    return redirect('register')
 
 
 # Login view function.
 @login_required
 def login_view(request):
     if request.user.is_authenticated:
-        return redirect('index') 
+        return redirect('index')
     else:
         if request.method == 'POST':
             username = request.POST.get('username')
@@ -123,4 +121,5 @@ def custom_404(request, exception):
     """
     Custom 404 error view.
     """
-    return render(request, 'blog/404.html', {'exception': exception}, status=404)
+    return render(request, 'blog/404.html',
+                  {'exception': exception}, status=404)

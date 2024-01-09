@@ -23,14 +23,14 @@ class AuthorListView(ListView):
     def get_queryset(self):
         # Define the queryset to fetch all authors
         return Author.objects.all()
-    
 
-# Generic class-based view to display information about an author and list of created posts. 
+
+# Generic class-based view to display
+# information about an author and list of created posts.
 class AuthorDetailView(DetailView):
-    template_name ='author/author_detail.html'
+    template_name = 'author/author_detail.html'
     model = Author
-   
-    
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         author_info = self.get_object()
@@ -57,19 +57,21 @@ class MessageAuthorView(FormView):
             message=form.cleaned_data['message'],
         )
         message.save()
-        messages.success(self.request, 'Your message has been sent successfully!')
-        return redirect('author-detail', pk=author.id)  # Redirect to the author's detail page or modify as needed
+        messages.success(self.request,
+                         'Your message has been sent successfully!')
+        # Redirect to the author's detail page or modify as needed
+        return redirect('author-detail', pk=author.id)
 
     def form_invalid(self, form):
         author = self.get_author()
-        return self.render_to_response({'form': form, 'author': author})   
+        return self.render_to_response({'form': form, 'author': author})
 
 
 # Generic class-based view to handle author access requests
 class RequestAuthorAccessView(LoginRequiredMixin, FormView):
     template_name = 'author/request_author_access.html'
     form_class = AuthorAccessRequestForm
-    
+
     def get(self, request, *args, **kwargs):
         form = self.form_class()
         return render(request, self.template_name, {'form': form})
@@ -79,14 +81,15 @@ class RequestAuthorAccessView(LoginRequiredMixin, FormView):
         if form.is_valid():
             # Update the form.instance.profile with the user's profile
             form.instance.profile = request.user.profile
-            
+
             # Create an AuthorAccessRequest instance
             request_reason = form.cleaned_data['request_reason']
-           
+
             # Authorize the request
             form.instance.authorize_request()
-            
-            messages.success(request, 'Your request has been submitted. We will review it soon.')
-            return redirect('index')  # Redirect to the desired page after successful submission
+
+            messages.success(request, 'Your request has been submitted.')
+            # Redirect to the desired page after successful submission
+            return redirect('index')
 
         return render(request, self.template_name, {'form': form})

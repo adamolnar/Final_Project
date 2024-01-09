@@ -39,10 +39,10 @@ class ContactForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super(ContactForm, self).__init__(*args, **kwargs)
-        # Customize widget attributes (placeholders) for name, email, and message fields
+        # Customize widget attributes for name, email, and message fields
         self.fields['name'].widget.attrs['placeholder'] = 'Your Name'
         self.fields['email'].widget.attrs['placeholder'] = 'Your Email'
-        self.fields['message'].widget.attrs['placeholder'] = 'Enter your message here...'
+        self.fields['message'].widget.attrs['placeholder'] = 'Enter message ..'
 
     def clean_email(self):
         # Custom validation for the email field if needed

@@ -6,7 +6,7 @@ from django.shortcuts import render, redirect
 class CommentForm(forms.ModelForm):
     class Meta:
         model = Comment
-        fields = ('body',) 
+        fields = ('body',)
 
         def __init__(self, *args, **kwargs):
             super(CommentForm, self).__init__(*args, **kwargs)
@@ -18,14 +18,15 @@ class CommentForm(forms.ModelForm):
             body = self.cleaned_data.get('body')
             # Your validation logic here
             return body
-        
+
     def comment_view(request):
         if request.method == 'POST':
             form = CommentForm(request.POST)
             if form.is_valid():
                 # Process the form data, save to the database, etc.
                 form.save()
-                return redirect('post-detail')  # Redirect to the same view to display an empty form again
+                # Redirect to the same view to display an empty form again
+                return redirect('post-detail')
         else:
             form = CommentForm()
 
@@ -35,11 +36,12 @@ class CommentForm(forms.ModelForm):
 class PostForm(forms.ModelForm):
     class Meta:
         model = Post
-        fields = ('title','content','image', 'status', 'categories', 'tags')
+        fields = ('title', 'content', 'image', 'status', 'categories', 'tags')
 
         # Widget customization for the 'content' field
         widgets = {
-            'content': forms.Textarea(attrs={'rows': 5, 'placeholder': 'Enter your post content here...'}),
+            'content': forms.Textarea(
+             attrs={'rows': 5, 'placeholder': 'Enter  post content here...'}),
             # Add more widget customization if needed
         }
 
@@ -48,5 +50,3 @@ class PostForm(forms.ModelForm):
             title = self.cleaned_data.get('title')
             # Your validation logic here
             return title
-
-

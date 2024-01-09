@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
-from django.urls import reverse 
+from django.urls import reverse
 from django.template.defaultfilters import slugify
 from author.models import Author
 from cloudinary.models import CloudinaryField
@@ -8,6 +8,7 @@ from cloudinary.models import CloudinaryField
 
 # Model representing the status of a blog post (Draft or Published)
 STATUS = ((0, "Draft"), (1, "Published"))
+
 
 # Model representing a category for blog posts
 class Category(models.Model):
@@ -18,7 +19,7 @@ class Category(models.Model):
     class Meta:
         verbose_name = "Category"
         verbose_name_plural = "Categories"
- 
+
     def __str__(self):
         return self.title
 
@@ -29,9 +30,9 @@ class Tag(models.Model):
     slug = models.SlugField(max_length=200, unique=True, null=True)
 
     def __str__(self):
-   
+
         return self.name
-    
+
 
 # Model representing a blog post
 class Post(models.Model):
@@ -50,7 +51,7 @@ class Post(models.Model):
         User, related_name='blogpost_like', blank=True)
     categories = models.ManyToManyField(Category)
     tags = models.ManyToManyField(Tag, related_name='tag')
-    
+
     class Meta:
         ordering = ["-created_on"]
 
@@ -61,14 +62,14 @@ class Post(models.Model):
 
     def __str__(self):
         return self.title
-    
+
     def number_of_likes(self):
         return self.likes.count()
-    
+
     def get_absolute_url(self):
         # Returns the URL to access a detail record for this post.
         return reverse('post-detail', args=[str(self.id)])
-    
+
     def approved_comments(self):
         return self.comments.filter(approved=True)
 
@@ -77,7 +78,8 @@ class Post(models.Model):
 class Comment(models.Model):
     post = models.ForeignKey(Post, on_delete=models.CASCADE,
                              related_name="comments")
-    author = models.ForeignKey(User, on_delete=models.CASCADE, null=True, related_name="comment")
+    author = models.ForeignKey(User, on_delete=models.CASCADE,
+                               null=True, related_name="comment")
     name = models.CharField(max_length=80)
     body = models.TextField()
     created_on = models.DateTimeField(auto_now_add=True)

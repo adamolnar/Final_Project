@@ -8,6 +8,7 @@
    - [HTML](#html)
    - [CSS](#css)
    - [Javascript](#javascript)
+   - [Python](#python)
 5. [Python](#python)
 6. [Performance](#performance)
 
@@ -99,22 +100,22 @@ The python code was tested using [Code Institute Python liner](https://pep8ci.he
 | AUTHOR    | admin.py       | ✅ Passed               | N/A   | <details><summary>View Screenshot</summary><img src="static/images/PEP8_author_admin.png">
 |           | apps.py        | ✅ Passes               | N/A   | <details><summary>View Screenshot</summary><img src="static/images/PEP8_author_apps.png">
 |           | forms.py       | ✅ Passed               | N/A   | <details><summary>View Screenshot</summary><img src="static/images/PEP8_author_forms.png">
-|           | models.py      | ✅ Passes               | N/A   | <details><summary>View Screenshot</summary><img src="static/images/">
-|           | urls.py        | ✅ Passes               | N/A   | <details><summary>View Screenshot</summary><img src="static/images/">
-|           | views.py       | ✅ Passes               | N/A   | <details><summary>View Screenshot</summary><img src="static/images/">
-| BLOG      | admin.py       | ✅ Passed               | N/A   | <details><summary>View Screenshot</summary><img src="static/images/">
-|           | apps.py        | ✅ Passes               | N/A   | <details><summary>View Screenshot</summary><img src="static/images/">
-|           | forms.py       | ✅ Passed               | N/A   | <details><summary>View Screenshot</summary><img src="static/images/">
-|           | models.py      | ✅ Passes               | N/A   | <details><summary>View Screenshot</summary><img src="static/images/">
-|           | urls.py        | ✅ Passes               | N/A   | <details><summary>View Screenshot</summary><img src="static/images/">
-|           | views.py       | ✅ Passes               | N/A   | <details><summary>View Screenshot</summary><img src="static/images/">
-| PROFILE   | admin.py       | ✅ Passed               | N/A   | <details><summary>View Screenshot</summary><img src="static/images/">
-|           | apps.py        | ✅ Passes               | N/A   | <details><summary>View Screenshot</summary><img src="static/images/">
-|           | forms.py       | ✅ Passed               | N/A   | <details><summary>View Screenshot</summary><img src="static/images/">
-|           | models.py      | ✅ Passes               | N/A   | <details><summary>View Screenshot</summary><img src="static/images/">
-|           | signals.py     | ✅ Passes               | N/A   | <details><summary>View Screenshot</summary><img src="static/images/">
-|           | urls.py        | ✅ Passes               | N/A   | <details><summary>View Screenshot</summary><img src="static/images/">
-|           | views.py       | ✅ Passes               | N/A   | <details><summary>View Screenshot</summary><img src="static/images/">
+|           | models.py      | ✅ Passes               | N/A   | <details><summary>View Screenshot</summary><img src="static/images/PEP2_author_models.png">
+|           | urls.py        | ✅ Passes               | N/A   | <details><summary>View Screenshot</summary><img src="static/images/PEP8_author_urls.png">
+|           | views.py       | ✅ Passes               | N/A   | <details><summary>View Screenshot</summary><img src="static/images/PEP8_author_views.png">
+| BLOG      | admin.py       | ✅ Passed               | N/A   | <details><summary>View Screenshot</summary><img src="static/images/PEP8_blog_admin.png">
+|           | apps.py        | ✅ Passes               | N/A   | <details><summary>View Screenshot</summary><img src="static/images/PEP8_blog_apps.png">
+|           | forms.py       | ✅ Passed               | N/A   | <details><summary>View Screenshot</summary><img src="static/images/PEP8_blog_forms.png">
+|           | models.py      | ✅ Passes               | N/A   | <details><summary>View Screenshot</summary><img src="static/images/PEP8_blog_models.png">
+|           | urls.py        | ✅ Passes               | N/A   | <details><summary>View Screenshot</summary><img src="static/images/PEP8_blog_urls.png">
+|           | views.py       | ❌ Fails                | Error | <details><summary>View Screenshot</summary><img src="static/images/PEP8_blog_views.png">
+| PROFILE   | admin.py       | ✅ Passed               | N/A   | <details><summary>View Screenshot</summary><img src="static/images/PEP8_profile_admin.png">
+|           | apps.py        | ✅ Passes               | N/A   | <details><summary>View Screenshot</summary><img src="static/images/PEP8_profile_apps.png">
+|           | forms.py       | ✅ Passed               | N/A   | <details><summary>View Screenshot</summary><img src="static/images/PEP8_profile_forms.png">
+|           | models.py      | ✅ Passes               | N/A   | <details><summary>View Screenshot</summary><img src="static/images/PEP8_profile_models.png">
+|           | signals.py     | ✅ Passes               | N/A   | <details><summary>View Screenshot</summary><img src="static/images/PEP8_profile_signals.png">
+|           | urls.py        | ✅ Passes               | N/A   | <details><summary>View Screenshot</summary><img src="static/images/PEP8_profile_urls.png">
+|           | views.py       | ❌ Fails                | Error | <details><summary>View Screenshot</summary><img src="static/images/PEP8_profile_views.png">
 | TESTS     | test_admin.py  | ✅ Passes               | N/A   | <details><summary>View Screenshot</summary><img src="static/images/PEP8_test_admin.png">
 |           | test_models.py | ✅ Passes               | N/A   | <details><summary>View Screenshot</summary><img src="static/images/PEP8_test_models.png">
 |           | test_views.py  | ✅ Passes               | N/A   | <details><summary>View Screenshot</summary><img src="static/images/">

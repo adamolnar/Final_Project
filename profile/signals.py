@@ -22,4 +22,3 @@ def save_user_profile(sender, instance, **kwargs):
 def post_delete_user(sender, instance, **kwargs):
     # Delete user when related profile is deleted.
     instance.user.delete()
-

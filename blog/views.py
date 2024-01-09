@@ -20,7 +20,7 @@ from django.views.generic import (
 
 
 # Generic class-based view for a list of all posts.
-class PostListView(ListView): 
+class PostListView(ListView):
     model = Post
     queryset = Post.objects.filter(status=1).order_by("-created_on")
     template_name = "blog/index.html"
@@ -47,9 +47,8 @@ class PostListView(ListView):
         return context
 
 
-
 # Generic class-based detail view for a post.
-class PostDetailView(DetailView):   
+class PostDetailView(DetailView):
     def get(self, request, slug, *args, **kwargs):
         # Retrieve the post and associated data
         post = get_object_or_404(Post, slug=slug)
@@ -74,7 +73,7 @@ class PostDetailView(DetailView):
     def post(self, request, slug, *args, **kwargs):
         # Handle comment submission
         queryset = Post.objects.filter(status=1)
-        post = get_object_or_404(queryset,slug=slug)
+        post = get_object_or_404(queryset, slug=slug)
         form = CommentForm(request.POST)
         comments = post.comments.filter(approved=True).order_by("-created_on")
         liked = False
@@ -82,7 +81,6 @@ class PostDetailView(DetailView):
         if post.likes.filter(id=self.request.user.id).exists():
             liked = True
 
-        
         if form.is_valid():
             new_comment = form.save(commit=False)
             new_comment.author = request.user
@@ -91,12 +89,12 @@ class PostDetailView(DetailView):
 
             messages.success(request, "Your comment has been posted.")
 
-            ## Redirect back to the same post detail page
+            # Redirect back to the same post detail page
             return redirect(reverse('post-detail', kwargs={'slug': slug}))
 
 
 # Generic class-based view for a like/unlike.
-class PostLikeView(LoginRequiredMixin, View): 
+class PostLikeView(LoginRequiredMixin, View):
     def post(self, request, slug, *args, **kwargs):
         # Handle post liking/unliking
         post = get_object_or_404(Post,  slug=slug)
@@ -107,20 +105,21 @@ class PostLikeView(LoginRequiredMixin, View):
 
         return HttpResponseRedirect(reverse('post-detail', args=[slug]))
 
-def is_author(user):
-    return user.groups.filter(name='author').exists()
+    def is_author(user):
+        return user.groups.filter(name='author').exists()
 
 
 # Generic class-based view to create new post.
-class PostCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):  
+class PostCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
     model = Post
-    fields = ["title", "content", "image", 'status', 'categories',"tags"]
+    fields = ["title", "content", "image", 'status', 'categories', "tags"]
     template_name = 'blog/post_form.html'
 
     def form_valid(self, form):
         # Save the new post and associated data
-        messages.success(self.request, 'Your post has been created successfully.')
-        
+        messages.success(self.request,
+                         'Your post has been created successfully.')
+
         # Set the author and slug before saving
         form.instance.author = Author.objects.get(profile=self.request.user.profile)
         form.instance.slug = slugify(form.cleaned_data['title'])
@@ -134,8 +133,9 @@ class PostCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
         # Check if the object has been created and has a status attribute
         if self.object and hasattr(self.object, 'status'):
             # Check the status of the created post
-            if self.object.status == 1:  # Assuming 1 represents a published post
-                return reverse_lazy('post-detail', kwargs={'slug': self.object.slug})
+            if self.object.status == 1:
+                return reverse_lazy('post-detail',
+                                    kwargs={'slug': self.object.slug})
             elif self.object.status == 0:  # Assuming 0 represents a draft post
                 return reverse_lazy('draft-post-author-list')
 
@@ -145,14 +145,15 @@ class PostCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
     def test_func(self):
         # Check if the user is associated with an Author model
         return Author.objects.filter(profile=self.request.user.profile).exists()
-    
+
     def handle_no_permission(self):
         # Handle the case where the user doesn't pass the test
-        messages.warning(self.request, 'You are not authorized to create a post.')
-        return redirect('request-author-access')  # Redirect to the request author access page
+        messages.warning(
+            self.request, 'You are not authorized to create a post.')
+        return redirect('request-author-access')
 
 
-# Generic class-based view to update post only by the author of the post.       
+# Generic class-based view to update post only by the author of the post
 class PostUpdateView(LoginRequiredMixin, UpdateView):
     model = Post
     fields = ["title", "content", "image"]
@@ -173,20 +174,19 @@ class PostUpdateView(LoginRequiredMixin, UpdateView):
         obj = super().get_object(queryset)
         # Ensure that the user is the author of the post
         if obj.author.id != self.request.user.pk:
-            print(obj.author.id , self.request.user.pk )
             raise PermissionError("You are not authorized to update this post.")
         return obj
-    
+
 
 class PublishPostView(View):
     def post(self, request, slug, *args, **kwargs):
         # Retrieve the post object
         post = get_object_or_404(Post, slug=slug)
 
-        # Check if the user has permission to publish (e.g., is the post's author)
+        # Check if the user has permission to publish
         if request.user.profile != post.author.profile:
-            # You may want to handle unauthorized access differently, e.g., show an error message
-            messages.error(request, 'You do not have permission to publish this post.')
+            messages.error(
+                request, 'You do not have permission to publish this post.')
             return redirect('post-detail', slug=slug)
 
         # Update the post's status to 1 (published)
@@ -214,55 +214,57 @@ class PostDeleteView(LoginRequiredMixin, DeleteView):
         self.object = self.get_object()
         messages.success(request, 'The post has been deleted successfully.')
         return super().post(request, *args, **kwargs)
-    
+
+
 @method_decorator(login_required, name='dispatch')
 class DraftPostAuthorListView(ListView):
     model = Post
-    template_name = "blog/draft_post_author.html"  # Create a template for displaying draft posts by a particular author
+    template_name = "blog/draft_post_author.html"
     context_object_name = 'draft_post_list'
     paginate_by = 5
 
     def get_queryset(self):
         # Filter draft posts for the currently logged-in author
-        return Post.objects.filter(author=self.request.user.profile.id, status=0).order_by("-created_on")
-    
+        return Post.objects.filter(author=self.request.user.profile.id,
+                                   status=0).order_by("-created_on")
+
 
 # Generic class-based view for author update comment function.
 class CommentUpdateView(LoginRequiredMixin, UpdateView):
     model = Comment
-    fields = ['body'] 
-    template_name = 'blog/comment_update.html' 
+    fields = ['body']
+    template_name = 'blog/comment_update.html'
 
     def form_valid(self, form):
         # Save the updated comment
         form.save()
         messages.success(self.request, "Comment updated successfully!!")
-        
+
         # Redirect to the post detail page
         post_slug = self.object.post.slug
         return HttpResponseRedirect(reverse('post-detail', args=[post_slug]))
-    
+
 
 # Generic class-based view for author delete comment function.
 class CommentDeleteView(LoginRequiredMixin, DeleteView):
     model = Comment
-    template_name = 'blog/comment_delete.html' 
+    template_name = 'blog/comment_delete.html'
 
     def get(self, request, pk, *args, **kwargs):
         # Retrieve and render the comment for deletion
         comment = get_object_or_404(Comment, pk=pk)
         context = {'comment': comment}
         if request.method == 'GET':
-            return render(request, 'blog/comment_delete.html',context)
+            return render(request, 'blog/comment_delete.html', context)
 
     def post(self, request, pk, *args, **kwargs):
         # Handle comment deletion
         comment = get_object_or_404(Comment, pk=pk)
-        post_slug = comment.post.slug 
+        post_slug = comment.post.slug
         comment.delete()
         messages.success(request, 'The comment has been deleted successfully.')
         return redirect(reverse('post-detail', args=[post_slug]))
-    
+
 
 class TagDetailView(ListView):
     template_name = 'blog/tag_detail.html'
@@ -281,25 +283,24 @@ class TagDetailView(ListView):
         }
 
         return render(request, self.template_name, context)
-    
+
 
 # Function that will be called when a 404 error occurs
 def custom_404(request, exception):
     """
     Custom 404 error view.
     """
-    return render(request, 'blog/404.html', {'exception': exception}, status=404)
+    return render(
+        request, 'blog/404.html', {'exception': exception}, status=404)
 
 
 def byte_by_byte_view(request):
     # Define a view function for rendering the "byte_by_byte.html" template.
-    
-    # Optionally, you can prepare context data to pass to the template.
+
     context = {
-        'page_title': 'Byte by Byte Tech Blog',  # Example: Set the page title.
-        'blog_content': 'Welcome to the Byte by Byte Tech Blog!',  # Example: Add some content.
+        'page_title': 'Byte by Byte Tech Blog',
+        'blog_content': 'Welcome to the Byte by Byte Tech Blog!',
     }
-    
+
     # Render the "byte_by_byte.html" template with the provided context data.
     return render(request, 'blog/byte_by_byte.html', context)
-
