@@ -46,7 +46,7 @@ The CSS code was validated using the [W3 Jigsaw Validator](https://jigsaw.w3.org
 
 ![CSS Validation Screenshot](static/images/W3C_CSS_VALIDATION.png)
 
-#### Javascript
+#### JAVASCRIPT
 Javascript functionality includes a timer for user notification and a toggle for displaying posts. The code was validated with [Site24X7](https://www.site24x7.com/de/tools/javascript-validator.html).
 
     setTimeout(function () {
@@ -90,7 +90,7 @@ Javascript functionality includes a timer for user notification and a toggle for
 
 ![JS Validation Screenshot](static/images/Java_script_validator.png)
 
-#### Python
+#### PYTHON
 
 The python code was tested using [Code Institute Python liner](https://pep8ci.herokuapp.com/).
 
@@ -118,7 +118,7 @@ The python code was tested using [Code Institute Python liner](https://pep8ci.he
 |           | views.py       | ❌ Fails                | Error | <details><summary>View Screenshot</summary><img src="static/images/PEP8_profile_views.png">
 | TESTS     | test_admin.py  | ✅ Passes               | N/A   | <details><summary>View Screenshot</summary><img src="static/images/PEP8_test_admin.png">
 |           | test_models.py | ✅ Passes               | N/A   | <details><summary>View Screenshot</summary><img src="static/images/PEP8_test_models.png">
-|           | test_views.py  | ✅ Passes               | N/A   | <details><summary>View Screenshot</summary><img src="static/images/">
+|           | test_views.py  | ✅ Passes               | N/A   | <details><summary>View Screenshot</summary><img src="static/images/PEP8_test_views.png">
 
 
 

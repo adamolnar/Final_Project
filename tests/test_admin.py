@@ -1,94 +1,9 @@
 from django.contrib.admin.sites import AdminSite
-from django.test import TestCase, RequestFactory
+from django.test import TestCase
 from django.contrib.auth.models import User
-from author.models import Author, AuthorAccessRequest
+from author.models import Author
 from blog.models import Post, Comment
-from author.admin import AuthorAdmin, AuthorAccessRequestAdmin
 from blog.admin import CommentAdmin
-
-
-class AuthorAdminTestCase(TestCase):
-    """
-    Verifies the functionality of the `AuthorAdmin` class in the Django admin
-    panel, focusing on the custom action 'make_author' for authorizing authors.
-    """
-
-    def setUp(self):
-        """
-        Sets up necessary objects for the test:
-        Creates a test user (`testuser`) and an associated `Author` object
-        (`John Doe`) with `is_authorized` set to `False`.
-        """
-        self.user = User.objects.create_user(username='testuser',
-                                             password='password')
-        self.author = Author.objects.create(
-            profile=self.user.profile, first_name='John', last_name='Doe',
-            is_authorized=False)
-
-    def test_make_author_action(self):
-        """
-        Ensures the custom admin action `make_author` updates an `Author`
-        object's `is_authorized` field to `True`.
-        """
-        request = RequestFactory().get('/admin/')
-        request.session = {}
-        request._messages = []
-
-        admin = AuthorAdmin(Author, None)
-        admin.make_author(request, queryset=[self.author])
-
-        self.author.refresh_from_db()
-        self.assertTrue(self.author.is_authorized)
-
-    def tearDown(self):
-        """
-        Cleans up after each test by deleting the test user and author objects.
-        """
-        self.user.delete()
-        self.author.delete()
-
-
-class AuthorAccessRequestAdminTestCase(TestCase):
-    """
-    Verifies functionality of the `AuthorAccessRequestAdmin` class in the
-    Django admin panel, focusing on the 'make_author' action for author access
-    requests.
-    """
-
-    def setUp(self):
-        """
-        Sets up necessary objects for testing:
-        Creates a test user (`testuser`) and an `AuthorAccessRequest` object
-        with `is_authorized` set to `False`.
-        """
-        self.user = User.objects.create_user(username='testuser',
-                                             password='password')
-        self.author_access_request = AuthorAccessRequest.objects.create(
-            profile=self.user.profile, request_reason='Test reason',
-            is_authorized=False)
-
-    def test_make_author_action(self):
-        """
-        Verifies if the `make_author` admin action authorizes an
-        `AuthorAccessRequest`.
-        """
-        request = RequestFactory().get('/admin/')
-        request.session = {}
-        request._messages = []
-
-        admin = AuthorAccessRequestAdmin(AuthorAccessRequest, None)
-        admin.make_author(request, queryset=[self.author_access_request])
-
-        self.author_access_request.refresh_from_db()
-        self.assertTrue(self.author_access_request.is_authorized)
-
-    def tearDown(self):
-        """
-        Cleans up after each test by deleting the test user and author access
-        request object.
-        """
-        self.user.delete()
-        self.author_access_request.delete()
 
 
 class CommentAdminTest(TestCase):

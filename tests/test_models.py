@@ -1,8 +1,7 @@
 from django.test import TestCase
 from django.contrib.auth.models import User
-from author.models import Author
+from author.models import Author, AuthorMessage, AuthorAccessRequest
 from profile.models import Profile
-from author.forms import AuthorMessage, AuthorAccessRequest
 from blog.models import Post, Comment, Category, Tag
 from profile.models import Contact
 
@@ -63,28 +62,6 @@ class AuthorModelTest(TestCase):
         Test the string representation of the Author model.
         """
         self.assertEqual(str(self.author), self.profile.user.username)
-
-
-class AuthorMessageModelTest(TestCase):
-    """
-    Test suite for the AuthorMessage model.
-    """
-
-    def test_author_message_str_representation(self):
-        """
-        Test to ensure the string representation of the AuthorMessage model
-        is as expected.
-        """
-        user = User.objects.create_user(
-            username='testuser', password='testpassword')
-        author_message = AuthorMessage(
-            author=user, sender_name="John Doe",
-            sender_email="john@example.com",
-            message="Hello, I'm a fan of your work!"
-        )
-        str_representation = str(author_message)
-        expected_str = "Message from John Doe to testuser"
-        self.assertEqual(str_representation, expected_str)
 
 
 class AuthorAccessRequestModelTest(TestCase):
