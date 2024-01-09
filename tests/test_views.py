@@ -13,336 +13,389 @@ from django.http import Http404
 
 
 class ProfileViewTest(TestCase):
+    """
+    Test suite for the Profile view in the profile app.
+    """
+
     @classmethod
     def setUpTestData(cls):
-        # Common data setup for the entire test class
+        """
+        Common data setup for the entire test class.
+        """
         cls.user = User.objects.create_user(username='hemingway', id=1, email='user@gmail.com', password='1234')
         cls.profile = Profile.objects.get(user=cls.user)
         cls.url = reverse('profile', args=[str(cls.user.pk)])
         cls.client = Client()
         
     def setUp(self):
-        # Additional setup for each individual test method
+        """
+        Additional setup for each individual test method.
+        """
         self.client = Client()
 
     def test_user_must_be_logged_in(self):        
-        # Tests that a non-logged in user is redirected to login page
+        """
+        Tests that a non-logged-in user is redirected to the login page.
+        """
         response = self.client.get(self.url)  
         self.assertEqual(response.status_code, 302) 
 
     def test_returns_200(self):
-        # Tests correctly logged in user response
+        """
+        Tests that a correctly logged-in user receives a 200 response.
+        """
         self.client.login(username='hemingway', password="1234")
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, 200)
  
     def test_get_add(self):        
-        # Tests that a GET request works and renders the correct template       
+        """
+        Tests that a GET request works and renders the correct template.
+        """
         self.client.force_login(self.user)        
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'profile/profile.html')
 
     def test_view_returns_profile_of_current_user(self):
-        # Check the profile of the current user
+        """
+        Checks that the view returns the profile of the current user.
+        """
         self.client.login(username='hemingway', password="1234")
         response = self.client.get(self.url)
         self.assertEqual(response.context["user"], self.user)
         self.assertEqual(response.context["profile"], self.user.profile)
 
     def test_correct_view_function(self):
-        # Check that the URL is associated with the correct view function
+        """
+        Checks that the URL is associated with the correct view function.
+        """
         view_func = resolve(self.url).func
         expected_view_func = ProfileDetailView.as_view()
-        
-        # Compare the view functions by their paths or names
         self.assertEqual(view_func.__name__, expected_view_func.__name__)
 
 
-
 class ProfileUpdateViewTest(TestCase):
+    """
+    Test suite for the Profile update view in the profile app.
+    """
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        # Common setup code that is the same for all test methods
+        cls.user = User.objects.create_user(username='hemingway', email='user@gmail.com', password='1234', id=1)
+        cls.profile = Profile.objects.get(user=cls.user)
 
     def setUp(self):
-        self.user = User.objects.create_user(username='hemingway', email='user@gmail.com', password='1234', id=1)
-        self.profile = Profile.objects.get(user=self.user)
+        """
+        Additional setup for each individual test method.
+        """
+        self.client = Client()
 
     def test_edit_profile_returns_200(self):
-        # Check the profile update belongs to current user
+        """
+        Test to ensure that the edit profile page returns a 200 response for the current user.
+        """
         self.login_user()
         response = self.client.get(reverse('profile-update', args=[str(self.user.pk)]))
         self.assertEqual(response.status_code, 200)
 
     def test_edit_profile_form_displayed(self):
-        # Check that the profile update form is displayed on the page
+        """
+        Test to ensure that the profile update form is displayed on the page.
+        """
         self.login_user()
         response = self.client.get(reverse('profile-update', args=['1']))
         self.assertContains(response, '<form', count=1)
         self.assertContains(response, 'id="id_username"', count=1)
 
     def login_user(self):
+        """
+        Helper method to log in the test user.
+        """
         self.client.login(username='hemingway', password='1234')
 
 
 class AuthorListViewTest(TestCase):
+    """
+    Test suite for the Author list view in the author app.
+    """
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.user = User.objects.create_user(username='hemingway',id=1, email='user@gmail.com', password='1234')
-        cls.profile = Profile.objects.get(user=cls.user) 
+        cls.user = User.objects.create_user(username='hemingway', id=1, email='user@gmail.com', password='1234')
+        cls.profile = Profile.objects.get(user=cls.user)
         cls.author = Author.objects.create(profile=cls.profile)
 
     def setUp(self):
-        self.user = User.objects.create_user(username='hemingway', id=1, email='user@gmail.com',password='1234')
-        self.profile = Profile.objects.get(user=self.user) 
-        # Create 13 authors for pagination tests
-        number_of_authors = 13
-
-        for profile in range(number_of_authors):
-            Author.objects.create(
-                profile=self.profile,
-            )
+        """
+        Additional setup for each individual test method, including creating multiple authors for pagination tests.
+        """
+        self.user = User.objects.create_user(username='hemingway', id=1, email='user@gmail.com', password='1234')
+        self.profile = Profile.objects.get(user=self.user)
+        for _ in range(13):
+            Author.objects.create(profile=self.profile)
 
     def test_view_uses_correct_template(self):
-        # Test that authors list is using correct template
+        """
+        Test that the authors list is using the correct template.
+        """
         response = self.client.get(reverse('authors-list'))
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'author/author_list.html')
 
     def test_view_url_accessible_by_name(self):
-        # Test if authors list can be accesses by authors name
+        """
+        Test if the authors list can be accessed by its URL name.
+        """
         response = self.client.get(reverse('authors-list'))
         self.assertEqual(response.status_code, 200)
 
     def test_pagination_is_ten(self):
-        # Get first page and confirm it has (exactly) remaining 10 items
+        """
+        Test that pagination is correctly configured to show ten items per page.
+        """
         response = self.client.get(reverse('authors-list'))
         self.assertEqual(response.status_code, 200)
         self.assertTrue('is_paginated' in response.context)
-        self.assertTrue(response.context['is_paginated'] is True)
+        self.assertTrue(response.context['is_paginated'])
         self.assertEqual(len(response.context['author_list']), 10)
 
     def test_lists_all_authors(self):
-        # Get second page and confirm it has (exactly) remaining 4 items
-        response = self.client.get(reverse('authors-list')+'?page=2')
+        """
+        Test that all authors are listed across the paginated pages.
+        """
+        response = self.client.get(reverse('authors-list') + '?page=2')
         self.assertEqual(response.status_code, 200)
         self.assertTrue('is_paginated' in response.context)
-        self.assertTrue(response.context['is_paginated'] is True)
+        self.assertTrue(response.context['is_paginated'])
         self.assertEqual(len(response.context['author_list']), 4)
 
 
 class AuthorDetailViewTestCase(TestCase):
+    """
+    Test suite for the AuthorDetailView in the author app.
+    """
+
     def setUp(self):
-        # Create a test user
+        """
+        Set up function to create a test user, author, and posts for testing.
+        """
         self.user = User.objects.create_user(username='testuser', password='testpassword', email='test@example.com')
-
-        # Create a test author associated with the test user
         self.author = Author.objects.create(profile=self.user.profile)
-
-        # Create some test posts for the author
         self.post1 = Post.objects.create(title='Post 1', content='Content 1', author=self.author, status=1)
         self.post2 = Post.objects.create(title='Post 2', content='Content 2', author=self.author, status=1)
 
     def test_author_detail_view_with_valid_author(self):
-        # Test the AuthorDetailView with a valid author
+        """
+        Test the AuthorDetailView with a valid author.
+        """
         response = self.client.get(reverse('author-detail', args=[self.author.pk]))
-
-        # Check if the response status code is 200 (OK)
         self.assertEqual(response.status_code, 200)
-
-        # Check if the correct template is used
         self.assertTemplateUsed(response, 'author/author_detail.html')
 
     def test_author_detail_view_with_invalid_author(self):
-        # Test the AuthorDetailView with an invalid author (non-existent PK)
+        """
+        Test the AuthorDetailView with an invalid author (non-existent PK).
+        """
         invalid_author_pk = self.author.pk + 1
         response = self.client.get(reverse('author-detail', args=[invalid_author_pk]))
-
-        # Check if the response status code is 404 (Not Found)
         self.assertEqual(response.status_code, 404)
 
 
 class MessageAuthorViewTestCase(TestCase):
+    """
+    Test suite for the MessageAuthorView in the author app.
+    """
+
     def setUp(self):
+        """
+        Set up function to create a test user, author, and necessary instances for testing the view.
+        """
         self.factory = RequestFactory()
         self.user = User.objects.create_user(username='testuser', email='test@example.com', password='testpassword')
-        # Create an author instance associated with the test user
         self.author = Author.objects.create(profile=self.user.profile)
         self.view = MessageAuthorView()
         self.client = Client()
-        
-        # URL for posting the message
         self.message_url = reverse('message-author', kwargs={'author_id': self.user.id})
 
     def test_get_author_with_valid_id(self):
-        # Mock the request and kwargs for the view
+        """
+        Test retrieving an author with a valid ID.
+        """
         request = self.factory.get('/fake-url')
         self.view.request = request
         self.view.kwargs = {'author_id': self.user.id}
-
-        # Call the method
         author = self.view.get_author()
-
-        # Assert the retrieved author is correct
         self.assertEqual(author, self.user)
 
     def test_get_author_with_invalid_id(self):
-        # Mock the request and kwargs for the view
+        """
+        Test retrieving an author with an invalid ID, expecting Http404.
+        """
         request = self.factory.get('/fake-url')
         self.view.request = request
-        self.view.kwargs = {'author_id': 9999}  # Assuming this ID does not exist
-
-        # Assert that Http404 is raised
+        self.view.kwargs = {'author_id': 9999}
         with self.assertRaises(Http404):
             self.view.get_author()
 
     def test_form_valid(self):
-        # Log in the user
-        self.client.login(username='testauthor', password='testpassword')
-
-        # Prepare form data
+        """
+        Test the form submission with valid data and ensure the message is created.
+        """
+        self.client.login(username='testuser', password='testpassword')
         form_data = {
             'sender_name': 'Test Sender',
             'sender_email': 'sender@test.com',
             'message': 'Test message content'
         }
-
-        # Make a POST request with form data
         response = self.client.post(self.message_url, form_data)
-
-        # Check if an AuthorMessage instance has been created
         self.assertEqual(AuthorMessage.objects.count(), 1)
         message = AuthorMessage.objects.first()
         self.assertEqual(message.sender_name, 'Test Sender')
         self.assertEqual(message.sender_email, 'sender@test.com')
         self.assertEqual(message.message, 'Test message content')
 
-        # Check for success message
         messages = list(response.wsgi_request._messages)
         self.assertEqual(len(messages), 1)
         self.assertEqual(str(messages[0]), 'Your message has been sent successfully!')
 
+
 class RequestAuthorAccessViewTest(TestCase):
+    """
+    Test suite for the RequestAuthorAccess view in the author app.
+    """
+
     def setUp(self):
-        # Create a test user and profile
+        """
+        Set up function to create a test user and profile for testing the view.
+        """
         self.user = User.objects.create_user(
             username='testuser',
             password='testpassword'
         )
-        self.profile = Profile.objects.get(
-            user=self.user,
-            # Add other required fields for your Profile model
-        )
+        self.profile = Profile.objects.get(user=self.user)
 
     def test_get_request_author_access_view(self):
-        # Log in the test user
+        """
+        Test the GET request for the request author access view.
+        """
         self.client.login(username='testuser', password='testpassword')
-
-        # Get the URL for the request author access view
-        url = reverse('request-author-access')  # Replace with the actual URL name
-
-        # Make a GET request to the view
+        url = reverse('request-author-access')
         response = self.client.get(url)
-
-        # Check that the response status code is 200 (OK)
         self.assertEqual(response.status_code, 200)
-
-        # Check that the 'form' context variable is present in the response
         self.assertIn('form', response.context)
 
     def test_post_request_author_access_view(self):
-        # Log in the test user
+        """
+        Test the POST request for the request author access view with valid form data.
+        """
         self.client.login(username='testuser', password='testpassword')
-
-        # Get the URL for the request author access view
-        url = reverse('request-author-access')  # Replace with the actual URL name
-
-        # Create valid form data
+        url = reverse('request-author-access')
         form_data = {
-            'request_reason': 'Test request reason',  # Replace with valid data
-            # Add other form fields and their values as needed
+            'request_reason': 'Test request reason',
         }
-
-        # Make a POST request to the view with valid form data
         response = self.client.post(url, data=form_data)
-
-        # Check that the response redirects to the 'index' page upon successful submission
-        self.assertRedirects(response, reverse('index'))  # Replace with the actual URL name
+        self.assertRedirects(response, reverse('index'))
 
 
 class TestPostListView(TestCase):
+    """
+    Test suite for the Post list view in the blog app.
+    """
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
 
     def setUp(self):
+        """
+        Set up function to create a test user, author, and posts for testing the view.
+        """
         self.client = Client()
-        self.user = User.objects.create_user(username='hemingway', id=1, email='user@gmail.com',password='1234')
-        self.profile = Profile.objects.get(user=self.user) 
-        self.author = Author.objects.create(profile=self.profile) 
-        self.post= Post.objects.create(title='Karramba', author = self.author, slug='karramba',status='1')
-        self.post1= Post.objects.create(title='News', author = self.author, slug='news',status='1')
-   
+        self.user = User.objects.create_user(username='hemingway', id=1, email='user@gmail.com', password='1234')
+        self.profile = Profile.objects.get(user=self.user)
+        self.author = Author.objects.create(profile=self.profile)
+        self.post = Post.objects.create(title='Karramba', author=self.author, slug='karramba', status='1')
+        self.post1 = Post.objects.create(title='News', author=self.author, slug='news', status='1')
+
     def test_get_index(self):
-        # Tests that a get request to index works and renders the correct template
+        """
+        Test that a GET request to the index page works and renders the correct template.
+        """
         response = self.client.get(reverse('index'))
         self.assertEquals(response.status_code, 200)
         self.assertTemplateUsed(response, 'blog/index.html')
 
     def test_context_contains_posts(self):
-        #Tests that there the context contains 'post_list' 
+        """
+        Test that the context contains 'post_list'.
+        """
         response = self.client.get(reverse('index'))
-        self.assertIn('post_list',response.context_data)
+        self.assertIn('post_list', response.context_data)
 
     def test_excludes_draft_posts(self):
-        # Tests that the list of posts on the homepage excludes drafts
+        """
+        Test that the list of posts on the homepage excludes draft posts.
+        """
         response = self.client.get(reverse('index'))
         self.assertEqual(len(response.context_data['post_list']), 2)
 
 
 class TestAddPostView(TestCase):
+    """
+    Test suite for the Add Post view in the blog app.
+    """
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-
-        # Create a sample image file for testing
         cls.image_content = b"dummy content"
         cls.sample_image = SimpleUploadedFile("test_image.jpg", 
-            cls.image_content, content_type="image/jpeg")
+                                              cls.image_content, content_type="image/jpeg")
 
     def setUp(self):
+        """
+        Set up function to create test users, author, posts, and client for testing the view.
+        """
         self.user = User.objects.create_user(username='avatar', id=1)
         self.hacker = User.objects.create_user(username='hacker')
-        self.profile = Profile.objects.get(user=self.user) 
+        self.profile = Profile.objects.get(user=self.user)
         self.author = Author.objects.create(profile=self.profile)
-        self.post= Post.objects.create(title='Karramba', author = self.author, slug='karramba',status='1',)
-        self.post1= Post.objects.create(title='News', author = self.author, slug='news')
-        self.post2= Post.objects.create(title='Coding', author = self.author, slug='coding', status='1',)
+        self.post = Post.objects.create(title='Karramba', author=self.author, slug='karramba', status='1')
+        self.post1 = Post.objects.create(title='News', author=self.author, slug='news')
+        self.post2 = Post.objects.create(title='Coding', author=self.author, slug='coding', status='1')
         self.client = Client()
         self.url = reverse('post-create')
 
     def test_login_requirement(self):
-        # Tests that a non-logged-in user is redirected
+        """
+        Test that a non-logged-in user is redirected from the post create view.
+        """
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, 302)
        
     def test_get_post_create(self):
-        # Tests that a GET request works and renders the correct template
+        """
+        Test that a GET request to the post create view works and renders the correct template.
+        """
         self.client.force_login(self.user)
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'blog/post_form.html')
 
     def test_user_must_be_logged_in(self):
-        # Tests that a non-logged in user is redirected
+        """
+        Test that a non-logged-in user is redirected from the post create view.
+        """
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, 302)
 
     def test_form_fields(self):
-        # Tests that fields are displayed in the user form
+        """
+        Test that all expected fields are displayed in the post creation form.
+        """
         self.client.force_login(self.user)
         response = self.client.get(self.url)
         form = response.context_data['form']

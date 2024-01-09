@@ -14,7 +14,7 @@
 
 ## Input validation and error checking
 
-### Manual Testing <hr>
+### Manual Testing
 The testing documentation can be found in [Manual Testing Documentation](MANUAL_TESTING.md) 
 
 ### Automated Testing
@@ -90,6 +90,35 @@ Javascript functionality includes a timer for user notification and a toggle for
 ![JS Validation Screenshot](static/images/Java_script_validator.png)
 
 #### Python
+
+The python code was tested using [Code Institute Python liner](https://pep8ci.herokuapp.com/).
+
+
+| App Name  | File Name      | PEP 8 Validation Status | Notes | Screenshot                                                                               |
+|-----------|----------------|-------------------------|-------|------------------------------------------------------------------------------------------|
+| AUTHOR    | admin.py       | ✅ Passed               | N/A   | <details><summary>View Screenshot</summary><img src="static/images/PEP8_author_admin.png">
+|           | apps.py        | ✅ Passes               | N/A   | <details><summary>View Screenshot</summary><img src="static/images/PEP8_author_apps.png">
+|           | forms.py       | ✅ Passed               | N/A   | <details><summary>View Screenshot</summary><img src="static/images/PEP8_author_forms.png">
+|           | models.py      | ✅ Passes               | N/A   | <details><summary>View Screenshot</summary><img src="static/images/">
+|           | urls.py        | ✅ Passes               | N/A   | <details><summary>View Screenshot</summary><img src="static/images/">
+|           | views.py       | ✅ Passes               | N/A   | <details><summary>View Screenshot</summary><img src="static/images/">
+| BLOG      | admin.py       | ✅ Passed               | N/A   | <details><summary>View Screenshot</summary><img src="static/images/">
+|           | apps.py        | ✅ Passes               | N/A   | <details><summary>View Screenshot</summary><img src="static/images/">
+|           | forms.py       | ✅ Passed               | N/A   | <details><summary>View Screenshot</summary><img src="static/images/">
+|           | models.py      | ✅ Passes               | N/A   | <details><summary>View Screenshot</summary><img src="static/images/">
+|           | urls.py        | ✅ Passes               | N/A   | <details><summary>View Screenshot</summary><img src="static/images/">
+|           | views.py       | ✅ Passes               | N/A   | <details><summary>View Screenshot</summary><img src="static/images/">
+| PROFILE   | admin.py       | ✅ Passed               | N/A   | <details><summary>View Screenshot</summary><img src="static/images/">
+|           | apps.py        | ✅ Passes               | N/A   | <details><summary>View Screenshot</summary><img src="static/images/">
+|           | forms.py       | ✅ Passed               | N/A   | <details><summary>View Screenshot</summary><img src="static/images/">
+|           | models.py      | ✅ Passes               | N/A   | <details><summary>View Screenshot</summary><img src="static/images/">
+|           | signals.py     | ✅ Passes               | N/A   | <details><summary>View Screenshot</summary><img src="static/images/">
+|           | urls.py        | ✅ Passes               | N/A   | <details><summary>View Screenshot</summary><img src="static/images/">
+|           | views.py       | ✅ Passes               | N/A   | <details><summary>View Screenshot</summary><img src="static/images/">
+| TESTS     | test_admin.py  | ✅ Passes               | N/A   | <details><summary>View Screenshot</summary><img src="static/images/PEP8_test_admin.png">
+|           | test_models.py | ✅ Passes               | N/A   | <details><summary>View Screenshot</summary><img src="static/images/PEP8_test_models.png">
+|           | test_views.py  | ✅ Passes               | N/A   | <details><summary>View Screenshot</summary><img src="static/images/">
+
 
 
 ### Performance

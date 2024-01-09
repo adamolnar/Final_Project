@@ -1,6 +1,6 @@
 from django.contrib import admin
 from .models import Author, AuthorMessage, AuthorAccessRequest
-from .forms import AuthorAccessRequestForm
+
 
 # Register the Author model with the admin site
 @admin.register(Author)
@@ -20,7 +20,8 @@ class AuthorAdmin(admin.ModelAdmin):
             author.save()
 
         # Provide a success message to the user
-        self.message_user(request, 'Successfully marked selected authors as authorized.')
+        self.message_user(
+            request, 'Successfully marked selected authors as authorized.')
 
     make_author.short_description = "Mark selected authors as authorized"
 
@@ -29,7 +30,7 @@ class AuthorAdmin(admin.ModelAdmin):
 @admin.register(AuthorMessage)
 class AuthorMessageAdmin(admin.ModelAdmin):
     # Display these fields in the list view
-    list_display = ( 'sender_name', 'sender_email', 'timestamp')
+    list_display = ('sender_name', 'sender_email', 'timestamp')
     # Add search functionality for the list view
     search_fields = ['author__username', 'sender_name', 'sender_email']
 
@@ -51,7 +52,7 @@ class AuthorAccessRequestAdmin(admin.ModelAdmin):
             author.save()
 
         # Provide a success message to the user
-        self.message_user(request, 'Successfully marked selected authors as authorized.')
+        self.message_user(
+            request, 'Successfully marked selected authors as authorized.')
 
     make_author.short_description = "Mark selected authors as authorized"
-
