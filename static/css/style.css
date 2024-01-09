@@ -106,6 +106,19 @@ a {
   margin-right: 5px; /* Adjust spacing between the icon and category title */
 }
 
+#post-card-container {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.post-card {
+  flex: 1;
+  margin: 10px; /* Add margin for spacing between cards */
+  border: 1px solid #ddd; /* Add a border for separation */
+  padding: 10px; /* Add padding for content spacing */
+  box-sizing: border-box; /* Include padding and border in the card's dimensions */
+}
+
 @media screen and (max-width: 1400px) {
   .post-title {font-size: medium;}
 }

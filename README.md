@@ -61,7 +61,7 @@ These user stories cover a range of user types, including visitors, registered u
 ## Flowchart
 The project flowchart was created using <b>LucidChart</b>.
 
-<img src="static/images/" >
+<img src="static/images/flowchart.png" >
 
 ## Features
 - User authentication: login, logout, register.

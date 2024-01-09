@@ -29,7 +29,7 @@
                 </div>
                 
                 <!-- Secondary posts (Second and Third rows) -->
-                <div class="row">
+                <div class="row" id="post-card-container">
                     {% for post in post_list %}
                         {% if forloop.counter > 1 and forloop.counter <= 6 %}
                             <div class="col-md-6">
