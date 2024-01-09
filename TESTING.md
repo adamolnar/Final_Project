@@ -1,16 +1,15 @@
 # Testing Documentation
 
 ## Table of Contents
-1. [Manual Testing](#manual-testing)
-2. [Automated Testing](#automated-testing)
-3. [Browser Testing](#browser-testing)
-4. [Code Validation](#code-validation)
+- [Manual Testing](#manual-testing)
+- [Automated Testing](#automated-testing)
+- [Browser Testing](#browser-testing)
+- [Code Validation](#code-validation)
    - [HTML](#html)
    - [CSS](#css)
    - [Javascript](#javascript)
    - [Python](#python)
-5. [Python](#python)
-6. [Performance](#performance)
+- [Performance](#performance)
 
 
 ## Input validation and error checking
@@ -19,6 +18,13 @@
 The testing documentation can be found in [Manual Testing Documentation](MANUAL_TESTING.md) 
 
 ### Automated Testing
+
+#### Test Coverage Before
+![Coverage Report](static/images/automated_test_cover_before.png)
+
+#### Test Coverage After
+![Coverege Report](static/images/automated_test_cover_results.png)
+
 The testing documentation for various components can be found in the following files:
 - [test admin.py](tests/test_admin.py)
 - [test models.py](tests/test_models.py)
@@ -28,7 +34,6 @@ Note: Due to the project size and hard deadline, 100% coverage was not achieved.
 
 ### Browser Testing
 The website was tested on several browsers to ensure functionality and compatibility:
-- Safari
 - Chrome
 - Firefox
 - Edge
@@ -132,3 +137,4 @@ The website's performance was assessed using [Google Lighthouse](https://develop
 ![Lighthouse Mobile Validation Screenshot](static/images/lighthouse.mobile.png)
 
 
+[Go backt to README.md](README.md)

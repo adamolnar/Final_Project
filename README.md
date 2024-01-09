@@ -1,6 +1,6 @@
 # Byte by Byte
 
-<img src="static/images/am_i_resposive.png" >
+![I Am Resposive Screenshot](static/images/am_i_resposive.png)
 
 Welcome to Byte by Byte, a Django-based tech blog that delivers in-depth insights, tutorials, and articles on the latest trends and technologies in the tech world.
 This application allows user to create, edit, and manage blog posts. It also includes user authentication and comment functionality. Below is guide through the setup and usage of this application.
@@ -15,8 +15,6 @@ This application allows user to create, edit, and manage blog posts. It also inc
 - [Technologies Used](#technologies-used)
 - [Deployment](#deployment)
 - [Testing](TESTING.md)
-- [Manual Testing](MANUAL_TESTING.md)
-- [Automated Testing](TESTING.md)
 - [Credits](#credits)
 - [Acknowledgements](#acknowledgements)
 
@@ -31,7 +29,7 @@ Catering to visitors, registered users, and authors/staff members, Byte by Byte 
 
 Go to [User Stories](https://github.com/users/adamolnar/projects/9/views/1).
 
-<img src="static/images/user_stories.png">
+![User Stories Screenshot](static/images/user_stories.png)
 
 #### Table of User Stories
 
@@ -61,7 +59,7 @@ These user stories cover a range of user types, including visitors, registered u
 ## Flowchart
 The project flowchart was created using <b>LucidChart</b>.
 
-<img src="static/images/flowchart.png" >
+![Flowchart Screenshot](static/images/flowchart.png)
 
 ## Features
 - User authentication: login, logout, register.
@@ -73,10 +71,28 @@ The project flowchart was created using <b>LucidChart</b>.
 - Image uploads with Cloudinary, tagging, categorization.
 - Social media sharing buttons.
 
+| Feature | Description | Image |
+|---------|-------------|-------|
+| Login     | - Users enter their credentials (username/email and password). <br> - Clear messages for login issues (e.g., incorrect credentials). | <details><summary>View Image</summary>![Image 1](URL_to_image1.jpg)</details> |
+| Logout    | -  When a user initiates the logout process, this page prompts for confirmation to prevent accidental logouts. <br> - Users are redirected to the homepage page after logging out. | <details><summary>View Image</summary>![Image 2](URL_to_image2.jpg)</details> |
+| Register  | -  Form to capture essential user details (name, email, password). <br> - Helps users create a strong password. <br> - Checks for correct format and uniqueness of user information. <br> - Allows users to log in immediately after registration.| <details><summary>View Image</summary>![Image 3](URL_to_image3.jpg)</details> |
+| Index Page  | - The post is presented with an engaging headline and an excerpt or the full content to capture immediate attention. <br> - Designed to feature the most recent or important blog post, drawing readers in. <br> - Includes "Previous" and "Next" buttons, enabling users to explore content seamlessly. <br> - Showcases a list of tags, each linking to a filtered view of blog posts associated with that tag. <br> - Displays a list of blog categories, allowing users to filter content based on broader topics. <br> - A dedicated section providing a brief introduction to "Byte by Byte's Tech Blog."  | <details><summary>View Image</summary>![Image 1](URL_to_image1.jpg)</details> |
+| Bloggers| - Each blogger is showcased in individual cards within a grid layout. <br> - Each card features the name of the blogger, which is a clickable link leading to their detailed profile. <br> A brief description or bio of the author, truncated for brevity. <br> - Each card lists up to 3 of the latest blog posts by the author, includes a thumbnail of the post image and a truncated title and each post title is a clickable link that directs to the full blog post. <br> -Provides pagination at the bottom of the page to navigate through the list of bloggers.| <details><summary>View Image</summary>![Image 2](URL_to_image2.jpg)</details> |
+| Contact | Description of Feature 3 | <details><summary>View Image</summary>![Image 3](URL_to_image3.jpg)</details> |
+| Profile | Description of Feature 3 | <details><summary>View Image</summary>![Image 3](URL_to_image3.jpg)</details> |
+| Create Post | Description of Feature 3 | <details><summary>View Image</summary>![Image 3](URL_to_image3.jpg)</details> |
+| Read More | Description of Feature 3 | <details><summary>View Image</summary>![Image 3](URL_to_image3.jpg)</details> |
+| Like/Unlike | Description of Feature 3 | <details><summary>View Image</summary>![Image 3](URL_to_image3.jpg)</details> |
+| Social Media Shering | Description of Feature 3 | <details><summary>View Image</summary>![Image 3](URL_to_image3.jpg)</details> |
+| Author Details | Description of Feature 3 | <details><summary>View Image</summary>![Image 3](URL_to_image3.jpg)</details> |
+| Feature 3 | Description of Feature 3 | <details><summary>View Image</summary>![Image 3](URL_to_image3.jpg)</details> |
+| Feature 3 | Description of Feature 3 | <details><summary>View Image</summary>![Image 3](URL_to_image3.jpg)</details> |
+
 ## Potential Future Features
 - Implementing a "Save Favorite Posts" feature.
 - Scheduling posts for publication.
 - Email notifications for new posts.
+- Multiple tags and categories assigment.
 - Search functionality and performance optimization.
 
 ## Enhancements
@@ -121,7 +137,7 @@ This project was deployed using Code Institute's mock terminal for Heroku.
  In the terminal enter the command ` pip3 freeze > requirements.txt`, and a file with all requirements will be created. 
  
  2. Setting up Heroku
-    - Go to the Heroku website (https://www.heroku.com/) 
+    - Go to the Heroku website [here](https://www.heroku.com/).
     - Login to Heroku and choose *Create App* 
     - Click *New* and *Create a new app*
     - Choose a name and select your location
@@ -153,12 +169,6 @@ For creating a clone of the repository on your local machine, use<b>Clone</b>:
 ## Testing
 The testing documentation can be found in the [Testing Documentation](TESTING.md).
 
-## Manual Testing 
-The documentation for manual testing can be found in the [Manual Testing](TESTING.md).
-
-## Automated Testing 
-For automated testing details, refer to the [Testing Documentation](TESTING.md). 
-
 ## Credits
 - Code Institute for the deployment terminal [CodeInstitute: FST101](https://learn.codeinstitute.net/courses/course-v1:CodeInstitute+FST101+2/courseware/b31493372e764469823578613d11036b/ae7923cfce7f4653a3af9f51825d2eba/).
 - Code Institute Project Scope [Code Institute || I Think Therefore I Blog](https://learn.codeinstitute.net/courses/course-v1:CodeInstitute+FST101+2/courseware/b31493372e764469823578613d11036b/fe4299adcd6743328183aab4e7ec5d13/).
@@ -171,12 +181,25 @@ For automated testing details, refer to the [Testing Documentation](TESTING.md).
 - Automated testing with [Code Institute || Python Testing](https://learn.codeinstitute.net/courses/course-v1:CodeInstitute+PT101+2021_T1/courseware/f20cd699fac3480b99004d1fc3f265ef/bfd6dc4d46c94af89af71f2525c66e0f/).
 - Automated testing with [Realpython](https://realpython.com/testing-in-django-part-1-best-practices-and-examples/#testing-models).
 - README layout from [Christian Göran](https://github.com/christiangoran/dome-restaurant-repo/blob/main/README.md).
+- The content of posts was generated with the assistance of [ChatGPT](https://www.openai.com/gpt-3/).
+
 
 ## Media
-- Image for blog posts 'How to Write an Effective Blog Post: A Step-by-Step Guide' [The Anatomy of a Perfect Blog Post](https://www.salesforce.com/ca/blog/2016/08/anatomy-of-a-perfect-blog-post.html)
-- Image for blog posts 'Django Form: From Zero to Hero - Mastering Form Handling' [Java67](https://www.java67.com/2020/06/top-5-courses-to-learn-django-and-python-for-web-development.html)
-- Image for blog posts 'Navigating Impostor Syndrome as a Software Developer' [Hackernoon](https://hackernoon.com/the-impostor-syndrome-among-us)
-
+- Image for blog post 'How to Write an Effective Blog Post: A Step-by-Step Guide' [The Anatomy of a Perfect Blog Post](https://www.salesforce.com/ca/blog/2016/08/anatomy-of-a-perfect-blog-post.html).
+- Image for blog post 'Django Form: From Zero to Hero - Mastering Form Handling' [Java67](https://www.java67.com/2020/06/top-5-courses-to-learn-django-and-python-for-web-development.html).
+- Image for blog post 'Navigating Impostor Syndrome as a Software Developer' [Hackernoon](https://hackernoon.com/the-impostor-syndrome-among-us).
+- Image for blog post 'Mastering Web Design with Bootstrap: A Comprehensive Guide' [Cloudways](https://www.cloudways.com/blog/laravel-bootstrap-template-integration/).
+- Image for blog post 'Exploring the World of JavaScript' [eMyAcademy](https://emyacademy.com/course-category/coding/).
+- Image for blog post 'Revolutionizing Conversational AI' [OnManorama](https://www.onmanorama.com/news/business/2023/02/11/google-calls-chat-gpt-hallucinating-chatbot.html).
+- Image for blog post 'The Unstoppable Rise of Artificial Intelligence' [Chi](https://www.writerchi.com/post/conversational-ai-the-future-to-be).
+- Image for blog post 'Tech Unleashed: Chubaka and the Wookiee Wonders of the Digital World' [OSecrate](https://osecrate.info/quantum-cryptography-os-exploring-foundations-applications/).
+- Image for blog post 'Unleashing the Data Dragon: Taming Big Data for Business Success' [AppSumo Blog](https://blog.appsumo.com/blog-post-ideas/).
+- Image for blog post 'Learning Node.js: A Beginner's Guide' [DEV Community](https://dev.to/burakboduroglu/building-a-nodejs-server-without-using-expressjs-3mc8).
+- Image for blog post 'Understanding the Importance of Cybersecurity in the Modern World' [InterCore Technologies](https://www.linkedin.com/company/intercoretech/about/).
+- Image for blog post 'Navigating the Rising Tide of Cyber Attacks: Strategies and Insights' [Medium](https://jerry-lawrence789.medium.com/10-security-vulnerabilities-in-web-applications-and-how-to-avoid-them-738d73183028).
+- Profile image for author admin [Krissping Computer](https://plautz-frisch-ins-haus.at/kisspng-computer-icons-icon-design-business-administration-admin-icon-5b46fc469cf717-2503725715313787586429/).
+- Profile image for author baby_groku [Vector](https://www.freevector.com/vector/stars-wars).
+- Profile image for author chubaka [Vector](https://www.freevector.com/vector/stars-wars).
 
 ## Acknowledgements
 - Code Institute for providing a great course and support.
