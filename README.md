@@ -54,7 +54,7 @@ Go to [User Stories](https://github.com/users/adamolnar/projects/9/views/1).
 |                     | As a Site Admin I can create draft posts so that I can finish writing the content later.           | Yes   |
 | **Author/Staff**    | As a Site Admin I can approve or disapprove comments so that I can filter out objectionable comments. | Modified   |
 |                     | As a Site Admin I can create, read, update, and delete posts so that I can manage my blog content. | Yes   |
-|                     | As a Site User I can find content by searching for particular words so that I have a quick or less complex way to find content. | No    |
+
 
 These user stories cover a range of user types, including visitors, registered users, and authors/staff members, and address various functionalities and features of the Blog application. 
 
