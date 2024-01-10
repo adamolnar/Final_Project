@@ -56,7 +56,7 @@ class AuthorMessage(models.Model):
 
     def __str__(self):
         # String representation of the message
-        return f'Message from {self.sender_name} to {self.author.username}'
+        return f'Message from {self.sender_name}'
 
 
 # Model to store author access requests
