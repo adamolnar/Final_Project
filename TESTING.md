@@ -10,6 +10,7 @@
    - [Javascript](#javascript)
    - [Python](#python)
 - [Performance](#performance)
+- [Bugs](#bugs)
 
 
 ## Input validation and error checking
@@ -38,6 +39,7 @@ The website was tested on several browsers to ensure functionality and compatibi
 - Firefox
 - Edge
 - Opera
+- Safari
 
 ### Code Validation
 
@@ -136,5 +138,16 @@ The website's performance was assessed using [Google Lighthouse](https://develop
 - Mobile Assesment
 ![Lighthouse Mobile Validation Screenshot](static/images/lighthouse.mobile.png)
 
+
+### Bugs
+
+#### Responsive Design Flaws
+- **Description**: Issues arise when the website does not properly adjust to different screen sizes or devices. Due to the use of Bootstrap and its grid system, some post cards appear smaller than intended.
+  - **Impact**:
+    - Poor user experience on mobile or tablet devices.
+    - Lower search engine rankings due to non-compliance with mobile-first standards.
+
+#### Other Issues
+- **Description**: All other issues identified during the development and initial testing phases have been addressed and fixed.
 
 [Go backt to README.md](README.md)
